@@ -39,7 +39,7 @@ img {
 ul {
     list-style-type: none;
     margin: none;
-    padding: none;
+    padding-inline-start: 0px;
 }
 
 li {
