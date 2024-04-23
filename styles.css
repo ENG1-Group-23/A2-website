@@ -36,6 +36,16 @@ img {
     display: inline-block;
 }
 
+ul {
+    list-style-type: none;
+    margin: none;
+    padding: none;
+}
+
+li {
+    padding: 10px;
+}
+
 .footer-breaker {
     height: 20px;
     background-color: plum;
