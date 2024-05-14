@@ -1,0 +1,327 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MockInput</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.backends.headless.mock.input</a>
+</div>
+
+<h1>Coverage Summary for Class: MockInput (com.badlogic.gdx.backends.headless.mock.input)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MockInput</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1.9%
+  </span>
+  <span class="absValue">
+    (1/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1.9%
+  </span>
+  <span class="absValue">
+    (1/54)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package com.badlogic.gdx.backends.headless.mock.input;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Input;
+&nbsp;import com.badlogic.gdx.InputAdapter;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import com.badlogic.gdx.Input.Orientation;
+&nbsp;
+&nbsp;public class MockInput implements Input {
+&nbsp;    private InputProcessor mockInputProcessor;
+&nbsp;
+&nbsp;    public MockInput() {
+&nbsp;    }
+&nbsp;
+&nbsp;    public float getAccelerometerX() {
+&nbsp;        return 0.0F;
+&nbsp;    }
+&nbsp;
+&nbsp;    public float getAccelerometerY() {
+&nbsp;        return 0.0F;
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public float getAccelerometerZ() {
+&nbsp;        return 0.0F;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public float getGyroscopeX() {
+&nbsp;        return 0.0F;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public float getGyroscopeY() {
+&nbsp;        return 0.0F;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public float getGyroscopeZ() {</b>
+&nbsp;        return 0.0F;
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getMaxPointers() {
+<b class="nc">&nbsp;        return 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getX() {
+&nbsp;        return 0;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public int getX(int pointer) {
+&nbsp;        return 0;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public int getDeltaX() {
+&nbsp;        return 0;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public int getDeltaX(int pointer) {</b>
+&nbsp;        return 0;
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getY() {
+<b class="nc">&nbsp;        return 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getY(int pointer) {
+&nbsp;        return 0;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public int getDeltaY() {
+&nbsp;        return 0;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public int getDeltaY(int pointer) {
+&nbsp;        return 0;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public boolean isTouched() {</b>
+&nbsp;        return false;
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean justTouched() {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isTouched(int pointer) {
+&nbsp;        return false;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public float getPressure() {
+&nbsp;        return 0.0F;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public float getPressure(int pointer) {
+&nbsp;        return 0.0F;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public boolean isButtonPressed(int button) {</b>
+&nbsp;        return false;
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isButtonJustPressed(int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isKeyPressed(int key) {
+&nbsp;        return false;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public boolean isKeyJustPressed(int key) {
+&nbsp;        return false;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public void getTextInput(Input.TextInputListener listener, String title, String text, String hint) {
+&nbsp;    }
+&nbsp;
+&nbsp;    public void getTextInput(Input.TextInputListener listener, String title, String text, String hint, Input.OnscreenKeyboardType type) {
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void setOnscreenKeyboardVisible(boolean visible) {
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void setOnscreenKeyboardVisible(boolean visible, Input.OnscreenKeyboardType type) {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void vibrate(int milliseconds) {
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public void vibrate(int milliseconds, boolean fallback) {
+&nbsp;    }
+&nbsp;
+&nbsp;    public void vibrate(int milliseconds, int amplitude, boolean fallback) {
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void vibrate(Input.VibrationType vibrationType) {
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public float getAzimuth() {</b>
+&nbsp;        return 0.0F;
+&nbsp;    }
+&nbsp;
+&nbsp;    public float getPitch() {
+<b class="nc">&nbsp;        return 0.0F;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public float getRoll() {
+&nbsp;        return 0.0F;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public void getRotationMatrix(float[] matrix) {
+&nbsp;    }
+&nbsp;
+&nbsp;    public long getCurrentEventTime() {
+<b class="nc">&nbsp;        return 0L;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCatchBackKey(boolean catchBack) {
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public boolean isCatchBackKey() {
+&nbsp;        return false;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void setCatchMenuKey(boolean catchMenu) {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isCatchMenuKey() {
+&nbsp;        return false;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void setCatchKey(int keycode, boolean catchKey) {
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public boolean isCatchKey(int keycode) {
+&nbsp;        return false;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public void setInputProcessor(InputProcessor processor) {
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public InputProcessor getInputProcessor() {</b>
+&nbsp;        if (this.mockInputProcessor == null) {
+&nbsp;            this.mockInputProcessor = new InputAdapter();
+&nbsp;        }
+<b class="nc">&nbsp;</b>
+&nbsp;        return this.mockInputProcessor;
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isPeripheralAvailable(Input.Peripheral peripheral) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getRotation() {
+&nbsp;        return 0;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public Input.Orientation getNativeOrientation() {
+&nbsp;        return Orientation.Landscape;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void setCursorCatched(boolean catched) {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isCursorCatched() {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCursorPosition(int x, int y) {
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

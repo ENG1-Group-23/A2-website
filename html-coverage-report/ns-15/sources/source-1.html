@@ -1,0 +1,903 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BaseTmxMapLoader</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps.tiled</a>
+</div>
+
+<h1>Coverage Summary for Class: BaseTmxMapLoader (com.badlogic.gdx.maps.tiled)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BaseTmxMapLoader</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (12/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    27.1%
+  </span>
+  <span class="absValue">
+    (64/236)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40.2%
+  </span>
+  <span class="absValue">
+    (182/453)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BaseTmxMapLoader$Parameters</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    52%
+  </span>
+  <span class="absValue">
+    (13/25)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    27.1%
+  </span>
+  <span class="absValue">
+    (64/236)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    41%
+  </span>
+  <span class="absValue">
+    (188/459)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;
+&nbsp;package com.badlogic.gdx.maps.tiled;
+&nbsp;
+&nbsp;import com.badlogic.gdx.assets.AssetDescriptor;
+&nbsp;import com.badlogic.gdx.assets.AssetLoaderParameters;
+&nbsp;import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
+&nbsp;import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+&nbsp;import com.badlogic.gdx.assets.loaders.TextureLoader;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.graphics.Color;
+&nbsp;import com.badlogic.gdx.graphics.Texture.TextureFilter;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureRegion;
+&nbsp;import com.badlogic.gdx.maps.*;
+&nbsp;import com.badlogic.gdx.maps.objects.EllipseMapObject;
+&nbsp;import com.badlogic.gdx.maps.objects.PolygonMapObject;
+&nbsp;import com.badlogic.gdx.maps.objects.PolylineMapObject;
+&nbsp;import com.badlogic.gdx.maps.objects.RectangleMapObject;
+&nbsp;import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+&nbsp;import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+&nbsp;import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
+&nbsp;import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+&nbsp;import com.badlogic.gdx.math.Polygon;
+&nbsp;import com.badlogic.gdx.math.Polyline;
+&nbsp;import com.badlogic.gdx.utils.*;
+&nbsp;import com.badlogic.gdx.utils.XmlReader.Element;
+&nbsp;
+&nbsp;import java.io.BufferedInputStream;
+&nbsp;import java.io.ByteArrayInputStream;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.util.StringTokenizer;
+&nbsp;import java.util.zip.GZIPInputStream;
+&nbsp;import java.util.zip.InflaterInputStream;
+&nbsp;
+&nbsp;public abstract class BaseTmxMapLoader&lt;P extends BaseTmxMapLoader.Parameters&gt; extends AsynchronousAssetLoader&lt;TiledMap, P&gt; {
+&nbsp;
+<b class="fc">&nbsp;	public static class Parameters extends AssetLoaderParameters&lt;TiledMap&gt; {</b>
+&nbsp;		/** generate mipmaps? **/
+<b class="fc">&nbsp;		public boolean generateMipMaps = false;</b>
+&nbsp;		/** The TextureFilter to use for minification **/
+<b class="fc">&nbsp;		public TextureFilter textureMinFilter = TextureFilter.Nearest;</b>
+&nbsp;		/** The TextureFilter to use for magnification **/
+<b class="fc">&nbsp;		public TextureFilter textureMagFilter = TextureFilter.Nearest;</b>
+&nbsp;		/** Whether to convert the objects&#39; pixel position and size to the equivalent in tile space. **/
+<b class="fc">&nbsp;		public boolean convertObjectToTileSpace = false;</b>
+&nbsp;		/** Whether to flip all Y coordinates so that Y positive is up. All libGDX renderers require flipped Y coordinates, and thus
+&nbsp;		 * flipY set to true. This parameter is included for non-rendering related purposes of TMX files, or custom renderers. */
+<b class="fc">&nbsp;		public boolean flipY = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static final int FLAG_FLIP_HORIZONTALLY = 0x80000000;
+&nbsp;	protected static final int FLAG_FLIP_VERTICALLY = 0x40000000;
+&nbsp;	protected static final int FLAG_FLIP_DIAGONALLY = 0x20000000;
+&nbsp;	protected static final int MASK_CLEAR = 0xE0000000;
+&nbsp;
+<b class="fc">&nbsp;	protected XmlReader xml = new XmlReader();</b>
+&nbsp;	protected Element root;
+&nbsp;	protected boolean convertObjectToTileSpace;
+<b class="fc">&nbsp;	protected boolean flipY = true;</b>
+&nbsp;
+&nbsp;	protected int mapTileWidth;
+&nbsp;	protected int mapTileHeight;
+&nbsp;	protected int mapWidthInPixels;
+&nbsp;	protected int mapHeightInPixels;
+&nbsp;
+&nbsp;	protected TiledMap map;
+&nbsp;	protected IntMap&lt;MapObject&gt; idToObject;
+&nbsp;	protected Array&lt;Runnable&gt; runOnEndOfLoadTiled;
+&nbsp;
+&nbsp;	public BaseTmxMapLoader (FileHandleResolver resolver) {
+<b class="fc">&nbsp;		super(resolver);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Array&lt;AssetDescriptor&gt; getDependencies (String fileName, FileHandle tmxFile, P parameter) {
+<b class="nc">&nbsp;		this.root = xml.parse(tmxFile);</b>
+&nbsp;
+<b class="nc">&nbsp;		TextureLoader.TextureParameter textureParameter = new TextureLoader.TextureParameter();</b>
+<b class="nc">&nbsp;		if (parameter != null) {</b>
+<b class="nc">&nbsp;			textureParameter.genMipMaps = parameter.generateMipMaps;</b>
+<b class="nc">&nbsp;			textureParameter.minFilter = parameter.textureMinFilter;</b>
+<b class="nc">&nbsp;			textureParameter.magFilter = parameter.textureMagFilter;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return getDependencyAssetDescriptors(tmxFile, textureParameter);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Gets a map of the object ids to the {@link MapObject} instances. Returns null if
+&nbsp;	 * {@link #loadTiledMap(FileHandle, Parameters, ImageResolver)} has not been called yet.
+&nbsp;	 *
+&nbsp;	 * @return the map of the ids to {@link MapObject}, or null if {@link #loadTiledMap(FileHandle, Parameters, ImageResolver)}
+&nbsp;	 *         method has not been called yet. */
+&nbsp;	public @Null IntMap&lt;MapObject&gt; getIdToObject () {
+<b class="nc">&nbsp;		return idToObject;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected abstract Array&lt;AssetDescriptor&gt; getDependencyAssetDescriptors (FileHandle tmxFile,
+&nbsp;		TextureLoader.TextureParameter textureParameter);
+&nbsp;
+&nbsp;	/** Loads the map data, given the XML root element
+&nbsp;	 *
+&nbsp;	 * @param tmxFile the Filehandle of the tmx file
+&nbsp;	 * @param parameter
+&nbsp;	 * @param imageResolver
+&nbsp;	 * @return the {@link TiledMap} */
+&nbsp;	protected TiledMap loadTiledMap (FileHandle tmxFile, P parameter, ImageResolver imageResolver) {
+<b class="fc">&nbsp;		this.map = new TiledMap();</b>
+<b class="fc">&nbsp;		this.idToObject = new IntMap&lt;&gt;();</b>
+<b class="fc">&nbsp;		this.runOnEndOfLoadTiled = new Array&lt;&gt;();</b>
+&nbsp;
+<b class="pc">&nbsp;		if (parameter != null) {</b>
+<b class="fc">&nbsp;			this.convertObjectToTileSpace = parameter.convertObjectToTileSpace;</b>
+<b class="fc">&nbsp;			this.flipY = parameter.flipY;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			this.convertObjectToTileSpace = false;</b>
+<b class="nc">&nbsp;			this.flipY = true;</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		String mapOrientation = root.getAttribute(&quot;orientation&quot;, null);</b>
+<b class="fc">&nbsp;		int mapWidth = root.getIntAttribute(&quot;width&quot;, 0);</b>
+<b class="fc">&nbsp;		int mapHeight = root.getIntAttribute(&quot;height&quot;, 0);</b>
+<b class="fc">&nbsp;		int tileWidth = root.getIntAttribute(&quot;tilewidth&quot;, 0);</b>
+<b class="fc">&nbsp;		int tileHeight = root.getIntAttribute(&quot;tileheight&quot;, 0);</b>
+<b class="fc">&nbsp;		int hexSideLength = root.getIntAttribute(&quot;hexsidelength&quot;, 0);</b>
+<b class="fc">&nbsp;		String staggerAxis = root.getAttribute(&quot;staggeraxis&quot;, null);</b>
+<b class="fc">&nbsp;		String staggerIndex = root.getAttribute(&quot;staggerindex&quot;, null);</b>
+<b class="fc">&nbsp;		String mapBackgroundColor = root.getAttribute(&quot;backgroundcolor&quot;, null);</b>
+&nbsp;
+<b class="fc">&nbsp;		MapProperties mapProperties = map.getProperties();</b>
+<b class="pc">&nbsp;		if (mapOrientation != null) {</b>
+<b class="fc">&nbsp;			mapProperties.put(&quot;orientation&quot;, mapOrientation);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		mapProperties.put(&quot;width&quot;, mapWidth);</b>
+<b class="fc">&nbsp;		mapProperties.put(&quot;height&quot;, mapHeight);</b>
+<b class="fc">&nbsp;		mapProperties.put(&quot;tilewidth&quot;, tileWidth);</b>
+<b class="fc">&nbsp;		mapProperties.put(&quot;tileheight&quot;, tileHeight);</b>
+<b class="fc">&nbsp;		mapProperties.put(&quot;hexsidelength&quot;, hexSideLength);</b>
+<b class="pc">&nbsp;		if (staggerAxis != null) {</b>
+<b class="nc">&nbsp;			mapProperties.put(&quot;staggeraxis&quot;, staggerAxis);</b>
+&nbsp;		}
+<b class="pc">&nbsp;		if (staggerIndex != null) {</b>
+<b class="nc">&nbsp;			mapProperties.put(&quot;staggerindex&quot;, staggerIndex);</b>
+&nbsp;		}
+<b class="pc">&nbsp;		if (mapBackgroundColor != null) {</b>
+<b class="nc">&nbsp;			mapProperties.put(&quot;backgroundcolor&quot;, mapBackgroundColor);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		this.mapTileWidth = tileWidth;</b>
+<b class="fc">&nbsp;		this.mapTileHeight = tileHeight;</b>
+<b class="fc">&nbsp;		this.mapWidthInPixels = mapWidth * tileWidth;</b>
+<b class="fc">&nbsp;		this.mapHeightInPixels = mapHeight * tileHeight;</b>
+&nbsp;
+<b class="pc">&nbsp;		if (mapOrientation != null) {</b>
+<b class="pc">&nbsp;			if (&quot;staggered&quot;.equals(mapOrientation)) {</b>
+<b class="nc">&nbsp;				if (mapHeight &gt; 1) {</b>
+<b class="nc">&nbsp;					this.mapWidthInPixels += tileWidth / 2;</b>
+<b class="nc">&nbsp;					this.mapHeightInPixels = mapHeightInPixels / 2 + tileHeight / 2;</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		Element properties = root.getChildByName(&quot;properties&quot;);</b>
+<b class="pc">&nbsp;		if (properties != null) {</b>
+<b class="nc">&nbsp;			loadProperties(map.getProperties(), properties);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		Array&lt;Element&gt; tilesets = root.getChildrenByName(&quot;tileset&quot;);</b>
+<b class="fc">&nbsp;		for (Element element : tilesets) {</b>
+<b class="fc">&nbsp;			loadTileSet(element, tmxFile, imageResolver);</b>
+<b class="fc">&nbsp;			root.removeChild(element);</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		for (int i = 0, j = root.getChildCount(); i &lt; j; i++) {</b>
+<b class="fc">&nbsp;			Element element = root.getChild(i);</b>
+<b class="fc">&nbsp;			loadLayer(map, map.getLayers(), element, tmxFile, imageResolver);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// update hierarchical parallax scrolling factors
+&nbsp;		// in Tiled the final parallax scrolling factor of a layer is the multiplication of its factor with all its parents
+&nbsp;		// 1) get top level groups
+<b class="fc">&nbsp;		final Array&lt;MapGroupLayer&gt; groups = map.getLayers().getByType(MapGroupLayer.class);</b>
+<b class="pc">&nbsp;		while (groups.notEmpty()) {</b>
+<b class="nc">&nbsp;			final MapGroupLayer group = groups.first();</b>
+<b class="nc">&nbsp;			groups.removeIndex(0);</b>
+&nbsp;
+<b class="nc">&nbsp;			for (MapLayer child : group.getLayers()) {</b>
+<b class="nc">&nbsp;				child.setParallaxX(child.getParallaxX() * group.getParallaxX());</b>
+<b class="nc">&nbsp;				child.setParallaxY(child.getParallaxY() * group.getParallaxY());</b>
+<b class="nc">&nbsp;				if (child instanceof MapGroupLayer) {</b>
+&nbsp;					// 2) handle any child groups
+<b class="nc">&nbsp;					groups.add((MapGroupLayer)child);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="pc">&nbsp;		for (Runnable runnable : runOnEndOfLoadTiled) {</b>
+<b class="nc">&nbsp;			runnable.run();</b>
+<b class="nc">&nbsp;		}</b>
+<b class="fc">&nbsp;		runOnEndOfLoadTiled = null;</b>
+&nbsp;
+<b class="fc">&nbsp;		return map;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void loadLayer (TiledMap map, MapLayers parentLayers, Element element, FileHandle tmxFile,
+&nbsp;		ImageResolver imageResolver) {
+<b class="fc">&nbsp;		String name = element.getName();</b>
+<b class="pc">&nbsp;		if (name.equals(&quot;group&quot;)) {</b>
+<b class="nc">&nbsp;			loadLayerGroup(map, parentLayers, element, tmxFile, imageResolver);</b>
+<b class="pc">&nbsp;		} else if (name.equals(&quot;layer&quot;)) {</b>
+<b class="fc">&nbsp;			loadTileLayer(map, parentLayers, element);</b>
+<b class="nc">&nbsp;		} else if (name.equals(&quot;objectgroup&quot;)) {</b>
+<b class="nc">&nbsp;			loadObjectGroup(map, parentLayers, element);</b>
+<b class="nc">&nbsp;		} else if (name.equals(&quot;imagelayer&quot;)) {</b>
+<b class="nc">&nbsp;			loadImageLayer(map, parentLayers, element, tmxFile, imageResolver);</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadLayerGroup (TiledMap map, MapLayers parentLayers, Element element, FileHandle tmxFile,
+&nbsp;		ImageResolver imageResolver) {
+<b class="nc">&nbsp;		if (element.getName().equals(&quot;group&quot;)) {</b>
+<b class="nc">&nbsp;			MapGroupLayer groupLayer = new MapGroupLayer();</b>
+<b class="nc">&nbsp;			loadBasicLayerInfo(groupLayer, element);</b>
+&nbsp;
+<b class="nc">&nbsp;			Element properties = element.getChildByName(&quot;properties&quot;);</b>
+<b class="nc">&nbsp;			if (properties != null) {</b>
+<b class="nc">&nbsp;				loadProperties(groupLayer.getProperties(), properties);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0, j = element.getChildCount(); i &lt; j; i++) {</b>
+<b class="nc">&nbsp;				Element child = element.getChild(i);</b>
+<b class="nc">&nbsp;				loadLayer(map, groupLayer.getLayers(), child, tmxFile, imageResolver);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			for (MapLayer layer : groupLayer.getLayers()) {</b>
+<b class="nc">&nbsp;				layer.setParent(groupLayer);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			parentLayers.add(groupLayer);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadTileLayer (TiledMap map, MapLayers parentLayers, Element element) {
+<b class="pc">&nbsp;		if (element.getName().equals(&quot;layer&quot;)) {</b>
+<b class="fc">&nbsp;			int width = element.getIntAttribute(&quot;width&quot;, 0);</b>
+<b class="fc">&nbsp;			int height = element.getIntAttribute(&quot;height&quot;, 0);</b>
+<b class="fc">&nbsp;			int tileWidth = map.getProperties().get(&quot;tilewidth&quot;, Integer.class);</b>
+<b class="fc">&nbsp;			int tileHeight = map.getProperties().get(&quot;tileheight&quot;, Integer.class);</b>
+<b class="fc">&nbsp;			TiledMapTileLayer layer = new TiledMapTileLayer(width, height, tileWidth, tileHeight);</b>
+&nbsp;
+<b class="fc">&nbsp;			loadBasicLayerInfo(layer, element);</b>
+&nbsp;
+<b class="fc">&nbsp;			int[] ids = getTileIds(element, width, height);</b>
+<b class="fc">&nbsp;			TiledMapTileSets tilesets = map.getTileSets();</b>
+<b class="fc">&nbsp;			for (int y = 0; y &lt; height; y++) {</b>
+<b class="fc">&nbsp;				for (int x = 0; x &lt; width; x++) {</b>
+<b class="fc">&nbsp;					int id = ids[y * width + x];</b>
+<b class="fc">&nbsp;					boolean flipHorizontally = ((id &amp; FLAG_FLIP_HORIZONTALLY) != 0);</b>
+<b class="fc">&nbsp;					boolean flipVertically = ((id &amp; FLAG_FLIP_VERTICALLY) != 0);</b>
+<b class="fc">&nbsp;					boolean flipDiagonally = ((id &amp; FLAG_FLIP_DIAGONALLY) != 0);</b>
+&nbsp;
+<b class="fc">&nbsp;					TiledMapTile tile = tilesets.getTile(id &amp; ~MASK_CLEAR);</b>
+<b class="fc">&nbsp;					if (tile != null) {</b>
+<b class="fc">&nbsp;						Cell cell = createTileLayerCell(flipHorizontally, flipVertically, flipDiagonally);</b>
+<b class="fc">&nbsp;						cell.setTile(tile);</b>
+<b class="pc">&nbsp;						layer.setCell(x, flipY ? height - 1 - y : y, cell);</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;
+<b class="fc">&nbsp;			Element properties = element.getChildByName(&quot;properties&quot;);</b>
+<b class="fc">&nbsp;			if (properties != null) {</b>
+<b class="fc">&nbsp;				loadProperties(layer.getProperties(), properties);</b>
+&nbsp;			}
+<b class="fc">&nbsp;			parentLayers.add(layer);</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadObjectGroup (TiledMap map, MapLayers parentLayers, Element element) {
+<b class="nc">&nbsp;		if (element.getName().equals(&quot;objectgroup&quot;)) {</b>
+<b class="nc">&nbsp;			MapLayer layer = new MapLayer();</b>
+<b class="nc">&nbsp;			loadBasicLayerInfo(layer, element);</b>
+<b class="nc">&nbsp;			Element properties = element.getChildByName(&quot;properties&quot;);</b>
+<b class="nc">&nbsp;			if (properties != null) {</b>
+<b class="nc">&nbsp;				loadProperties(layer.getProperties(), properties);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			for (Element objectElement : element.getChildrenByName(&quot;object&quot;)) {</b>
+<b class="nc">&nbsp;				loadObject(map, layer, objectElement);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			parentLayers.add(layer);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadImageLayer (TiledMap map, MapLayers parentLayers, Element element, FileHandle tmxFile,
+&nbsp;		ImageResolver imageResolver) {
+<b class="nc">&nbsp;		if (element.getName().equals(&quot;imagelayer&quot;)) {</b>
+<b class="nc">&nbsp;			float x = 0;</b>
+<b class="nc">&nbsp;			float y = 0;</b>
+<b class="nc">&nbsp;			if (element.hasAttribute(&quot;offsetx&quot;)) {</b>
+<b class="nc">&nbsp;				x = Float.parseFloat(element.getAttribute(&quot;offsetx&quot;, &quot;0&quot;));</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				x = Float.parseFloat(element.getAttribute(&quot;x&quot;, &quot;0&quot;));</b>
+&nbsp;			}
+<b class="nc">&nbsp;			if (element.hasAttribute(&quot;offsety&quot;)) {</b>
+<b class="nc">&nbsp;				y = Float.parseFloat(element.getAttribute(&quot;offsety&quot;, &quot;0&quot;));</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				y = Float.parseFloat(element.getAttribute(&quot;y&quot;, &quot;0&quot;));</b>
+&nbsp;			}
+<b class="nc">&nbsp;			if (flipY) y = mapHeightInPixels - y;</b>
+&nbsp;
+<b class="nc">&nbsp;			TextureRegion texture = null;</b>
+&nbsp;
+<b class="nc">&nbsp;			Element image = element.getChildByName(&quot;image&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (image != null) {</b>
+<b class="nc">&nbsp;				String source = image.getAttribute(&quot;source&quot;);</b>
+<b class="nc">&nbsp;				FileHandle handle = getRelativeFileHandle(tmxFile, source);</b>
+<b class="nc">&nbsp;				texture = imageResolver.getImage(handle.path());</b>
+<b class="nc">&nbsp;				y -= texture.getRegionHeight();</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			TiledMapImageLayer layer = new TiledMapImageLayer(texture, x, y);</b>
+&nbsp;
+<b class="nc">&nbsp;			loadBasicLayerInfo(layer, element);</b>
+&nbsp;
+<b class="nc">&nbsp;			Element properties = element.getChildByName(&quot;properties&quot;);</b>
+<b class="nc">&nbsp;			if (properties != null) {</b>
+<b class="nc">&nbsp;				loadProperties(layer.getProperties(), properties);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			parentLayers.add(layer);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadBasicLayerInfo (MapLayer layer, Element element) {
+<b class="fc">&nbsp;		String name = element.getAttribute(&quot;name&quot;, null);</b>
+<b class="fc">&nbsp;		float opacity = Float.parseFloat(element.getAttribute(&quot;opacity&quot;, &quot;1.0&quot;));</b>
+<b class="pc">&nbsp;		boolean visible = element.getIntAttribute(&quot;visible&quot;, 1) == 1;</b>
+<b class="fc">&nbsp;		float offsetX = element.getFloatAttribute(&quot;offsetx&quot;, 0);</b>
+<b class="fc">&nbsp;		float offsetY = element.getFloatAttribute(&quot;offsety&quot;, 0);</b>
+<b class="fc">&nbsp;		float parallaxX = element.getFloatAttribute(&quot;parallaxx&quot;, 1f);</b>
+<b class="fc">&nbsp;		float parallaxY = element.getFloatAttribute(&quot;parallaxy&quot;, 1f);</b>
+&nbsp;
+<b class="fc">&nbsp;		layer.setName(name);</b>
+<b class="fc">&nbsp;		layer.setOpacity(opacity);</b>
+<b class="fc">&nbsp;		layer.setVisible(visible);</b>
+<b class="fc">&nbsp;		layer.setOffsetX(offsetX);</b>
+<b class="fc">&nbsp;		layer.setOffsetY(offsetY);</b>
+<b class="fc">&nbsp;		layer.setParallaxX(parallaxX);</b>
+<b class="fc">&nbsp;		layer.setParallaxY(parallaxY);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadObject (TiledMap map, MapLayer layer, Element element) {
+<b class="nc">&nbsp;		loadObject(map, layer.getObjects(), element, mapHeightInPixels);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadObject (TiledMap map, TiledMapTile tile, Element element) {
+<b class="nc">&nbsp;		loadObject(map, tile.getObjects(), element, tile.getTextureRegion().getRegionHeight());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadObject (TiledMap map, MapObjects objects, Element element, float heightInPixels) {
+<b class="nc">&nbsp;		if (element.getName().equals(&quot;object&quot;)) {</b>
+<b class="nc">&nbsp;			MapObject object = null;</b>
+&nbsp;
+<b class="nc">&nbsp;			float scaleX = convertObjectToTileSpace ? 1.0f / mapTileWidth : 1.0f;</b>
+<b class="nc">&nbsp;			float scaleY = convertObjectToTileSpace ? 1.0f / mapTileHeight : 1.0f;</b>
+&nbsp;
+<b class="nc">&nbsp;			float x = element.getFloatAttribute(&quot;x&quot;, 0) * scaleX;</b>
+<b class="nc">&nbsp;			float y = (flipY ? (heightInPixels - element.getFloatAttribute(&quot;y&quot;, 0)) : element.getFloatAttribute(&quot;y&quot;, 0)) * scaleY;</b>
+&nbsp;
+<b class="nc">&nbsp;			float width = element.getFloatAttribute(&quot;width&quot;, 0) * scaleX;</b>
+<b class="nc">&nbsp;			float height = element.getFloatAttribute(&quot;height&quot;, 0) * scaleY;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (element.getChildCount() &gt; 0) {</b>
+<b class="nc">&nbsp;				Element child = null;</b>
+<b class="nc">&nbsp;				if ((child = element.getChildByName(&quot;polygon&quot;)) != null) {</b>
+<b class="nc">&nbsp;					String[] points = child.getAttribute(&quot;points&quot;).split(&quot; &quot;);</b>
+<b class="nc">&nbsp;					float[] vertices = new float[points.length * 2];</b>
+<b class="nc">&nbsp;					for (int i = 0; i &lt; points.length; i++) {</b>
+<b class="nc">&nbsp;						String[] point = points[i].split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;						vertices[i * 2] = Float.parseFloat(point[0]) * scaleX;</b>
+<b class="nc">&nbsp;						vertices[i * 2 + 1] = Float.parseFloat(point[1]) * scaleY * (flipY ? -1 : 1);</b>
+&nbsp;					}
+<b class="nc">&nbsp;					Polygon polygon = new Polygon(vertices);</b>
+<b class="nc">&nbsp;					polygon.setPosition(x, y);</b>
+<b class="nc">&nbsp;					object = new PolygonMapObject(polygon);</b>
+<b class="nc">&nbsp;				} else if ((child = element.getChildByName(&quot;polyline&quot;)) != null) {</b>
+<b class="nc">&nbsp;					String[] points = child.getAttribute(&quot;points&quot;).split(&quot; &quot;);</b>
+<b class="nc">&nbsp;					float[] vertices = new float[points.length * 2];</b>
+<b class="nc">&nbsp;					for (int i = 0; i &lt; points.length; i++) {</b>
+<b class="nc">&nbsp;						String[] point = points[i].split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;						vertices[i * 2] = Float.parseFloat(point[0]) * scaleX;</b>
+<b class="nc">&nbsp;						vertices[i * 2 + 1] = Float.parseFloat(point[1]) * scaleY * (flipY ? -1 : 1);</b>
+&nbsp;					}
+<b class="nc">&nbsp;					Polyline polyline = new Polyline(vertices);</b>
+<b class="nc">&nbsp;					polyline.setPosition(x, y);</b>
+<b class="nc">&nbsp;					object = new PolylineMapObject(polyline);</b>
+<b class="nc">&nbsp;				} else if ((child = element.getChildByName(&quot;ellipse&quot;)) != null) {</b>
+<b class="nc">&nbsp;					object = new EllipseMapObject(x, flipY ? y - height : y, width, height);</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			if (object == null) {</b>
+<b class="nc">&nbsp;				String gid = null;</b>
+<b class="nc">&nbsp;				if ((gid = element.getAttribute(&quot;gid&quot;, null)) != null) {</b>
+<b class="nc">&nbsp;					int id = (int)Long.parseLong(gid);</b>
+<b class="nc">&nbsp;					boolean flipHorizontally = ((id &amp; FLAG_FLIP_HORIZONTALLY) != 0);</b>
+<b class="nc">&nbsp;					boolean flipVertically = ((id &amp; FLAG_FLIP_VERTICALLY) != 0);</b>
+&nbsp;
+<b class="nc">&nbsp;					TiledMapTile tile = map.getTileSets().getTile(id &amp; ~MASK_CLEAR);</b>
+<b class="nc">&nbsp;					TiledMapTileMapObject tiledMapTileMapObject = new TiledMapTileMapObject(tile, flipHorizontally, flipVertically);</b>
+<b class="nc">&nbsp;					TextureRegion textureRegion = tiledMapTileMapObject.getTextureRegion();</b>
+<b class="nc">&nbsp;					tiledMapTileMapObject.getProperties().put(&quot;gid&quot;, id);</b>
+<b class="nc">&nbsp;					tiledMapTileMapObject.setX(x);</b>
+<b class="nc">&nbsp;					tiledMapTileMapObject.setY(flipY ? y : y - height);</b>
+<b class="nc">&nbsp;					float objectWidth = element.getFloatAttribute(&quot;width&quot;, textureRegion.getRegionWidth());</b>
+<b class="nc">&nbsp;					float objectHeight = element.getFloatAttribute(&quot;height&quot;, textureRegion.getRegionHeight());</b>
+<b class="nc">&nbsp;					tiledMapTileMapObject.setScaleX(scaleX * (objectWidth / textureRegion.getRegionWidth()));</b>
+<b class="nc">&nbsp;					tiledMapTileMapObject.setScaleY(scaleY * (objectHeight / textureRegion.getRegionHeight()));</b>
+<b class="nc">&nbsp;					tiledMapTileMapObject.setRotation(element.getFloatAttribute(&quot;rotation&quot;, 0));</b>
+<b class="nc">&nbsp;					object = tiledMapTileMapObject;</b>
+<b class="nc">&nbsp;				} else {</b>
+<b class="nc">&nbsp;					object = new RectangleMapObject(x, flipY ? y - height : y, width, height);</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			object.setName(element.getAttribute(&quot;name&quot;, null));</b>
+<b class="nc">&nbsp;			String rotation = element.getAttribute(&quot;rotation&quot;, null);</b>
+<b class="nc">&nbsp;			if (rotation != null) {</b>
+<b class="nc">&nbsp;				object.getProperties().put(&quot;rotation&quot;, Float.parseFloat(rotation));</b>
+&nbsp;			}
+<b class="nc">&nbsp;			String type = element.getAttribute(&quot;type&quot;, null);</b>
+<b class="nc">&nbsp;			if (type != null) {</b>
+<b class="nc">&nbsp;				object.getProperties().put(&quot;type&quot;, type);</b>
+&nbsp;			}
+<b class="nc">&nbsp;			int id = element.getIntAttribute(&quot;id&quot;, 0);</b>
+<b class="nc">&nbsp;			if (id != 0) {</b>
+<b class="nc">&nbsp;				object.getProperties().put(&quot;id&quot;, id);</b>
+&nbsp;			}
+<b class="nc">&nbsp;			object.getProperties().put(&quot;x&quot;, x);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (object instanceof TiledMapTileMapObject) {</b>
+<b class="nc">&nbsp;				object.getProperties().put(&quot;y&quot;, y);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				object.getProperties().put(&quot;y&quot;, (flipY ? y - height : y));</b>
+&nbsp;			}
+<b class="nc">&nbsp;			object.getProperties().put(&quot;width&quot;, width);</b>
+<b class="nc">&nbsp;			object.getProperties().put(&quot;height&quot;, height);</b>
+<b class="nc">&nbsp;			object.setVisible(element.getIntAttribute(&quot;visible&quot;, 1) == 1);</b>
+<b class="nc">&nbsp;			Element properties = element.getChildByName(&quot;properties&quot;);</b>
+<b class="nc">&nbsp;			if (properties != null) {</b>
+<b class="nc">&nbsp;				loadProperties(object.getProperties(), properties);</b>
+&nbsp;			}
+<b class="nc">&nbsp;			idToObject.put(id, object);</b>
+<b class="nc">&nbsp;			objects.add(object);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void loadProperties (final MapProperties properties, Element element) {
+<b class="pc">&nbsp;		if (element == null) return;</b>
+<b class="pc">&nbsp;		if (element.getName().equals(&quot;properties&quot;)) {</b>
+<b class="fc">&nbsp;			for (Element property : element.getChildrenByName(&quot;property&quot;)) {</b>
+<b class="fc">&nbsp;				final String name = property.getAttribute(&quot;name&quot;, null);</b>
+<b class="fc">&nbsp;				String value = property.getAttribute(&quot;value&quot;, null);</b>
+<b class="fc">&nbsp;				String type = property.getAttribute(&quot;type&quot;, null);</b>
+<b class="pc">&nbsp;				if (value == null) {</b>
+<b class="nc">&nbsp;					value = property.getText();</b>
+&nbsp;				}
+<b class="pc">&nbsp;				if (type != null &amp;&amp; type.equals(&quot;object&quot;)) {</b>
+&nbsp;					// Wait until the end of [loadTiledMap] to fetch the object
+&nbsp;					try {
+&nbsp;						// Value should be the id of the object being pointed to
+<b class="nc">&nbsp;						final int id = Integer.parseInt(value);</b>
+&nbsp;						// Create [Runnable] to fetch object and add it to props
+<b class="nc">&nbsp;						Runnable fetch = new Runnable() {</b>
+&nbsp;							@Override
+&nbsp;							public void run () {
+&nbsp;								MapObject object = idToObject.get(id);
+&nbsp;								properties.put(name, object);
+&nbsp;							}
+&nbsp;						};
+&nbsp;						// [Runnable] should not run until the end of [loadTiledMap]
+<b class="nc">&nbsp;						runOnEndOfLoadTiled.add(fetch);</b>
+<b class="nc">&nbsp;					} catch (Exception exception) {</b>
+<b class="nc">&nbsp;						throw new GdxRuntimeException(</b>
+&nbsp;							&quot;Error parsing property [\&quot; + name + \&quot;] of type \&quot;object\&quot; with value: [&quot; + value + &quot;]&quot;, exception);
+<b class="nc">&nbsp;					}</b>
+&nbsp;				} else {
+<b class="fc">&nbsp;					Object castValue = castProperty(name, value, type);</b>
+<b class="fc">&nbsp;					properties.put(name, castValue);</b>
+&nbsp;				}
+<b class="fc">&nbsp;			}</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected Object castProperty (String name, String value, String type) {
+<b class="pc">&nbsp;		if (type == null) {</b>
+<b class="fc">&nbsp;			return value;</b>
+<b class="nc">&nbsp;		} else if (type.equals(&quot;int&quot;)) {</b>
+<b class="nc">&nbsp;			return Integer.valueOf(value);</b>
+<b class="nc">&nbsp;		} else if (type.equals(&quot;float&quot;)) {</b>
+<b class="nc">&nbsp;			return Float.valueOf(value);</b>
+<b class="nc">&nbsp;		} else if (type.equals(&quot;bool&quot;)) {</b>
+<b class="nc">&nbsp;			return Boolean.valueOf(value);</b>
+<b class="nc">&nbsp;		} else if (type.equals(&quot;color&quot;)) {</b>
+&nbsp;			// Tiled uses the format #AARRGGBB
+<b class="nc">&nbsp;			String opaqueColor = value.substring(3);</b>
+<b class="nc">&nbsp;			String alpha = value.substring(1, 3);</b>
+<b class="nc">&nbsp;			return Color.valueOf(opaqueColor + alpha);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			throw new GdxRuntimeException(</b>
+&nbsp;				&quot;Wrong type given for property &quot; + name + &quot;, given : &quot; + type + &quot;, supported : string, bool, int, float, color&quot;);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Cell createTileLayerCell (boolean flipHorizontally, boolean flipVertically, boolean flipDiagonally) {
+<b class="fc">&nbsp;		Cell cell = new Cell();</b>
+<b class="fc">&nbsp;		if (flipDiagonally) {</b>
+<b class="fc">&nbsp;			if (flipHorizontally &amp;&amp; flipVertically) {</b>
+<b class="fc">&nbsp;				cell.setFlipHorizontally(true);</b>
+<b class="fc">&nbsp;				cell.setRotation(Cell.ROTATE_270);</b>
+<b class="fc">&nbsp;			} else if (flipHorizontally) {</b>
+<b class="fc">&nbsp;				cell.setRotation(Cell.ROTATE_270);</b>
+<b class="pc">&nbsp;			} else if (flipVertically) {</b>
+<b class="fc">&nbsp;				cell.setRotation(Cell.ROTATE_90);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				cell.setFlipVertically(true);</b>
+<b class="nc">&nbsp;				cell.setRotation(Cell.ROTATE_270);</b>
+&nbsp;			}
+&nbsp;		} else {
+<b class="fc">&nbsp;			cell.setFlipHorizontally(flipHorizontally);</b>
+<b class="fc">&nbsp;			cell.setFlipVertically(flipVertically);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		return cell;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public int[] getTileIds (Element element, int width, int height) {
+<b class="fc">&nbsp;		Element data = element.getChildByName(&quot;data&quot;);</b>
+<b class="fc">&nbsp;		String encoding = data.getAttribute(&quot;encoding&quot;, null);</b>
+<b class="pc">&nbsp;		if (encoding == null) { // no &#39;encoding&#39; attribute means that the encoding is XML</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Unsupported encoding (XML) for TMX Layer Data&quot;);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		int[] ids = new int[width * height];</b>
+<b class="pc">&nbsp;		if (encoding.equals(&quot;csv&quot;)) {</b>
+<b class="fc">&nbsp;			String[] array = data.getText().split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;			for (int i = 0; i &lt; array.length; i++)</b>
+<b class="fc">&nbsp;				ids[i] = (int)Long.parseLong(array[i].trim());</b>
+<b class="fc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			if (true) if (encoding.equals(&quot;base64&quot;)) {</b>
+<b class="nc">&nbsp;				InputStream is = null;</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					String compression = data.getAttribute(&quot;compression&quot;, null);</b>
+<b class="nc">&nbsp;					byte[] bytes = Base64Coder.decode(data.getText());</b>
+<b class="nc">&nbsp;					if (compression == null)</b>
+<b class="nc">&nbsp;						is = new ByteArrayInputStream(bytes);</b>
+<b class="nc">&nbsp;					else if (compression.equals(&quot;gzip&quot;))</b>
+<b class="nc">&nbsp;						is = new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(bytes), bytes.length));</b>
+<b class="nc">&nbsp;					else if (compression.equals(&quot;zlib&quot;))</b>
+<b class="nc">&nbsp;						is = new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(bytes)));</b>
+&nbsp;					else
+<b class="nc">&nbsp;						throw new GdxRuntimeException(&quot;Unrecognised compression (&quot; + compression + &quot;) for TMX Layer Data&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;					byte[] temp = new byte[4];</b>
+<b class="nc">&nbsp;					for (int y = 0; y &lt; height; y++) {</b>
+<b class="nc">&nbsp;						for (int x = 0; x &lt; width; x++) {</b>
+<b class="nc">&nbsp;							int read = is.read(temp);</b>
+<b class="nc">&nbsp;							while (read &lt; temp.length) {</b>
+<b class="nc">&nbsp;								int curr = is.read(temp, read, temp.length - read);</b>
+<b class="nc">&nbsp;								if (curr == -1) break;</b>
+<b class="nc">&nbsp;								read += curr;</b>
+<b class="nc">&nbsp;							}</b>
+<b class="nc">&nbsp;							if (read != temp.length)</b>
+<b class="nc">&nbsp;								throw new GdxRuntimeException(&quot;Error Reading TMX Layer Data: Premature end of tile data&quot;);</b>
+<b class="nc">&nbsp;							ids[y * width + x] = unsignedByteToInt(temp[0]) | unsignedByteToInt(temp[1]) &lt;&lt; 8</b>
+<b class="nc">&nbsp;								| unsignedByteToInt(temp[2]) &lt;&lt; 16 | unsignedByteToInt(temp[3]) &lt;&lt; 24;</b>
+&nbsp;						}
+&nbsp;					}
+<b class="nc">&nbsp;				} catch (IOException e) {</b>
+<b class="nc">&nbsp;					throw new GdxRuntimeException(&quot;Error Reading TMX Layer Data - IOException: &quot; + e.getMessage());</b>
+&nbsp;				} finally {
+<b class="nc">&nbsp;					StreamUtils.closeQuietly(is);</b>
+<b class="nc">&nbsp;				}</b>
+<b class="nc">&nbsp;			} else {</b>
+&nbsp;				// any other value of &#39;encoding&#39; is one we&#39;re not aware of, probably a feature of a future version of Tiled
+&nbsp;				// or another editor
+<b class="nc">&nbsp;				throw new GdxRuntimeException(&quot;Unrecognised encoding (&quot; + encoding + &quot;) for TMX Layer Data&quot;);</b>
+&nbsp;			}
+&nbsp;		}
+<b class="fc">&nbsp;		return ids;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static int unsignedByteToInt (byte b) {
+<b class="nc">&nbsp;		return b &amp; 0xFF;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static FileHandle getRelativeFileHandle (FileHandle file, String path) {
+<b class="fc">&nbsp;		StringTokenizer tokenizer = new StringTokenizer(path, &quot;\\/&quot;);</b>
+<b class="fc">&nbsp;		FileHandle result = file.parent();</b>
+<b class="fc">&nbsp;		while (tokenizer.hasMoreElements()) {</b>
+<b class="fc">&nbsp;			String token = tokenizer.nextToken();</b>
+<b class="pc">&nbsp;			if (token.equals(&quot;..&quot;))</b>
+<b class="nc">&nbsp;				result = result.parent();</b>
+&nbsp;			else {
+<b class="fc">&nbsp;				result = result.child(token);</b>
+&nbsp;			}
+<b class="fc">&nbsp;		}</b>
+<b class="fc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void loadTileSet (Element element, FileHandle tmxFile, ImageResolver imageResolver) {
+<b class="pc">&nbsp;		if (element.getName().equals(&quot;tileset&quot;)) {</b>
+<b class="fc">&nbsp;			int firstgid = element.getIntAttribute(&quot;firstgid&quot;, 1);</b>
+<b class="fc">&nbsp;			String imageSource = &quot;&quot;;</b>
+<b class="fc">&nbsp;			int imageWidth = 0;</b>
+<b class="fc">&nbsp;			int imageHeight = 0;</b>
+<b class="fc">&nbsp;			FileHandle image = null;</b>
+&nbsp;
+<b class="fc">&nbsp;			String source = element.getAttribute(&quot;source&quot;, null);</b>
+<b class="pc">&nbsp;			if (source != null) {</b>
+<b class="nc">&nbsp;				FileHandle tsx = getRelativeFileHandle(tmxFile, source);</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					element = xml.parse(tsx);</b>
+<b class="nc">&nbsp;					Element imageElement = element.getChildByName(&quot;image&quot;);</b>
+<b class="nc">&nbsp;					if (imageElement != null) {</b>
+<b class="nc">&nbsp;						imageSource = imageElement.getAttribute(&quot;source&quot;);</b>
+<b class="nc">&nbsp;						imageWidth = imageElement.getIntAttribute(&quot;width&quot;, 0);</b>
+<b class="nc">&nbsp;						imageHeight = imageElement.getIntAttribute(&quot;height&quot;, 0);</b>
+<b class="nc">&nbsp;						image = getRelativeFileHandle(tsx, imageSource);</b>
+&nbsp;					}
+<b class="nc">&nbsp;				} catch (SerializationException e) {</b>
+<b class="nc">&nbsp;					throw new GdxRuntimeException(&quot;Error parsing external tileset.&quot;);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else {</b>
+<b class="fc">&nbsp;				Element imageElement = element.getChildByName(&quot;image&quot;);</b>
+<b class="pc">&nbsp;				if (imageElement != null) {</b>
+<b class="fc">&nbsp;					imageSource = imageElement.getAttribute(&quot;source&quot;);</b>
+<b class="fc">&nbsp;					imageWidth = imageElement.getIntAttribute(&quot;width&quot;, 0);</b>
+<b class="fc">&nbsp;					imageHeight = imageElement.getIntAttribute(&quot;height&quot;, 0);</b>
+<b class="fc">&nbsp;					image = getRelativeFileHandle(tmxFile, imageSource);</b>
+&nbsp;				}
+&nbsp;			}
+<b class="fc">&nbsp;			String name = element.get(&quot;name&quot;, null);</b>
+<b class="fc">&nbsp;			int tilewidth = element.getIntAttribute(&quot;tilewidth&quot;, 0);</b>
+<b class="fc">&nbsp;			int tileheight = element.getIntAttribute(&quot;tileheight&quot;, 0);</b>
+<b class="fc">&nbsp;			int spacing = element.getIntAttribute(&quot;spacing&quot;, 0);</b>
+<b class="fc">&nbsp;			int margin = element.getIntAttribute(&quot;margin&quot;, 0);</b>
+&nbsp;
+<b class="fc">&nbsp;			Element offset = element.getChildByName(&quot;tileoffset&quot;);</b>
+<b class="fc">&nbsp;			int offsetX = 0;</b>
+<b class="fc">&nbsp;			int offsetY = 0;</b>
+<b class="pc">&nbsp;			if (offset != null) {</b>
+<b class="nc">&nbsp;				offsetX = offset.getIntAttribute(&quot;x&quot;, 0);</b>
+<b class="nc">&nbsp;				offsetY = offset.getIntAttribute(&quot;y&quot;, 0);</b>
+&nbsp;			}
+<b class="fc">&nbsp;			TiledMapTileSet tileSet = new TiledMapTileSet();</b>
+&nbsp;
+&nbsp;			// TileSet
+<b class="fc">&nbsp;			tileSet.setName(name);</b>
+<b class="fc">&nbsp;			final MapProperties tileSetProperties = tileSet.getProperties();</b>
+<b class="fc">&nbsp;			Element properties = element.getChildByName(&quot;properties&quot;);</b>
+<b class="pc">&nbsp;			if (properties != null) {</b>
+<b class="nc">&nbsp;				loadProperties(tileSetProperties, properties);</b>
+&nbsp;			}
+<b class="fc">&nbsp;			tileSetProperties.put(&quot;firstgid&quot;, firstgid);</b>
+&nbsp;
+&nbsp;			// Tiles
+<b class="fc">&nbsp;			Array&lt;Element&gt; tileElements = element.getChildrenByName(&quot;tile&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;			addStaticTiles(tmxFile, imageResolver, tileSet, element, tileElements, name, firstgid, tilewidth, tileheight, spacing,</b>
+&nbsp;				margin, source, offsetX, offsetY, imageSource, imageWidth, imageHeight, image);
+&nbsp;
+<b class="fc">&nbsp;			Array&lt;AnimatedTiledMapTile&gt; animatedTiles = new Array&lt;AnimatedTiledMapTile&gt;();</b>
+&nbsp;
+<b class="pc">&nbsp;			for (Element tileElement : tileElements) {</b>
+<b class="nc">&nbsp;				int localtid = tileElement.getIntAttribute(&quot;id&quot;, 0);</b>
+<b class="nc">&nbsp;				TiledMapTile tile = tileSet.getTile(firstgid + localtid);</b>
+<b class="nc">&nbsp;				if (tile != null) {</b>
+<b class="nc">&nbsp;					AnimatedTiledMapTile animatedTile = createAnimatedTile(tileSet, tile, tileElement, firstgid);</b>
+<b class="nc">&nbsp;					if (animatedTile != null) {</b>
+<b class="nc">&nbsp;						animatedTiles.add(animatedTile);</b>
+<b class="nc">&nbsp;						tile = animatedTile;</b>
+&nbsp;					}
+<b class="nc">&nbsp;					addTileProperties(tile, tileElement);</b>
+<b class="nc">&nbsp;					addTileObjectGroup(tile, tileElement);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+&nbsp;			// replace original static tiles by animated tiles
+<b class="pc">&nbsp;			for (AnimatedTiledMapTile animatedTile : animatedTiles) {</b>
+<b class="nc">&nbsp;				tileSet.putTile(animatedTile.getId(), animatedTile);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="fc">&nbsp;			map.getTileSets().addTileSet(tileSet);</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected abstract void addStaticTiles (FileHandle tmxFile, ImageResolver imageResolver, TiledMapTileSet tileset,
+&nbsp;		Element element, Array&lt;Element&gt; tileElements, String name, int firstgid, int tilewidth, int tileheight, int spacing,
+&nbsp;		int margin, String source, int offsetX, int offsetY, String imageSource, int imageWidth, int imageHeight, FileHandle image);
+&nbsp;
+&nbsp;	protected void addTileProperties (TiledMapTile tile, Element tileElement) {
+<b class="nc">&nbsp;		String terrain = tileElement.getAttribute(&quot;terrain&quot;, null);</b>
+<b class="nc">&nbsp;		if (terrain != null) {</b>
+<b class="nc">&nbsp;			tile.getProperties().put(&quot;terrain&quot;, terrain);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		String probability = tileElement.getAttribute(&quot;probability&quot;, null);</b>
+<b class="nc">&nbsp;		if (probability != null) {</b>
+<b class="nc">&nbsp;			tile.getProperties().put(&quot;probability&quot;, probability);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		String type = tileElement.getAttribute(&quot;type&quot;, null);</b>
+<b class="nc">&nbsp;		if (type != null) {</b>
+<b class="nc">&nbsp;			tile.getProperties().put(&quot;type&quot;, type);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		Element properties = tileElement.getChildByName(&quot;properties&quot;);</b>
+<b class="nc">&nbsp;		if (properties != null) {</b>
+<b class="nc">&nbsp;			loadProperties(tile.getProperties(), properties);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void addTileObjectGroup (TiledMapTile tile, Element tileElement) {
+<b class="nc">&nbsp;		Element objectgroupElement = tileElement.getChildByName(&quot;objectgroup&quot;);</b>
+<b class="nc">&nbsp;		if (objectgroupElement != null) {</b>
+<b class="nc">&nbsp;			for (Element objectElement : objectgroupElement.getChildrenByName(&quot;object&quot;)) {</b>
+<b class="nc">&nbsp;				loadObject(map, tile, objectElement);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected AnimatedTiledMapTile createAnimatedTile (TiledMapTileSet tileSet, TiledMapTile tile, Element tileElement,
+&nbsp;		int firstgid) {
+<b class="nc">&nbsp;		Element animationElement = tileElement.getChildByName(&quot;animation&quot;);</b>
+<b class="nc">&nbsp;		if (animationElement != null) {</b>
+<b class="nc">&nbsp;			Array&lt;StaticTiledMapTile&gt; staticTiles = new Array&lt;StaticTiledMapTile&gt;();</b>
+<b class="nc">&nbsp;			IntArray intervals = new IntArray();</b>
+<b class="nc">&nbsp;			for (Element frameElement : animationElement.getChildrenByName(&quot;frame&quot;)) {</b>
+<b class="nc">&nbsp;				staticTiles.add((StaticTiledMapTile)tileSet.getTile(firstgid + frameElement.getIntAttribute(&quot;tileid&quot;)));</b>
+<b class="nc">&nbsp;				intervals.add(frameElement.getIntAttribute(&quot;duration&quot;));</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			AnimatedTiledMapTile animatedTile = new AnimatedTiledMapTile(intervals, staticTiles);</b>
+<b class="nc">&nbsp;			animatedTile.setId(tile.getId());</b>
+<b class="nc">&nbsp;			return animatedTile;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addStaticTiledMapTile (TiledMapTileSet tileSet, TextureRegion textureRegion, int tileId, float offsetX,
+&nbsp;		float offsetY) {
+<b class="fc">&nbsp;		TiledMapTile tile = new StaticTiledMapTile(textureRegion);</b>
+<b class="fc">&nbsp;		tile.setId(tileId);</b>
+<b class="fc">&nbsp;		tile.setOffsetX(offsetX);</b>
+<b class="pc">&nbsp;		tile.setOffsetY(flipY ? -offsetY : offsetY);</b>
+<b class="fc">&nbsp;		tileSet.putTile(tileId, tile);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

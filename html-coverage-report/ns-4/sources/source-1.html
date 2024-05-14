@@ -1,0 +1,406 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > EndScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.screens</a>
+</div>
+
+<h1>Coverage Summary for Class: EndScreen (bytemusketeers.heslingtonhustle.screens)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EndScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/65)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">EndScreen$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">EndScreen$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/74)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.screens;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.HeslingtonHustle;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.Achievement;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.Leaderboard;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.Score;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.ScreenAdapter;
+&nbsp;import com.badlogic.gdx.graphics.Color;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.g2d.BitmapFont;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureRegion;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.EventListener;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.InputEvent;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Stage;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Label;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Table;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;import com.badlogic.gdx.utils.viewport.FitViewport;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.concurrent.atomic.AtomicInteger;
+&nbsp;
+&nbsp;/**
+&nbsp; * The {@link EndScreen} represents a {@link Screen} displayed at the end of the {@link HeslingtonHustle} game.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class EndScreen extends ScreenAdapter implements Screen {
+&nbsp;    /**
+&nbsp;     * The standard horizontal padding between columns, in pixels
+&nbsp;     */
+&nbsp;    public static final int HORIZONTAL_PADDING = 50;
+&nbsp;    /**
+&nbsp;     * The standard vertical padding around leader rows, in pixels
+&nbsp;     */
+&nbsp;    public static final int VERTICAL_PADDING = 30;
+&nbsp;    /**
+&nbsp;     * The LibGDX {@link Texture} of the &quot;Play Again&quot; button.
+&nbsp;     */
+<b class="nc">&nbsp;    private final Texture playAgainButton = new Texture(&quot;end_gui/play_button.png&quot;);</b>
+&nbsp;    /**
+&nbsp;     * The LibGDX {@link Texture} of the &quot;Exit&quot; button.
+&nbsp;     */
+<b class="nc">&nbsp;    private final Texture exitButton = new Texture(&quot;end_gui/exit_button.png&quot;);</b>
+<b class="nc">&nbsp;    private final Texture backgroundImage = new Texture(&quot;menu_gui/new_background_dark.png&quot;);</b>
+&nbsp;    /**
+&nbsp;     * The {@link BitmapFont} used for rendering the large {@link EndScreen} {@link String} objects.
+&nbsp;     */
+<b class="nc">&nbsp;    private final BitmapFont largeFont = new BitmapFont(Gdx.files.internal(&quot;font/WhitePeaberry.fnt&quot;));</b>
+&nbsp;    /**
+&nbsp;     * The {@link BitmapFont} used for rendering the small {@link EndScreen} {@link String} objects.
+&nbsp;     *
+&nbsp;     * @see Leaderboard
+&nbsp;     */
+<b class="nc">&nbsp;    private final BitmapFont smallFont = new BitmapFont(Gdx.files.internal(&quot;font/WhitePeaberry.fnt&quot;));</b>
+&nbsp;    /**
+&nbsp;     * The {@link Label.LabelStyle} used to inform all constructed LibGDX {@link Label}
+&nbsp;     * {@link com.badlogic.gdx.scenes.scene2d.Actor} objects.
+&nbsp;     */
+&nbsp;    private final Label.LabelStyle labelStyle;
+&nbsp;    /**
+&nbsp;     * The {@link Stage} object for organising on-{@link Screen} {@link com.badlogic.gdx.scenes.scene2d.Actor} objects.
+&nbsp;     */
+<b class="nc">&nbsp;    private final Stage stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));</b>
+&nbsp;    HeslingtonHustle game;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Construct an {@link EndScreen} with the assets. The {@link Score} of the
+&nbsp;     * {@link bytemusketeers.heslingtonhustle.entity.Player} is also registered and recorded as a &#39;high-score&#39; if
+&nbsp;     * appropriate.
+&nbsp;     *
+&nbsp;     * @param game         The parental {@link com.badlogic.gdx.Game} reference
+&nbsp;     * @param score        The final {@link com.badlogic.gdx.Game} score
+&nbsp;     * @param achievements Array of {@link Achievement} objects to display next to the {@link Leaderboard}
+&nbsp;     * @see Score
+&nbsp;     * @see Leaderboard
+&nbsp;     */
+<b class="nc">&nbsp;    public EndScreen(HeslingtonHustle game, Score score, Achievement[] achievements) {</b>
+<b class="nc">&nbsp;        this.game = game;</b>
+<b class="nc">&nbsp;        Table table = new Table();</b>
+<b class="nc">&nbsp;        table.setFillParent(true);</b>
+&nbsp;
+<b class="nc">&nbsp;        largeFont.getData().setScale(3);</b>
+<b class="nc">&nbsp;        smallFont.getData().setScale(2);</b>
+<b class="nc">&nbsp;        labelStyle = new Label.LabelStyle(largeFont, Color.WHITE);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (score.getScore() &gt;= 400) {</b>
+<b class="nc">&nbsp;            table.add(new Label(&quot;The End! That&#39;s a PASS: &quot; + score + &quot;.&quot;, labelStyle));</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            table.add(new Label(&quot;The End! That&#39;s a FAIL: &quot; + score + &quot;.&quot;, labelStyle));</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        table.row();</b>
+&nbsp;
+<b class="nc">&nbsp;        table.add(constructBodyTable(score, achievements));</b>
+<b class="nc">&nbsp;        table.row();</b>
+<b class="nc">&nbsp;        table.add(constructButtons(game)).padTop(VERTICAL_PADDING);</b>
+&nbsp;
+<b class="nc">&nbsp;        stage.addActor(table);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Construct a single {@link ImageButton} with the given {@link Texture} and {@link EventListener}-defined action.
+&nbsp;     *
+&nbsp;     * @param texture  The LibGDX {@link Texture} for the {@link ImageButton}
+&nbsp;     * @param listener The {@link EventListener} to be coupled to the button
+&nbsp;     * @return The constructed {@link ImageButton}
+&nbsp;     */
+&nbsp;    private static ImageButton createButton(Texture texture, EventListener listener) {
+<b class="nc">&nbsp;        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();</b>
+<b class="nc">&nbsp;        style.up = new TextureRegionDrawable(new TextureRegion(texture));</b>
+<b class="nc">&nbsp;        ImageButton button = new ImageButton(style);</b>
+&nbsp;
+<b class="nc">&nbsp;        button.addListener(listener);</b>
+<b class="nc">&nbsp;        return button;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Construct the &#39;Exit&#39; and &#39;Play Again&#39; buttons.
+&nbsp;     *
+&nbsp;     * @param game The parental {@link HeslingtonHustle} object, containing scaling information.
+&nbsp;     * @return A {@link Table} of the constructed buttons
+&nbsp;     */
+&nbsp;    private Table constructButtons(HeslingtonHustle game) {
+<b class="nc">&nbsp;        final int BUTTON_WIDTH = playAgainButton.getWidth() * 10 * (int) game.scaleFactorX;</b>
+<b class="nc">&nbsp;        final int BUTTON_HEIGHT = playAgainButton.getHeight() * 10 * (int) game.scaleFactorY;</b>
+&nbsp;
+<b class="nc">&nbsp;        final Table buttonsTable = new Table();</b>
+&nbsp;
+<b class="nc">&nbsp;        buttonsTable.add(createButton(exitButton, new ClickListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void clicked(InputEvent event, float x, float y) {
+<b class="nc">&nbsp;                game.gameData.buttonClickedSoundActivate();</b>
+<b class="nc">&nbsp;                game.screenManager.clearMemory();</b>
+<b class="nc">&nbsp;                dispose();</b>
+<b class="nc">&nbsp;                Gdx.app.exit();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        })).size(BUTTON_WIDTH, BUTTON_HEIGHT).padRight(HORIZONTAL_PADDING);</b>
+&nbsp;
+<b class="nc">&nbsp;        buttonsTable.add(createButton(playAgainButton, new ClickListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void clicked(InputEvent event, float x, float y) {
+<b class="nc">&nbsp;                game.gameData.buttonClickedSoundActivate();</b>
+<b class="nc">&nbsp;                game.create();</b>
+<b class="nc">&nbsp;                game.setup();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        })).size(BUTTON_WIDTH, BUTTON_HEIGHT);</b>
+&nbsp;
+<b class="nc">&nbsp;        return buttonsTable;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Construct the main body {@link Table} consisting of the {@link Leaderboard}, and, if applicable, the index of
+&nbsp;     * attained {@link Achievement} awards.
+&nbsp;     *
+&nbsp;     * @param score        The overall game {@link Score}
+&nbsp;     * @param achievements The {@link Achievement} trackers
+&nbsp;     * @return The constructed {@link Table}
+&nbsp;     */
+&nbsp;    private Table constructBodyTable(Score score, Achievement[] achievements) {
+<b class="nc">&nbsp;        AtomicInteger mentioned = new AtomicInteger();</b>
+<b class="nc">&nbsp;        StringBuilder string = new StringBuilder(&quot;Achievements: &quot;);</b>
+<b class="nc">&nbsp;        Leaderboard leaderboard = new Leaderboard(new Label.LabelStyle(smallFont, Color.WHITE));</b>
+&nbsp;
+<b class="nc">&nbsp;        leaderboard.registerScore(score);</b>
+<b class="nc">&nbsp;        leaderboard.populateBoard();</b>
+&nbsp;
+<b class="nc">&nbsp;        Arrays.stream(achievements).forEach(</b>
+&nbsp;                achievement -&gt; {
+<b class="nc">&nbsp;                    if (achievement.hasMetThreshold()) {</b>
+<b class="nc">&nbsp;                        string.append(achievement.getAnnotatedName());</b>
+<b class="nc">&nbsp;                        string.append(&quot;; &quot;);</b>
+<b class="nc">&nbsp;                        mentioned.getAndIncrement();</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        Table bodyTable = new Table();</b>
+<b class="nc">&nbsp;        bodyTable.row().height(16);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (mentioned.get() &gt; 0)</b>
+<b class="nc">&nbsp;            bodyTable.add(new Label(string.toString(), labelStyle));</b>
+&nbsp;        else
+<b class="nc">&nbsp;            bodyTable.add(new Label(&quot;No achievements earned in this session&quot;, labelStyle));</b>
+&nbsp;
+<b class="nc">&nbsp;        bodyTable.row();</b>
+<b class="nc">&nbsp;        bodyTable.add(leaderboard.getTable()).padTop(60).padBottom(VERTICAL_PADDING);</b>
+&nbsp;
+<b class="nc">&nbsp;        return bodyTable;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when the screen should render itself.
+&nbsp;     *
+&nbsp;     * @param delta The time in seconds since the last render.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void render(float delta) {
+<b class="nc">&nbsp;        ScreenUtils.clear(0f, 0f, 0f, 1);</b>
+<b class="nc">&nbsp;        game.batch.begin();</b>
+<b class="nc">&nbsp;        game.batch.draw(backgroundImage, 0, 0, game.screenWidth, game.screenHeight);</b>
+<b class="nc">&nbsp;        game.batch.end();</b>
+<b class="nc">&nbsp;        stage.draw();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when this screen becomes the current screen for a {@link com.badlogic.gdx.Game}.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void show() {
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(stage);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when this screen should release all resources.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        playAgainButton.dispose();</b>
+<b class="nc">&nbsp;        exitButton.dispose();</b>
+<b class="nc">&nbsp;        largeFont.dispose();</b>
+<b class="nc">&nbsp;        smallFont.dispose();</b>
+<b class="nc">&nbsp;        stage.dispose();</b>
+<b class="nc">&nbsp;        backgroundImage.dispose();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        stage.getViewport().update(width, height);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

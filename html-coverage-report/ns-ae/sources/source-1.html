@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IOUtil</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.mockito.internal.util.io</a>
+</div>
+
+<h1>Coverage Summary for Class: IOUtil (org.mockito.internal.util.io)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">IOUtil</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    46.2%
+  </span>
+  <span class="absValue">
+    (12/26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package org.mockito.internal.util.io;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.Closeable;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileWriter;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.io.PrintWriter;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.LinkedList;
+&nbsp;import java.util.List;
+&nbsp;import org.mockito.exceptions.base.MockitoException;
+&nbsp;
+&nbsp;public final class IOUtil {
+&nbsp;    public static void writeText(String text, File output) {
+&nbsp;        PrintWriter pw = null;
+&nbsp;
+&nbsp;        try {
+&nbsp;            pw = new PrintWriter(new FileWriter(output));
+&nbsp;            pw.write(text);
+&nbsp;        } catch (Exception var7) {
+&nbsp;            Exception e = var7;
+<b class="nc">&nbsp;            throw new MockitoException(&quot;Problems writing text to file: &quot; + output, e);</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            close(pw);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+<b class="nc">&nbsp;    public static Collection&lt;String&gt; readLines(InputStream is) {</b>
+<b class="nc">&nbsp;        List&lt;String&gt; out = new LinkedList();</b>
+<b class="nc">&nbsp;        BufferedReader r = new BufferedReader(new InputStreamReader(is));</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            String line;</b>
+<b class="fc">&nbsp;            while((line = r.readLine()) != null) {</b>
+&nbsp;                out.add(line);
+&nbsp;            }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;            return out;</b>
+&nbsp;        } catch (IOException var5) {
+<b class="nc">&nbsp;            IOException e = var5;</b>
+<b class="nc">&nbsp;            throw new MockitoException(&quot;Problems reading from: &quot; + is, e);</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public static void closeQuietly(Closeable closeable) {
+&nbsp;        try {
+&nbsp;            close(closeable);
+&nbsp;        } catch (MockitoException var2) {
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public static void close(Closeable closeable) {</b>
+<b class="nc">&nbsp;        if (closeable != null) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                closeable.close();</b>
+<b class="fc">&nbsp;            } catch (IOException var2) {</b>
+&nbsp;                IOException e = var2;
+&nbsp;                throw new MockitoException(&quot;Problems closing stream: &quot; + closeable, e);
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+<b class="pc">&nbsp;    private IOUtil() {</b>
+&nbsp;    }
+<b class="fc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

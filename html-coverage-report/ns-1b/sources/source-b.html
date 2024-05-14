@@ -1,0 +1,480 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SharedLibraryLoader</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: SharedLibraryLoader (com.badlogic.gdx.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SharedLibraryLoader</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    63.2%
+  </span>
+  <span class="absValue">
+    (12/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23.3%
+  </span>
+  <span class="absValue">
+    (27/116)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.5%
+  </span>
+  <span class="absValue">
+    (60/169)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package com.badlogic.gdx.utils;
+&nbsp;
+&nbsp;import java.io.Closeable;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileInputStream;
+&nbsp;import java.io.FileNotFoundException;
+&nbsp;import java.io.FileOutputStream;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.lang.reflect.Method;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Random;
+&nbsp;import java.util.UUID;
+&nbsp;import java.util.zip.CRC32;
+&nbsp;import java.util.zip.ZipEntry;
+&nbsp;import java.util.zip.ZipFile;
+&nbsp;
+&nbsp;public class SharedLibraryLoader {
+&nbsp;    public static boolean isWindows = System.getProperty(&quot;os.name&quot;).contains(&quot;Windows&quot;);
+&nbsp;    public static boolean isLinux = System.getProperty(&quot;os.name&quot;).contains(&quot;Linux&quot;);
+&nbsp;    public static boolean isMac = System.getProperty(&quot;os.name&quot;).contains(&quot;Mac&quot;);
+&nbsp;    public static boolean isIos = false;
+&nbsp;    public static boolean isAndroid = false;
+&nbsp;    public static boolean isARM = System.getProperty(&quot;os.arch&quot;).startsWith(&quot;arm&quot;) || System.getProperty(&quot;os.arch&quot;).startsWith(&quot;aarch64&quot;);
+&nbsp;    public static boolean is64Bit = System.getProperty(&quot;os.arch&quot;).contains(&quot;64&quot;) || System.getProperty(&quot;os.arch&quot;).startsWith(&quot;armv8&quot;);
+&nbsp;    private static final HashSet&lt;String&gt; loadedLibraries;
+&nbsp;    private static final Random random;
+&nbsp;    private String nativesJar;
+&nbsp;
+&nbsp;    public SharedLibraryLoader() {
+&nbsp;    }
+&nbsp;
+&nbsp;    static String randomUUID() {
+<b class="fc">&nbsp;        return (new UUID(random.nextLong(), random.nextLong())).toString();</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    public SharedLibraryLoader(String nativesJar) {</b>
+<b class="fc">&nbsp;        this.nativesJar = nativesJar;</b>
+<b class="pc">&nbsp;    }</b>
+<b class="pc">&nbsp;</b>
+&nbsp;    public String crc(InputStream input) {
+&nbsp;        if (input == null) {
+<b class="pc">&nbsp;            throw new IllegalArgumentException(&quot;input cannot be null.&quot;);</b>
+<b class="fc">&nbsp;        } else {</b>
+<b class="pc">&nbsp;            CRC32 crc = new CRC32();</b>
+<b class="nc">&nbsp;            byte[] buffer = new byte[4096];</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            try {</b>
+<b class="nc">&nbsp;                while(true) {</b>
+<b class="nc">&nbsp;                    int length = input.read(buffer);</b>
+&nbsp;                    if (length == -1) {
+<b class="pc">&nbsp;                        break;</b>
+<b class="nc">&nbsp;                    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;                    crc.update(buffer, 0, length);</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;            } catch (Exception var8) {</b>
+<b class="nc">&nbsp;            } finally {</b>
+&nbsp;                closeQuietly(input);
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            return Long.toString(crc.getValue(), 16);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String mapLibraryName(String libraryName) {
+<b class="fc">&nbsp;        if (isWindows) {</b>
+<b class="fc">&nbsp;            return libraryName + (is64Bit ? &quot;64.dll&quot; : &quot;.dll&quot;);</b>
+&nbsp;        } else if (isLinux) {
+&nbsp;            return &quot;lib&quot; + libraryName + (isARM ? &quot;arm&quot; : &quot;&quot;) + (is64Bit ? &quot;64.so&quot; : &quot;.so&quot;);
+<b class="nc">&nbsp;        } else {</b>
+&nbsp;            return isMac ? &quot;lib&quot; + libraryName + (isARM ? &quot;arm&quot; : &quot;&quot;) + (is64Bit ? &quot;64.dylib&quot; : &quot;.dylib&quot;) : libraryName;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void load(String libraryName) {</b>
+<b class="nc">&nbsp;        if (!isIos) {</b>
+<b class="nc">&nbsp;            Class var2 = SharedLibraryLoader.class;</b>
+&nbsp;            synchronized(SharedLibraryLoader.class) {
+&nbsp;                if (!isLoaded(libraryName)) {
+&nbsp;                    String platformName = this.mapLibraryName(libraryName);
+<b class="pc">&nbsp;</b>
+<b class="fc">&nbsp;                    try {</b>
+<b class="fc">&nbsp;                        if (isAndroid) {</b>
+&nbsp;                            System.loadLibrary(platformName);
+&nbsp;                        } else {
+<b class="fc">&nbsp;                            this.loadFile(platformName);</b>
+<b class="fc">&nbsp;                        }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;                        setLoaded(libraryName);</b>
+<b class="nc">&nbsp;                    } catch (Throwable var6) {</b>
+&nbsp;                        Throwable ex = var6;
+<b class="fc">&nbsp;                        throw new SharedLibraryLoadRuntimeException(&quot;Couldn&#39;t load shared library &#39;&quot; + platformName + &quot;&#39; for target: &quot; + (isAndroid ? &quot;Android&quot; : System.getProperty(&quot;os.name&quot;) + (isARM ? &quot;, ARM&quot; : &quot;&quot;) + (is64Bit ? &quot;, 64-bit&quot; : &quot;, 32-bit&quot;)), ex);</b>
+<b class="fc">&nbsp;                    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+<b class="pc">&nbsp;</b>
+<b class="pc">&nbsp;    private InputStream readFile(String path) {</b>
+<b class="nc">&nbsp;        if (this.nativesJar == null) {</b>
+<b class="nc">&nbsp;            InputStream input = SharedLibraryLoader.class.getResourceAsStream(&quot;/&quot; + path);</b>
+&nbsp;            if (input == null) {
+&nbsp;                throw new SharedLibraryLoadRuntimeException(&quot;Unable to read file for extraction: &quot; + path);
+&nbsp;            } else {
+&nbsp;                return input;
+&nbsp;            }
+&nbsp;        } else {
+<b class="pc">&nbsp;            try {</b>
+&nbsp;                ZipFile file = new ZipFile(this.nativesJar);
+<b class="fc">&nbsp;                ZipEntry entry = file.getEntry(path);</b>
+<b class="pc">&nbsp;                if (entry == null) {</b>
+<b class="fc">&nbsp;                    throw new SharedLibraryLoadRuntimeException(&quot;Couldn&#39;t find &#39;&quot; + path + &quot;&#39; in JAR: &quot; + this.nativesJar);</b>
+&nbsp;                } else {
+<b class="pc">&nbsp;                    return file.getInputStream(entry);</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            } catch (IOException var4) {
+<b class="fc">&nbsp;                IOException ex = var4;</b>
+<b class="fc">&nbsp;                throw new SharedLibraryLoadRuntimeException(&quot;Error reading &#39;&quot; + path + &quot;&#39; in JAR: &quot; + this.nativesJar, ex);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public File extractFile(String sourcePath, String dirName) throws IOException {
+<b class="fc">&nbsp;        File extractedFile;</b>
+<b class="fc">&nbsp;        try {</b>
+&nbsp;            String sourceCrc = this.crc(this.readFile(sourcePath));
+&nbsp;            if (dirName == null) {
+<b class="pc">&nbsp;                dirName = sourceCrc;</b>
+<b class="fc">&nbsp;            }</b>
+<b class="pc">&nbsp;</b>
+<b class="fc">&nbsp;            extractedFile = this.getExtractedFile(dirName, (new File(sourcePath)).getName());</b>
+&nbsp;            if (extractedFile == null) {
+&nbsp;                extractedFile = this.getExtractedFile(randomUUID(), (new File(sourcePath)).getName());
+&nbsp;                if (extractedFile == null) {
+&nbsp;                    throw new SharedLibraryLoadRuntimeException(&quot;Unable to find writable path to extract file. Is the user home directory writable?&quot;);
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            return this.extractFile(sourcePath, sourceCrc, extractedFile);</b>
+<b class="nc">&nbsp;        } catch (RuntimeException var5) {</b>
+<b class="nc">&nbsp;            RuntimeException ex = var5;</b>
+&nbsp;            extractedFile = new File(System.getProperty(&quot;java.library.path&quot;), sourcePath);
+&nbsp;            if (extractedFile.exists()) {
+&nbsp;                return extractedFile;
+&nbsp;            } else {
+&nbsp;                throw ex;
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void extractFileTo(String sourcePath, File dir) throws IOException {
+<b class="nc">&nbsp;        this.extractFile(sourcePath, this.crc(this.readFile(sourcePath)), new File(dir, (new File(sourcePath)).getName()));</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+<b class="nc">&nbsp;    private File getExtractedFile(String dirName, String fileName) {</b>
+<b class="nc">&nbsp;        File idealFile = new File(System.getProperty(&quot;java.io.tmpdir&quot;) + &quot;/libgdx&quot; + System.getProperty(&quot;user.name&quot;) + &quot;/&quot; + dirName, fileName);</b>
+<b class="nc">&nbsp;        if (this.canWrite(idealFile)) {</b>
+<b class="nc">&nbsp;            return idealFile;</b>
+&nbsp;        } else {
+&nbsp;            File file;
+<b class="nc">&nbsp;            try {</b>
+<b class="nc">&nbsp;                file = File.createTempFile(dirName, (String)null);</b>
+&nbsp;                if (file.delete()) {
+<b class="nc">&nbsp;                    file = new File(file, fileName);</b>
+<b class="nc">&nbsp;                    if (this.canWrite(file)) {</b>
+<b class="nc">&nbsp;                        return file;</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            } catch (IOException var5) {
+&nbsp;            }
+&nbsp;
+&nbsp;            file = new File(System.getProperty(&quot;user.home&quot;) + &quot;/.libgdx/&quot; + dirName, fileName);
+&nbsp;            if (this.canWrite(file)) {
+&nbsp;                return file;
+<b class="nc">&nbsp;            } else {</b>
+<b class="nc">&nbsp;                file = new File(&quot;.temp/&quot; + dirName, fileName);</b>
+&nbsp;                if (this.canWrite(file)) {
+&nbsp;                    return file;
+&nbsp;                } else {
+&nbsp;                    return System.getenv(&quot;APP_SANDBOX_CONTAINER_ID&quot;) != null ? idealFile : null;
+&nbsp;                }
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private boolean canWrite(File file) {
+&nbsp;        File parent = file.getParentFile();
+<b class="nc">&nbsp;        File testFile;</b>
+<b class="nc">&nbsp;        if (file.exists()) {</b>
+<b class="nc">&nbsp;            if (!file.canWrite() || !this.canExecute(file)) {</b>
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            testFile = new File(parent, randomUUID().toString());</b>
+&nbsp;        } else {
+&nbsp;            parent.mkdirs();
+<b class="nc">&nbsp;            if (!parent.isDirectory()) {</b>
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            testFile = file;</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        boolean var4;
+<b class="nc">&nbsp;        try {</b>
+&nbsp;            (new FileOutputStream(testFile)).close();
+<b class="nc">&nbsp;            if (!this.canExecute(testFile)) {</b>
+&nbsp;                var4 = false;
+&nbsp;                return var4;
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            var4 = true;</b>
+&nbsp;        } catch (Throwable var9) {
+<b class="nc">&nbsp;            boolean var5 = false;</b>
+<b class="nc">&nbsp;            return var5;</b>
+&nbsp;        } finally {
+<b class="nc">&nbsp;            testFile.delete();</b>
+&nbsp;        }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        return var4;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private boolean canExecute(File file) {
+<b class="nc">&nbsp;        try {</b>
+<b class="nc">&nbsp;            Method canExecute = File.class.getMethod(&quot;canExecute&quot;);</b>
+<b class="nc">&nbsp;            if ((Boolean)canExecute.invoke(file)) {</b>
+<b class="nc">&nbsp;                return true;</b>
+<b class="nc">&nbsp;            } else {</b>
+&nbsp;                Method setExecutable = File.class.getMethod(&quot;setExecutable&quot;, Boolean.TYPE, Boolean.TYPE);
+<b class="nc">&nbsp;                setExecutable.invoke(file, true, false);</b>
+<b class="nc">&nbsp;                return (Boolean)canExecute.invoke(file);</b>
+&nbsp;            }
+&nbsp;        } catch (Exception var4) {
+&nbsp;            return false;
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    private File extractFile(String sourcePath, String sourceCrc, File extractedFile) throws IOException {
+<b class="nc">&nbsp;        String extractedCrc = null;</b>
+<b class="nc">&nbsp;        if (extractedFile.exists()) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                extractedCrc = this.crc(new FileInputStream(extractedFile));</b>
+<b class="nc">&nbsp;            } catch (FileNotFoundException var13) {</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        if (extractedCrc == null || !extractedCrc.equals(sourceCrc)) {
+&nbsp;            InputStream input = null;
+<b class="fc">&nbsp;            FileOutputStream output = null;</b>
+<b class="pc">&nbsp;</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                input = this.readFile(sourcePath);</b>
+<b class="nc">&nbsp;                extractedFile.getParentFile().mkdirs();</b>
+<b class="fc">&nbsp;                output = new FileOutputStream(extractedFile);</b>
+&nbsp;                byte[] buffer = new byte[4096];
+&nbsp;
+&nbsp;                while(true) {
+<b class="pc">&nbsp;                    int length = input.read(buffer);</b>
+<b class="nc">&nbsp;                    if (length == -1) {</b>
+<b class="nc">&nbsp;                        break;</b>
+&nbsp;                    }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;                    output.write(buffer, 0, length);</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;            } catch (IOException var14) {</b>
+&nbsp;                IOException ex = var14;
+<b class="nc">&nbsp;                throw new SharedLibraryLoadRuntimeException(&quot;Error extracting file: &quot; + sourcePath + &quot;\nTo: &quot; + extractedFile.getAbsolutePath(), ex);</b>
+<b class="nc">&nbsp;            } finally {</b>
+<b class="nc">&nbsp;                closeQuietly(input);</b>
+<b class="nc">&nbsp;                closeQuietly(output);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        return extractedFile;
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    private void loadFile(String sourcePath) {</b>
+&nbsp;        String sourceCrc = this.crc(this.readFile(sourcePath));
+&nbsp;        String fileName = (new File(sourcePath)).getName();
+<b class="fc">&nbsp;        File file = new File(System.getProperty(&quot;java.io.tmpdir&quot;) + &quot;/libgdx&quot; + System.getProperty(&quot;user.name&quot;) + &quot;/&quot; + sourceCrc, fileName);</b>
+&nbsp;        Throwable ex = this.loadFile(sourcePath, sourceCrc, file);
+&nbsp;        if (ex != null) {
+&nbsp;            try {
+&nbsp;                file = File.createTempFile(sourceCrc, (String)null);
+&nbsp;                if (file.delete() &amp;&amp; this.loadFile(sourcePath, sourceCrc, file) == null) {
+<b class="fc">&nbsp;                    return;</b>
+&nbsp;                }
+<b class="fc">&nbsp;            } catch (Throwable var7) {</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            file = new File(System.getProperty(&quot;user.home&quot;) + &quot;/.libgdx/&quot; + sourceCrc, fileName);</b>
+&nbsp;            if (this.loadFile(sourcePath, sourceCrc, file) != null) {
+<b class="fc">&nbsp;                file = new File(&quot;.temp/&quot; + sourceCrc, fileName);</b>
+<b class="pc">&nbsp;                if (this.loadFile(sourcePath, sourceCrc, file) != null) {</b>
+&nbsp;                    file = new File(System.getProperty(&quot;java.library.path&quot;), sourcePath);
+&nbsp;                    if (file.exists()) {
+&nbsp;                        System.load(file.getAbsolutePath());
+<b class="nc">&nbsp;                    } else {</b>
+<b class="nc">&nbsp;                        throw new SharedLibraryLoadRuntimeException(ex);</b>
+<b class="nc">&nbsp;                    }</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    private Throwable loadFile(String sourcePath, String sourceCrc, File extractedFile) {
+&nbsp;        try {
+<b class="nc">&nbsp;            System.load(this.extractFile(sourcePath, sourceCrc, extractedFile).getAbsolutePath());</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        } catch (Throwable var5) {
+&nbsp;            Throwable ex = var5;
+<b class="nc">&nbsp;            return ex;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public static synchronized void setLoaded(String libraryName) {
+&nbsp;        loadedLibraries.add(libraryName);
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public static synchronized boolean isLoaded(String libraryName) {
+&nbsp;        return loadedLibraries.contains(libraryName);
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public static void closeQuietly(Closeable c) {</b>
+<b class="fc">&nbsp;        if (c != null) {</b>
+<b class="nc">&nbsp;            try {</b>
+<b class="nc">&nbsp;                c.close();</b>
+&nbsp;            } catch (Throwable var2) {
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    static {</b>
+&nbsp;        boolean isMOEiOS = System.getProperty(&quot;moe.platform.name&quot;) != null;
+&nbsp;        String vm = System.getProperty(&quot;java.runtime.name&quot;);
+<b class="fc">&nbsp;        if (vm != null &amp;&amp; vm.contains(&quot;Android Runtime&quot;)) {</b>
+&nbsp;            isAndroid = true;
+&nbsp;            isWindows = false;
+&nbsp;            isLinux = false;
+<b class="pc">&nbsp;            isMac = false;</b>
+&nbsp;            is64Bit = false;
+<b class="fc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+<b class="fc">&nbsp;        if (isMOEiOS || !isAndroid &amp;&amp; !isWindows &amp;&amp; !isLinux &amp;&amp; !isMac) {</b>
+&nbsp;            isIos = true;
+<b class="fc">&nbsp;            isAndroid = false;</b>
+&nbsp;            isWindows = false;
+&nbsp;            isLinux = false;
+&nbsp;            isMac = false;
+&nbsp;            is64Bit = false;
+&nbsp;        }
+&nbsp;
+&nbsp;        loadedLibraries = new HashSet();
+&nbsp;        random = new Random();
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

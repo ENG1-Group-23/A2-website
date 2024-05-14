@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TiledMapTileSet</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps.tiled</a>
+</div>
+
+<h1>Coverage Summary for Class: TiledMapTileSet (com.badlogic.gdx.maps.tiled)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TiledMapTileSet</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    55.6%
+  </span>
+  <span class="absValue">
+    (5/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (10/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.maps.tiled;
+&nbsp;
+&nbsp;import java.util.Iterator;
+&nbsp;import com.badlogic.gdx.maps.MapProperties;
+&nbsp;import com.badlogic.gdx.utils.IntMap;
+&nbsp;
+&nbsp;/** @brief Set of {@link TiledMapTile} instances used to compose a TiledMapLayer */
+&nbsp;public class TiledMapTileSet implements Iterable&lt;TiledMapTile&gt; {
+&nbsp;
+&nbsp;	private String name;
+&nbsp;
+&nbsp;	private IntMap&lt;TiledMapTile&gt; tiles;
+&nbsp;
+&nbsp;	private MapProperties properties;
+&nbsp;
+&nbsp;	/** @return tileset&#39;s name */
+&nbsp;	public String getName () {
+<b class="nc">&nbsp;		return name;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param name new name for the tileset */
+&nbsp;	public void setName (String name) {
+<b class="fc">&nbsp;		this.name = name;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return tileset&#39;s properties set */
+&nbsp;	public MapProperties getProperties () {
+<b class="fc">&nbsp;		return properties;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates empty tileset */
+<b class="fc">&nbsp;	public TiledMapTileSet () {</b>
+<b class="fc">&nbsp;		tiles = new IntMap&lt;TiledMapTile&gt;();</b>
+<b class="fc">&nbsp;		properties = new MapProperties();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Gets the {@link TiledMapTile} that has the given id.
+&nbsp;	 * 
+&nbsp;	 * @param id the id of the {@link TiledMapTile} to retrieve.
+&nbsp;	 * @return tile matching id, null if it doesn&#39;t exist */
+&nbsp;	public TiledMapTile getTile (int id) {
+<b class="fc">&nbsp;		return tiles.get(id);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return iterator to tiles in this tileset */
+&nbsp;	@Override
+&nbsp;	public Iterator&lt;TiledMapTile&gt; iterator () {
+<b class="nc">&nbsp;		return tiles.values().iterator();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Adds or replaces tile with that id
+&nbsp;	 * 
+&nbsp;	 * @param id the id of the {@link TiledMapTile} to add or replace.
+&nbsp;	 * @param tile the {@link TiledMapTile} to add or replace. */
+&nbsp;	public void putTile (int id, TiledMapTile tile) {
+<b class="fc">&nbsp;		tiles.put(id, tile);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param id tile&#39;s id to be removed */
+&nbsp;	public void removeTile (int id) {
+<b class="nc">&nbsp;		tiles.remove(id);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return the size of this TiledMapTileSet. */
+&nbsp;	public int size () {
+<b class="nc">&nbsp;		return tiles.size;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1442 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > StringBuilder</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: StringBuilder (com.badlogic.gdx.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StringBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.1%
+  </span>
+  <span class="absValue">
+    (2/96)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0.2%
+  </span>
+  <span class="absValue">
+    (1/428)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1%
+  </span>
+  <span class="absValue">
+    (5/512)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; *  Licensed to the Apache Software Foundation (ASF) under one or more
+&nbsp; *  contributor license agreements.  See the NOTICE file distributed with
+&nbsp; *  this work for additional information regarding copyright ownership.
+&nbsp; *  The ASF licenses this file to You under the Apache License, Version 2.0
+&nbsp; *  (the &quot;License&quot;); you may not use this file except in compliance with
+&nbsp; *  the License.  You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *     http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; *  Unless required by applicable law or agreed to in writing, software
+&nbsp; *  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; *  See the License for the specific language governing permissions and
+&nbsp; *  limitations under the License.
+&nbsp; */
+&nbsp;
+&nbsp;package com.badlogic.gdx.utils;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;
+&nbsp;/** A {@link java.lang.StringBuilder} that implements equals and hashcode.
+&nbsp; * @see CharSequence
+&nbsp; * @see Appendable
+&nbsp; * @see java.lang.StringBuilder
+&nbsp; * @see String */
+&nbsp;public class StringBuilder implements Appendable, CharSequence {
+&nbsp;	static final int INITIAL_CAPACITY = 16;
+&nbsp;
+&nbsp;	public char[] chars;
+&nbsp;	public int length;
+&nbsp;
+<b class="fc">&nbsp;	private static final char[] digits = new char[] {&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;};</b>
+&nbsp;
+&nbsp;	/** @return the number of characters required to represent the specified value with the specified radix */
+&nbsp;	public static int numChars (int value, int radix) {
+<b class="nc">&nbsp;		int result = (value &lt; 0) ? 2 : 1;</b>
+<b class="nc">&nbsp;		while ((value /= radix) != 0)</b>
+<b class="nc">&nbsp;			++result;</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the number of characters required to represent the specified value with the specified radix */
+&nbsp;	public static int numChars (long value, int radix) {
+<b class="nc">&nbsp;		int result = (value &lt; 0) ? 2 : 1;</b>
+<b class="nc">&nbsp;		while ((value /= radix) != 0)</b>
+<b class="nc">&nbsp;			++result;</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * Returns the character array.
+&nbsp;	 */
+&nbsp;	final char[] getValue () {
+<b class="nc">&nbsp;		return chars;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructs an instance with an initial capacity of {@code 16}.
+&nbsp;	 * 
+&nbsp;	 * @see #capacity() */
+<b class="nc">&nbsp;	public StringBuilder () {</b>
+<b class="nc">&nbsp;		chars = new char[INITIAL_CAPACITY];</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs an instance with the specified capacity.
+&nbsp;	 * 
+&nbsp;	 * @param capacity the initial capacity to use.
+&nbsp;	 * @throws NegativeArraySizeException if the specified {@code capacity} is negative.
+&nbsp;	 * @see #capacity() */
+<b class="fc">&nbsp;	public StringBuilder (int capacity) {</b>
+<b class="pc">&nbsp;		if (capacity &lt; 0) {</b>
+<b class="nc">&nbsp;			throw new NegativeArraySizeException();</b>
+&nbsp;		}
+<b class="fc">&nbsp;		chars = new char[capacity];</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs an instance that&#39;s initialized with the contents of the specified {@code CharSequence}. The capacity of the new
+&nbsp;	 * builder will be the length of the {@code CharSequence} plus 16.
+&nbsp;	 * 
+&nbsp;	 * @param seq the {@code CharSequence} to copy into the builder.
+&nbsp;	 * @throws NullPointerException if {@code seq} is {@code null}. */
+&nbsp;	public StringBuilder (CharSequence seq) {
+<b class="nc">&nbsp;		this(seq.toString());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+<b class="nc">&nbsp;	public StringBuilder (StringBuilder builder) {</b>
+<b class="nc">&nbsp;		length = builder.length;</b>
+<b class="nc">&nbsp;		chars = new char[length + INITIAL_CAPACITY];</b>
+<b class="nc">&nbsp;		System.arraycopy(builder.chars, 0, chars, 0, length);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs an instance that&#39;s initialized with the contents of the specified {@code String}. The capacity of the new
+&nbsp;	 * builder will be the length of the {@code String} plus 16.
+&nbsp;	 * 
+&nbsp;	 * @param string the {@code String} to copy into the builder.
+&nbsp;	 * @throws NullPointerException if {@code str} is {@code null}. */
+<b class="nc">&nbsp;	public StringBuilder (String string) {</b>
+<b class="nc">&nbsp;		length = string.length();</b>
+<b class="nc">&nbsp;		chars = new char[length + INITIAL_CAPACITY];</b>
+<b class="nc">&nbsp;		string.getChars(0, length, chars, 0);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	private void enlargeBuffer (int min) {
+<b class="nc">&nbsp;		int newSize = (chars.length &gt;&gt; 1) + chars.length + 2;</b>
+<b class="nc">&nbsp;		char[] newData = new char[min &gt; newSize ? min : newSize];</b>
+<b class="nc">&nbsp;		System.arraycopy(chars, 0, newData, 0, length);</b>
+<b class="nc">&nbsp;		chars = newData;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void appendNull () {
+<b class="nc">&nbsp;		int newSize = length + 4;</b>
+<b class="nc">&nbsp;		if (newSize &gt; chars.length) {</b>
+<b class="nc">&nbsp;			enlargeBuffer(newSize);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		chars[length++] = &#39;n&#39;;</b>
+<b class="nc">&nbsp;		chars[length++] = &#39;u&#39;;</b>
+<b class="nc">&nbsp;		chars[length++] = &#39;l&#39;;</b>
+<b class="nc">&nbsp;		chars[length++] = &#39;l&#39;;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void append0 (char[] value) {
+<b class="nc">&nbsp;		int newSize = length + value.length;</b>
+<b class="nc">&nbsp;		if (newSize &gt; chars.length) {</b>
+<b class="nc">&nbsp;			enlargeBuffer(newSize);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		System.arraycopy(value, 0, chars, length, value.length);</b>
+<b class="nc">&nbsp;		length = newSize;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void append0 (char[] value, int offset, int length) {
+&nbsp;		// Force null check of chars first!
+<b class="nc">&nbsp;		if (offset &gt; value.length || offset &lt; 0) {</b>
+<b class="nc">&nbsp;			throw new ArrayIndexOutOfBoundsException(&quot;Offset out of bounds: &quot; + offset);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (length &lt; 0 || value.length - offset &lt; length) {</b>
+<b class="nc">&nbsp;			throw new ArrayIndexOutOfBoundsException(&quot;Length out of bounds: &quot; + length);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		int newSize = this.length + length;</b>
+<b class="nc">&nbsp;		if (newSize &gt; chars.length) {</b>
+<b class="nc">&nbsp;			enlargeBuffer(newSize);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		System.arraycopy(value, offset, chars, this.length, length);</b>
+<b class="nc">&nbsp;		this.length = newSize;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void append0 (char ch) {
+<b class="nc">&nbsp;		if (length == chars.length) {</b>
+<b class="nc">&nbsp;			enlargeBuffer(length + 1);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		chars[length++] = ch;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void append0 (String string) {
+<b class="nc">&nbsp;		if (string == null) {</b>
+<b class="nc">&nbsp;			appendNull();</b>
+<b class="nc">&nbsp;			return;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		int adding = string.length();</b>
+<b class="nc">&nbsp;		int newSize = length + adding;</b>
+<b class="nc">&nbsp;		if (newSize &gt; chars.length) {</b>
+<b class="nc">&nbsp;			enlargeBuffer(newSize);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		string.getChars(0, adding, chars, length);</b>
+<b class="nc">&nbsp;		length = newSize;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void append0 (CharSequence s, int start, int end) {
+<b class="nc">&nbsp;		if (s == null) {</b>
+<b class="nc">&nbsp;			s = &quot;null&quot;;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (start &lt; 0 || end &lt; 0 || start &gt; end || end &gt; s.length()) {</b>
+<b class="nc">&nbsp;			throw new IndexOutOfBoundsException();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		append0(s.subSequence(start, end).toString());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the number of characters that can be held without growing.
+&nbsp;	 * 
+&nbsp;	 * @return the capacity
+&nbsp;	 * @see #ensureCapacity
+&nbsp;	 * @see #length */
+&nbsp;	public int capacity () {
+<b class="nc">&nbsp;		return chars.length;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Retrieves the character at the {@code index}.
+&nbsp;	 * 
+&nbsp;	 * @param index the index of the character to retrieve.
+&nbsp;	 * @return the char value.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code index} is negative or greater than or equal to the current {@link #length()}. */
+&nbsp;	public char charAt (int index) {
+<b class="nc">&nbsp;		if (index &lt; 0 || index &gt;= length) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(index);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return chars[index];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final void delete0 (int start, int end) {
+<b class="nc">&nbsp;		if (start &gt;= 0) {</b>
+<b class="nc">&nbsp;			if (end &gt; length) {</b>
+<b class="nc">&nbsp;				end = length;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			if (end == start) {</b>
+<b class="nc">&nbsp;				return;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			if (end &gt; start) {</b>
+<b class="nc">&nbsp;				int count = length - end;</b>
+<b class="nc">&nbsp;				if (count &gt;= 0) System.arraycopy(chars, end, chars, start, count);</b>
+<b class="nc">&nbsp;				length -= end - start;</b>
+<b class="nc">&nbsp;				return;</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		throw new StringIndexOutOfBoundsException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final void deleteCharAt0 (int location) {
+<b class="nc">&nbsp;		if (0 &gt; location || location &gt;= length) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(location);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		int count = length - location - 1;</b>
+<b class="nc">&nbsp;		if (count &gt; 0) {</b>
+<b class="nc">&nbsp;			System.arraycopy(chars, location + 1, chars, location, count);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		length--;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Ensures that this object has a minimum capacity available before requiring the internal buffer to be enlarged. The general
+&nbsp;	 * policy of this method is that if the {@code minimumCapacity} is larger than the current {@link #capacity()}, then the
+&nbsp;	 * capacity will be increased to the largest value of either the {@code minimumCapacity} or the current capacity multiplied by
+&nbsp;	 * two plus two. Although this is the general policy, there is no guarantee that the capacity will change.
+&nbsp;	 * 
+&nbsp;	 * @param min the new minimum capacity to set. */
+&nbsp;	public void ensureCapacity (int min) {
+<b class="nc">&nbsp;		if (min &gt; chars.length) {</b>
+<b class="nc">&nbsp;			int twice = (chars.length &lt;&lt; 1) + 2;</b>
+<b class="nc">&nbsp;			enlargeBuffer(twice &gt; min ? twice : min);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Copies the requested sequence of characters to the {@code char[]} passed starting at {@code destStart}.
+&nbsp;	 * 
+&nbsp;	 * @param start the inclusive start index of the characters to copy.
+&nbsp;	 * @param end the exclusive end index of the characters to copy.
+&nbsp;	 * @param dest the {@code char[]} to copy the characters to.
+&nbsp;	 * @param destStart the inclusive start index of {@code dest} to begin copying to.
+&nbsp;	 * @throws IndexOutOfBoundsException if the {@code start} is negative, the {@code destStart} is negative, the {@code start} is
+&nbsp;	 *            greater than {@code end}, the {@code end} is greater than the current {@link #length()} or
+&nbsp;	 *            {@code destStart + end - begin} is greater than {@code dest.length}. */
+&nbsp;	public void getChars (int start, int end, char[] dest, int destStart) {
+<b class="nc">&nbsp;		if (start &gt; length || end &gt; length || start &gt; end) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		System.arraycopy(chars, start, dest, destStart, end - start);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void insert0 (int index, char[] value) {
+<b class="nc">&nbsp;		if (0 &gt; index || index &gt; length) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(index);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (value.length != 0) {</b>
+<b class="nc">&nbsp;			move(value.length, index);</b>
+<b class="nc">&nbsp;			System.arraycopy(value, 0, value, index, value.length);</b>
+<b class="nc">&nbsp;			length += value.length;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void insert0 (int index, char[] value, int start, int length) {
+<b class="nc">&nbsp;		if (0 &lt;= index &amp;&amp; index &lt;= length) {</b>
+&nbsp;			// start + length could overflow, start/length maybe MaxInt
+<b class="nc">&nbsp;			if (start &gt;= 0 &amp;&amp; 0 &lt;= length &amp;&amp; length &lt;= value.length - start) {</b>
+<b class="nc">&nbsp;				if (length != 0) {</b>
+<b class="nc">&nbsp;					move(length, index);</b>
+<b class="nc">&nbsp;					System.arraycopy(value, start, chars, index, length);</b>
+<b class="nc">&nbsp;					this.length += length;</b>
+&nbsp;				}
+<b class="nc">&nbsp;				return;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(&quot;offset &quot; + start + &quot;, length &quot; + length + &quot;, char[].length &quot; + value.length);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		throw new StringIndexOutOfBoundsException(index);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final void insert0 (int index, char ch) {
+<b class="nc">&nbsp;		if (0 &gt; index || index &gt; length) {</b>
+&nbsp;			// RI compatible exception type
+<b class="nc">&nbsp;			throw new ArrayIndexOutOfBoundsException(index);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		move(1, index);</b>
+<b class="nc">&nbsp;		chars[index] = ch;</b>
+<b class="nc">&nbsp;		length++;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void insert0 (int index, String string) {
+<b class="nc">&nbsp;		if (0 &lt;= index &amp;&amp; index &lt;= length) {</b>
+<b class="nc">&nbsp;			if (string == null) {</b>
+<b class="nc">&nbsp;				string = &quot;null&quot;;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			int min = string.length();</b>
+<b class="nc">&nbsp;			if (min != 0) {</b>
+<b class="nc">&nbsp;				move(min, index);</b>
+<b class="nc">&nbsp;				string.getChars(0, min, chars, index);</b>
+<b class="nc">&nbsp;				length += min;</b>
+&nbsp;			}
+&nbsp;		} else {
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(index);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void insert0 (int index, CharSequence s, int start, int end) {
+<b class="nc">&nbsp;		if (s == null) {</b>
+<b class="nc">&nbsp;			s = &quot;null&quot;;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (index &lt; 0 || index &gt; length || start &lt; 0 || end &lt; 0 || start &gt; end || end &gt; s.length()) {</b>
+<b class="nc">&nbsp;			throw new IndexOutOfBoundsException();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		insert0(index, s.subSequence(start, end).toString());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** The current length.
+&nbsp;	 * 
+&nbsp;	 * @return the number of characters contained in this instance. */
+&nbsp;	public int length () {
+<b class="nc">&nbsp;		return length;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void move (int size, int index) {
+<b class="nc">&nbsp;		if (chars.length - length &gt;= size) {</b>
+<b class="nc">&nbsp;			System.arraycopy(chars, index, chars, index + size, length - index); // index == count case is no-op</b>
+<b class="nc">&nbsp;			return;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		int a = length + size, b = (chars.length &lt;&lt; 1) + 2;</b>
+<b class="nc">&nbsp;		int newSize = a &gt; b ? a : b;</b>
+<b class="nc">&nbsp;		char[] newData = new char[newSize];</b>
+<b class="nc">&nbsp;		System.arraycopy(chars, 0, newData, 0, index);</b>
+&nbsp;		// index == count case is no-op
+<b class="nc">&nbsp;		System.arraycopy(chars, index, newData, index + size, length - index);</b>
+<b class="nc">&nbsp;		chars = newData;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	final void replace0 (int start, int end, String string) {
+<b class="nc">&nbsp;		if (start &gt;= 0) {</b>
+<b class="nc">&nbsp;			if (end &gt; length) {</b>
+<b class="nc">&nbsp;				end = length;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			if (end &gt; start) {</b>
+<b class="nc">&nbsp;				int stringLength = string.length();</b>
+<b class="nc">&nbsp;				int diff = end - start - stringLength;</b>
+<b class="nc">&nbsp;				if (diff &gt; 0) { // replacing with fewer characters</b>
+&nbsp;					// index == count case is no-op
+<b class="nc">&nbsp;					System.arraycopy(chars, end, chars, start + stringLength, length - end);</b>
+<b class="nc">&nbsp;				} else if (diff &lt; 0) {</b>
+&nbsp;					// replacing with more characters...need some room
+<b class="nc">&nbsp;					move(-diff, end);</b>
+&nbsp;				}
+<b class="nc">&nbsp;				string.getChars(0, stringLength, chars, start);</b>
+<b class="nc">&nbsp;				length -= diff;</b>
+<b class="nc">&nbsp;				return;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			if (start == end) {</b>
+<b class="nc">&nbsp;				if (string == null) {</b>
+<b class="nc">&nbsp;					throw new NullPointerException();</b>
+&nbsp;				}
+<b class="nc">&nbsp;				insert0(start, string);</b>
+<b class="nc">&nbsp;				return;</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		throw new StringIndexOutOfBoundsException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final void reverse0 () {
+<b class="nc">&nbsp;		if (length &lt; 2) {</b>
+<b class="nc">&nbsp;			return;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		int end = length - 1;</b>
+<b class="nc">&nbsp;		char frontHigh = chars[0];</b>
+<b class="nc">&nbsp;		char endLow = chars[end];</b>
+<b class="nc">&nbsp;		boolean allowFrontSur = true, allowEndSur = true;</b>
+<b class="nc">&nbsp;		for (int i = 0, mid = length / 2; i &lt; mid; i++, --end) {</b>
+<b class="nc">&nbsp;			char frontLow = chars[i + 1];</b>
+<b class="nc">&nbsp;			char endHigh = chars[end - 1];</b>
+<b class="nc">&nbsp;			boolean surAtFront = allowFrontSur &amp;&amp; frontLow &gt;= 0xdc00 &amp;&amp; frontLow &lt;= 0xdfff &amp;&amp; frontHigh &gt;= 0xd800</b>
+&nbsp;				&amp;&amp; frontHigh &lt;= 0xdbff;
+<b class="nc">&nbsp;			if (surAtFront &amp;&amp; length &lt; 3) {</b>
+<b class="nc">&nbsp;				return;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			boolean surAtEnd = allowEndSur &amp;&amp; endHigh &gt;= 0xd800 &amp;&amp; endHigh &lt;= 0xdbff &amp;&amp; endLow &gt;= 0xdc00 &amp;&amp; endLow &lt;= 0xdfff;</b>
+<b class="nc">&nbsp;			allowFrontSur = allowEndSur = true;</b>
+<b class="nc">&nbsp;			if (surAtFront == surAtEnd) {</b>
+<b class="nc">&nbsp;				if (surAtFront) {</b>
+&nbsp;					// both surrogates
+<b class="nc">&nbsp;					chars[end] = frontLow;</b>
+<b class="nc">&nbsp;					chars[end - 1] = frontHigh;</b>
+<b class="nc">&nbsp;					chars[i] = endHigh;</b>
+<b class="nc">&nbsp;					chars[i + 1] = endLow;</b>
+<b class="nc">&nbsp;					frontHigh = chars[i + 2];</b>
+<b class="nc">&nbsp;					endLow = chars[end - 2];</b>
+<b class="nc">&nbsp;					i++;</b>
+<b class="nc">&nbsp;					end--;</b>
+&nbsp;				} else {
+&nbsp;					// neither surrogates
+<b class="nc">&nbsp;					chars[end] = frontHigh;</b>
+<b class="nc">&nbsp;					chars[i] = endLow;</b>
+<b class="nc">&nbsp;					frontHigh = frontLow;</b>
+<b class="nc">&nbsp;					endLow = endHigh;</b>
+&nbsp;				}
+&nbsp;			} else {
+<b class="nc">&nbsp;				if (surAtFront) {</b>
+&nbsp;					// surrogate only at the front
+<b class="nc">&nbsp;					chars[end] = frontLow;</b>
+<b class="nc">&nbsp;					chars[i] = endLow;</b>
+<b class="nc">&nbsp;					endLow = endHigh;</b>
+<b class="nc">&nbsp;					allowFrontSur = false;</b>
+&nbsp;				} else {
+&nbsp;					// surrogate only at the end
+<b class="nc">&nbsp;					chars[end] = frontHigh;</b>
+<b class="nc">&nbsp;					chars[i] = endHigh;</b>
+<b class="nc">&nbsp;					frontHigh = frontLow;</b>
+<b class="nc">&nbsp;					allowEndSur = false;</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		if ((length &amp; 1) == 1 &amp;&amp; (!allowFrontSur || !allowEndSur)) {</b>
+<b class="nc">&nbsp;			chars[end] = allowFrontSur ? endLow : frontHigh;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the character at the {@code index}.
+&nbsp;	 * 
+&nbsp;	 * @param index the zero-based index of the character to replace.
+&nbsp;	 * @param ch the character to set.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code index} is negative or greater than or equal to the current {@link #length()}. */
+&nbsp;	public void setCharAt (int index, char ch) {
+<b class="nc">&nbsp;		if (0 &gt; index || index &gt;= length) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(index);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		chars[index] = ch;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the current length to a new value. If the new length is larger than the current length, then the new characters at the
+&nbsp;	 * end of this object will contain the {@code char} value of {@code \u0000}.
+&nbsp;	 * 
+&nbsp;	 * @param newLength the new length of this StringBuilder.
+&nbsp;	 * @exception IndexOutOfBoundsException if {@code length &lt; 0}.
+&nbsp;	 * @see #length */
+&nbsp;	public void setLength (int newLength) {
+<b class="nc">&nbsp;		if (newLength &lt; 0) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(newLength);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (newLength &gt; chars.length) {</b>
+<b class="nc">&nbsp;			enlargeBuffer(newLength);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			if (length &lt; newLength) {</b>
+<b class="nc">&nbsp;				Arrays.fill(chars, length, newLength, (char)0);</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		length = newLength;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the String value of the subsequence from the {@code start} index to the current end.
+&nbsp;	 * 
+&nbsp;	 * @param start the inclusive start index to begin the subsequence.
+&nbsp;	 * @return a String containing the subsequence.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code start} is negative or greater than the current {@link #length()}. */
+&nbsp;	public String substring (int start) {
+<b class="nc">&nbsp;		if (0 &lt;= start &amp;&amp; start &lt;= length) {</b>
+<b class="nc">&nbsp;			if (start == length) {</b>
+<b class="nc">&nbsp;				return &quot;&quot;;</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// Remove String sharing for more performance
+<b class="nc">&nbsp;			return new String(chars, start, length - start);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		throw new StringIndexOutOfBoundsException(start);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the String value of the subsequence from the {@code start} index to the {@code end} index.
+&nbsp;	 * 
+&nbsp;	 * @param start the inclusive start index to begin the subsequence.
+&nbsp;	 * @param end the exclusive end index to end the subsequence.
+&nbsp;	 * @return a String containing the subsequence.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code start} is negative, greater than {@code end} or if {@code end} is greater
+&nbsp;	 *            than the current {@link #length()}. */
+&nbsp;	public String substring (int start, int end) {
+<b class="nc">&nbsp;		if (0 &lt;= start &amp;&amp; start &lt;= end &amp;&amp; end &lt;= length) {</b>
+<b class="nc">&nbsp;			if (start == end) {</b>
+<b class="nc">&nbsp;				return &quot;&quot;;</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// Remove String sharing for more performance
+<b class="nc">&nbsp;			return new String(chars, start, end - start);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		throw new StringIndexOutOfBoundsException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the current String representation.
+&nbsp;	 * 
+&nbsp;	 * @return a String containing the characters in this instance. */
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		if (length == 0) return &quot;&quot;;</b>
+<b class="nc">&nbsp;		return new String(chars, 0, length);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the current String representation and clears the StringBuilder.
+&nbsp;	 * 
+&nbsp;	 * @return a String containing the characters in this instance. */
+&nbsp;	public String toStringAndClear () {
+<b class="nc">&nbsp;		final String s = toString();</b>
+<b class="nc">&nbsp;		clear();</b>
+<b class="nc">&nbsp;		return s;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a {@code CharSequence} of the subsequence from the {@code start} index to the {@code end} index.
+&nbsp;	 * 
+&nbsp;	 * @param start the inclusive start index to begin the subsequence.
+&nbsp;	 * @param end the exclusive end index to end the subsequence.
+&nbsp;	 * @return a CharSequence containing the subsequence.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code start} is negative, greater than {@code end} or if {@code end} is greater than
+&nbsp;	 *            the current {@link #length()}.
+&nbsp;	 * @since 1.4 */
+&nbsp;	public CharSequence subSequence (int start, int end) {
+<b class="nc">&nbsp;		return substring(start, end);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Searches for the first index of the specified character. The search for the character starts at the beginning and moves
+&nbsp;	 * towards the end.
+&nbsp;	 * 
+&nbsp;	 * @param string the string to find.
+&nbsp;	 * @return the index of the specified character, -1 if the character isn&#39;t found.
+&nbsp;	 * @see #lastIndexOf(String)
+&nbsp;	 * @since 1.4 */
+&nbsp;	public int indexOf (String string) {
+<b class="nc">&nbsp;		return indexOf(string, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Searches for the index of the specified character. The search for the character starts at the specified offset and moves
+&nbsp;	 * towards the end.
+&nbsp;	 * 
+&nbsp;	 * @param subString the string to find.
+&nbsp;	 * @param start the starting offset.
+&nbsp;	 * @return the index of the specified character, -1 if the character isn&#39;t found
+&nbsp;	 * @see #lastIndexOf(String,int)
+&nbsp;	 * @since 1.4 */
+&nbsp;	public int indexOf (String subString, int start) {
+<b class="nc">&nbsp;		if (start &lt; 0) {</b>
+<b class="nc">&nbsp;			start = 0;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		int subCount = subString.length();</b>
+<b class="nc">&nbsp;		if (subCount == 0) return start &lt; length || start == 0 ? start : length;</b>
+<b class="nc">&nbsp;		int maxIndex = length - subCount;</b>
+<b class="nc">&nbsp;		if (start &gt; maxIndex) return -1;</b>
+<b class="nc">&nbsp;		char firstChar = subString.charAt(0);</b>
+&nbsp;		while (true) {
+<b class="nc">&nbsp;			int i = start;</b>
+<b class="nc">&nbsp;			boolean found = false;</b>
+<b class="nc">&nbsp;			for (; i &lt;= maxIndex; i++) {</b>
+<b class="nc">&nbsp;				if (chars[i] == firstChar) {</b>
+<b class="nc">&nbsp;					found = true;</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			if (!found) return -1;</b>
+<b class="nc">&nbsp;			int o1 = i, o2 = 0;</b>
+<b class="nc">&nbsp;			while (++o2 &lt; subCount &amp;&amp; chars[++o1] == subString.charAt(o2)) {</b>
+&nbsp;				// Intentionally empty
+&nbsp;			}
+<b class="nc">&nbsp;			if (o2 == subCount) return i;</b>
+<b class="nc">&nbsp;			start = i + 1;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int indexOfIgnoreCase (String subString, int start) {
+<b class="nc">&nbsp;		if (start &lt; 0) {</b>
+<b class="nc">&nbsp;			start = 0;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		int subCount = subString.length();</b>
+<b class="nc">&nbsp;		if (subCount == 0) return start &lt; length || start == 0 ? start : length;</b>
+<b class="nc">&nbsp;		int maxIndex = length - subCount;</b>
+<b class="nc">&nbsp;		if (start &gt; maxIndex) return -1;</b>
+<b class="nc">&nbsp;		char firstUpper = Character.toUpperCase(subString.charAt(0));</b>
+<b class="nc">&nbsp;		char firstLower = Character.toLowerCase(firstUpper);</b>
+&nbsp;		while (true) {
+<b class="nc">&nbsp;			int i = start;</b>
+<b class="nc">&nbsp;			boolean found = false;</b>
+<b class="nc">&nbsp;			for (; i &lt;= maxIndex; i++) {</b>
+<b class="nc">&nbsp;				char c = chars[i];</b>
+<b class="nc">&nbsp;				if (c == firstUpper || c == firstLower) {</b>
+<b class="nc">&nbsp;					found = true;</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			if (!found) return -1;</b>
+<b class="nc">&nbsp;			int o1 = i, o2 = 0;</b>
+<b class="nc">&nbsp;			while (++o2 &lt; subCount) {</b>
+<b class="nc">&nbsp;				char c = chars[++o1];</b>
+<b class="nc">&nbsp;				char upper = Character.toUpperCase(subString.charAt(o2));</b>
+<b class="nc">&nbsp;				if (c != upper &amp;&amp; c != Character.toLowerCase(upper)) break;</b>
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;			if (o2 == subCount) return i;</b>
+<b class="nc">&nbsp;			start = i + 1;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean contains (String subString) {
+<b class="nc">&nbsp;		return indexOf(subString, 0) != -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean containsIgnoreCase (String subString) {
+<b class="nc">&nbsp;		return indexOfIgnoreCase(subString, 0) != -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Searches for the last index of the specified character. The search for the character starts at the end and moves towards
+&nbsp;	 * the beginning.
+&nbsp;	 * 
+&nbsp;	 * @param string the string to find.
+&nbsp;	 * @return the index of the specified character, -1 if the character isn&#39;t found.
+&nbsp;	 * @throws NullPointerException if {@code string} is {@code null}.
+&nbsp;	 * @see String#lastIndexOf(java.lang.String)
+&nbsp;	 * @since 1.4 */
+&nbsp;	public int lastIndexOf (String string) {
+<b class="nc">&nbsp;		return lastIndexOf(string, length);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Searches for the index of the specified character. The search for the character starts at the specified offset and moves
+&nbsp;	 * towards the beginning.
+&nbsp;	 * 
+&nbsp;	 * @param subString the string to find.
+&nbsp;	 * @param start the starting offset.
+&nbsp;	 * @return the index of the specified character, -1 if the character isn&#39;t found.
+&nbsp;	 * @throws NullPointerException if {@code subString} is {@code null}.
+&nbsp;	 * @see String#lastIndexOf(String,int)
+&nbsp;	 * @since 1.4 */
+&nbsp;	public int lastIndexOf (String subString, int start) {
+<b class="nc">&nbsp;		int subCount = subString.length();</b>
+<b class="nc">&nbsp;		if (subCount &lt;= length &amp;&amp; start &gt;= 0) {</b>
+<b class="nc">&nbsp;			if (subCount &gt; 0) {</b>
+<b class="nc">&nbsp;				if (start &gt; length - subCount) {</b>
+<b class="nc">&nbsp;					start = length - subCount; // count and subCount are both</b>
+&nbsp;				}
+&nbsp;				// &gt;= 1
+<b class="nc">&nbsp;				char firstChar = subString.charAt(0);</b>
+&nbsp;				while (true) {
+<b class="nc">&nbsp;					int i = start;</b>
+<b class="nc">&nbsp;					boolean found = false;</b>
+<b class="nc">&nbsp;					for (; i &gt;= 0; --i) {</b>
+<b class="nc">&nbsp;						if (chars[i] == firstChar) {</b>
+<b class="nc">&nbsp;							found = true;</b>
+<b class="nc">&nbsp;							break;</b>
+&nbsp;						}
+&nbsp;					}
+<b class="nc">&nbsp;					if (!found) {</b>
+<b class="nc">&nbsp;						return -1;</b>
+&nbsp;					}
+<b class="nc">&nbsp;					int o1 = i, o2 = 0;</b>
+<b class="nc">&nbsp;					while (++o2 &lt; subCount &amp;&amp; chars[++o1] == subString.charAt(o2)) {</b>
+&nbsp;						// Intentionally empty
+&nbsp;					}
+<b class="nc">&nbsp;					if (o2 == subCount) {</b>
+<b class="nc">&nbsp;						return i;</b>
+&nbsp;					}
+<b class="nc">&nbsp;					start = i - 1;</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;			}
+<b class="nc">&nbsp;			return start &lt; length ? start : length;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Trims off any extra capacity beyond the current length. Note, this method is NOT guaranteed to change the capacity of this
+&nbsp;	 * object.
+&nbsp;	 * 
+&nbsp;	 * @since 1.5 */
+&nbsp;	public void trimToSize () {
+<b class="nc">&nbsp;		if (length &lt; chars.length) {</b>
+<b class="nc">&nbsp;			char[] newValue = new char[length];</b>
+<b class="nc">&nbsp;			System.arraycopy(chars, 0, newValue, 0, length);</b>
+<b class="nc">&nbsp;			chars = newValue;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Retrieves the Unicode code point value at the {@code index}.
+&nbsp;	 * 
+&nbsp;	 * @param index the index to the {@code char} code unit.
+&nbsp;	 * @return the Unicode code point value.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code index} is negative or greater than or equal to {@link #length()}.
+&nbsp;	 * @see Character
+&nbsp;	 * @see Character#codePointAt(char[], int, int)
+&nbsp;	 * @since 1.5 */
+&nbsp;	public int codePointAt (int index) {
+<b class="nc">&nbsp;		if (index &lt; 0 || index &gt;= length) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(index);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return Character.codePointAt(chars, index, length);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Retrieves the Unicode code point value that precedes the {@code index}.
+&nbsp;	 * 
+&nbsp;	 * @param index the index to the {@code char} code unit within this object.
+&nbsp;	 * @return the Unicode code point value.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code index} is less than 1 or greater than {@link #length()}.
+&nbsp;	 * @see Character
+&nbsp;	 * @see Character#codePointBefore(char[], int, int)
+&nbsp;	 * @since 1.5 */
+&nbsp;	public int codePointBefore (int index) {
+<b class="nc">&nbsp;		if (index &lt; 1 || index &gt; length) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException(index);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return Character.codePointBefore(chars, index);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calculates the number of Unicode code points between {@code beginIndex} and {@code endIndex}.
+&nbsp;	 * 
+&nbsp;	 * @param beginIndex the inclusive beginning index of the subsequence.
+&nbsp;	 * @param endIndex the exclusive end index of the subsequence.
+&nbsp;	 * @return the number of Unicode code points in the subsequence.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code beginIndex} is negative or greater than {@code endIndex} or {@code endIndex} is
+&nbsp;	 *            greater than {@link #length()}.
+&nbsp;	 * @see Character
+&nbsp;	 * @see Character#codePointCount(char[], int, int)
+&nbsp;	 * @since 1.5 */
+&nbsp;	public int codePointCount (int beginIndex, int endIndex) {
+<b class="nc">&nbsp;		if (beginIndex &lt; 0 || endIndex &gt; length || beginIndex &gt; endIndex) {</b>
+<b class="nc">&nbsp;			throw new StringIndexOutOfBoundsException();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return Character.codePointCount(chars, beginIndex, endIndex - beginIndex);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the index that is offset {@code codePointOffset} code points from {@code index}.
+&nbsp;	 * 
+&nbsp;	 * @param index the index to calculate the offset from.
+&nbsp;	 * @param codePointOffset the number of code points to count.
+&nbsp;	 * @return the index that is {@code codePointOffset} code points away from index.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code index} is negative or greater than {@link #length()} or if there aren&#39;t enough
+&nbsp;	 *            code points before or after {@code index} to match {@code codePointOffset}.
+&nbsp;	 * @see Character
+&nbsp;	 * @see Character#offsetByCodePoints(char[], int, int, int, int)
+&nbsp;	 * @since 1.5 */
+&nbsp;	public int offsetByCodePoints (int index, int codePointOffset) {
+<b class="nc">&nbsp;		return Character.offsetByCodePoints(chars, 0, length, index, codePointOffset);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code boolean} value. The {@code boolean} value is converted to a
+&nbsp;	 * String according to the rule defined by {@link String#valueOf(boolean)}.
+&nbsp;	 * 
+&nbsp;	 * @param b the {@code boolean} value to append.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(boolean) */
+&nbsp;	public StringBuilder append (boolean b) {
+<b class="nc">&nbsp;		append0(b ? &quot;true&quot; : &quot;false&quot;); //$NON-NLS-1$ //$NON-NLS-2$</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code char} value. The {@code char} value is converted to a string
+&nbsp;	 * according to the rule defined by {@link String#valueOf(char)}.
+&nbsp;	 * 
+&nbsp;	 * @param c the {@code char} value to append.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(char) */
+&nbsp;	public StringBuilder append (char c) {
+<b class="nc">&nbsp;		append0(c);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code int} value. The {@code int} value is converted to a string
+&nbsp;	 * without memory allocation.
+&nbsp;	 * 
+&nbsp;	 * @param value the {@code int} value to append.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(int) */
+&nbsp;	public StringBuilder append (int value) {
+<b class="nc">&nbsp;		return append(value, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code int} value. The {@code int} value is converted to a string
+&nbsp;	 * without memory allocation.
+&nbsp;	 * 
+&nbsp;	 * @param value the {@code int} value to append.
+&nbsp;	 * @param minLength the minimum number of characters to add
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(int) */
+&nbsp;	public StringBuilder append (int value, int minLength) {
+<b class="nc">&nbsp;		return append(value, minLength, &#39;0&#39;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code int} value. The {@code int} value is converted to a string
+&nbsp;	 * without memory allocation.
+&nbsp;	 * 
+&nbsp;	 * @param value the {@code int} value to append.
+&nbsp;	 * @param minLength the minimum number of characters to add
+&nbsp;	 * @param prefix the character to use as prefix
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(int) */
+&nbsp;	public StringBuilder append (int value, final int minLength, final char prefix) {
+<b class="nc">&nbsp;		if (value == Integer.MIN_VALUE) {</b>
+<b class="nc">&nbsp;			append0(&quot;-2147483648&quot;);</b>
+<b class="nc">&nbsp;			return this;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (value &lt; 0) {</b>
+<b class="nc">&nbsp;			append0(&#39;-&#39;);</b>
+<b class="nc">&nbsp;			value = -value;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (minLength &gt; 1) {</b>
+<b class="nc">&nbsp;			for (int j = minLength - numChars(value, 10); j &gt; 0; --j)</b>
+<b class="nc">&nbsp;				append(prefix);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (value &gt;= 10000) {</b>
+<b class="nc">&nbsp;			if (value &gt;= 1000000000) append0(digits[(int)((long)value % 10000000000L / 1000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 100000000) append0(digits[value % 1000000000 / 100000000]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 10000000) append0(digits[value % 100000000 / 10000000]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 1000000) append0(digits[value % 10000000 / 1000000]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 100000) append0(digits[value % 1000000 / 100000]);</b>
+<b class="nc">&nbsp;			append0(digits[value % 100000 / 10000]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (value &gt;= 1000) append0(digits[value % 10000 / 1000]);</b>
+<b class="nc">&nbsp;		if (value &gt;= 100) append0(digits[value % 1000 / 100]);</b>
+<b class="nc">&nbsp;		if (value &gt;= 10) append0(digits[value % 100 / 10]);</b>
+<b class="nc">&nbsp;		append0(digits[value % 10]);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code long} value. The {@code long} value is converted to a string
+&nbsp;	 * without memory allocation.
+&nbsp;	 * 
+&nbsp;	 * @param value the {@code long} value.
+&nbsp;	 * @return this builder. */
+&nbsp;	public StringBuilder append (long value) {
+<b class="nc">&nbsp;		return append(value, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code long} value. The {@code long} value is converted to a string
+&nbsp;	 * without memory allocation.
+&nbsp;	 * 
+&nbsp;	 * @param value the {@code long} value.
+&nbsp;	 * @param minLength the minimum number of characters to add
+&nbsp;	 * @return this builder. */
+&nbsp;	public StringBuilder append (long value, int minLength) {
+<b class="nc">&nbsp;		return append(value, minLength, &#39;0&#39;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code long} value. The {@code long} value is converted to a string
+&nbsp;	 * without memory allocation.
+&nbsp;	 * 
+&nbsp;	 * @param value the {@code long} value.
+&nbsp;	 * @param minLength the minimum number of characters to add
+&nbsp;	 * @param prefix the character to use as prefix
+&nbsp;	 * @return this builder. */
+&nbsp;	public StringBuilder append (long value, int minLength, char prefix) {
+<b class="nc">&nbsp;		if (value == Long.MIN_VALUE) {</b>
+<b class="nc">&nbsp;			append0(&quot;-9223372036854775808&quot;);</b>
+<b class="nc">&nbsp;			return this;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (value &lt; 0L) {</b>
+<b class="nc">&nbsp;			append0(&#39;-&#39;);</b>
+<b class="nc">&nbsp;			value = -value;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (minLength &gt; 1) {</b>
+<b class="nc">&nbsp;			for (int j = minLength - numChars(value, 10); j &gt; 0; --j)</b>
+<b class="nc">&nbsp;				append(prefix);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (value &gt;= 10000) {</b>
+<b class="nc">&nbsp;			if (value &gt;= 1000000000000000000L) append0(digits[(int)(value % 10000000000000000000D / 1000000000000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 100000000000000000L) append0(digits[(int)(value % 1000000000000000000L / 100000000000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 10000000000000000L) append0(digits[(int)(value % 100000000000000000L / 10000000000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 1000000000000000L) append0(digits[(int)(value % 10000000000000000L / 1000000000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 100000000000000L) append0(digits[(int)(value % 1000000000000000L / 100000000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 10000000000000L) append0(digits[(int)(value % 100000000000000L / 10000000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 1000000000000L) append0(digits[(int)(value % 10000000000000L / 1000000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 100000000000L) append0(digits[(int)(value % 1000000000000L / 100000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 10000000000L) append0(digits[(int)(value % 100000000000L / 10000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 1000000000L) append0(digits[(int)(value % 10000000000L / 1000000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 100000000L) append0(digits[(int)(value % 1000000000L / 100000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 10000000L) append0(digits[(int)(value % 100000000L / 10000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 1000000L) append0(digits[(int)(value % 10000000L / 1000000L)]);</b>
+<b class="nc">&nbsp;			if (value &gt;= 100000L) append0(digits[(int)(value % 1000000L / 100000L)]);</b>
+<b class="nc">&nbsp;			append0(digits[(int)(value % 100000L / 10000L)]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (value &gt;= 1000L) append0(digits[(int)(value % 10000L / 1000L)]);</b>
+<b class="nc">&nbsp;		if (value &gt;= 100L) append0(digits[(int)(value % 1000L / 100L)]);</b>
+<b class="nc">&nbsp;		if (value &gt;= 10L) append0(digits[(int)(value % 100L / 10L)]);</b>
+<b class="nc">&nbsp;		append0(digits[(int)(value % 10L)]);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code float} value. The {@code float} value is converted to a string
+&nbsp;	 * according to the rule defined by {@link String#valueOf(float)}.
+&nbsp;	 * 
+&nbsp;	 * @param f the {@code float} value to append.
+&nbsp;	 * @return this builder. */
+&nbsp;	public StringBuilder append (float f) {
+<b class="nc">&nbsp;		append0(Float.toString(f));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code double} value. The {@code double} value is converted to a string
+&nbsp;	 * according to the rule defined by {@link String#valueOf(double)}.
+&nbsp;	 * 
+&nbsp;	 * @param d the {@code double} value to append.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(double) */
+&nbsp;	public StringBuilder append (double d) {
+<b class="nc">&nbsp;		append0(Double.toString(d));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code Object}. The {@code Object} value is converted to a string
+&nbsp;	 * according to the rule defined by {@link String#valueOf(Object)}.
+&nbsp;	 * 
+&nbsp;	 * @param obj the {@code Object} to append.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(Object) */
+&nbsp;	public StringBuilder append (Object obj) {
+<b class="nc">&nbsp;		if (obj == null) {</b>
+<b class="nc">&nbsp;			appendNull();</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			append0(obj.toString());</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the contents of the specified string. If the string is {@code null}, then the string {@code &quot;null&quot;} is appended.
+&nbsp;	 * 
+&nbsp;	 * @param str the string to append.
+&nbsp;	 * @return this builder. */
+&nbsp;	public StringBuilder append (String str) {
+<b class="nc">&nbsp;		append0(str);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the specified separator if the builder is not empty, then the specified string. */
+&nbsp;	public StringBuilder append (String str, String separator) {
+<b class="nc">&nbsp;		if (length &gt; 0) append0(separator);</b>
+<b class="nc">&nbsp;		append0(str);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the contents of the specified string, then create a new line. If the string is {@code null}, then the string
+&nbsp;	 * {@code &quot;null&quot;} is appended.
+&nbsp;	 * 
+&nbsp;	 * @param str the string to append.
+&nbsp;	 * @return this builder. */
+&nbsp;	public StringBuilder appendLine (String str) {
+<b class="nc">&nbsp;		append0(str);</b>
+<b class="nc">&nbsp;		append0(&#39;\n&#39;);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code char[]}. The {@code char[]} is converted to a string according to
+&nbsp;	 * the rule defined by {@link String#valueOf(char[])}.
+&nbsp;	 * 
+&nbsp;	 * @param ch the {@code char[]} to append..
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see String#valueOf(char[]) */
+&nbsp;	public StringBuilder append (char[] ch) {
+<b class="nc">&nbsp;		append0(ch);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified subset of the {@code char[]}. The {@code char[]} value is converted to a
+&nbsp;	 * String according to the rule defined by {@link String#valueOf(char[],int,int)}.
+&nbsp;	 * 
+&nbsp;	 * @param str the {@code char[]} to append.
+&nbsp;	 * @param offset the inclusive offset index.
+&nbsp;	 * @param len the number of characters.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws ArrayIndexOutOfBoundsException if {@code offset} and {@code len} do not specify a valid subsequence.
+&nbsp;	 * @see String#valueOf(char[],int,int) */
+&nbsp;	public StringBuilder append (char[] str, int offset, int len) {
+<b class="nc">&nbsp;		append0(str, offset, len);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified {@code CharSequence}. If the {@code CharSequence} is {@code null}, then
+&nbsp;	 * the string {@code &quot;null&quot;} is appended.
+&nbsp;	 * 
+&nbsp;	 * @param csq the {@code CharSequence} to append.
+&nbsp;	 * @return this builder. */
+&nbsp;	public StringBuilder append (CharSequence csq) {
+<b class="nc">&nbsp;		if (csq == null) {</b>
+<b class="nc">&nbsp;			appendNull();</b>
+<b class="nc">&nbsp;		} else if (csq instanceof StringBuilder) {</b>
+<b class="nc">&nbsp;			StringBuilder builder = (StringBuilder)csq;</b>
+<b class="nc">&nbsp;			append0(builder.chars, 0, builder.length);</b>
+<b class="nc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			append0(csq.toString());</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public StringBuilder append (StringBuilder builder) {
+<b class="nc">&nbsp;		if (builder == null)</b>
+<b class="nc">&nbsp;			appendNull();</b>
+&nbsp;		else
+<b class="nc">&nbsp;			append0(builder.chars, 0, builder.length);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the string representation of the specified subsequence of the {@code CharSequence}. If the {@code CharSequence} is
+&nbsp;	 * {@code null}, then the string {@code &quot;null&quot;} is used to extract the subsequence from.
+&nbsp;	 * 
+&nbsp;	 * @param csq the {@code CharSequence} to append.
+&nbsp;	 * @param start the beginning index.
+&nbsp;	 * @param end the ending index.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code start} or {@code end} are negative, {@code start} is greater than {@code end} or
+&nbsp;	 *            {@code end} is greater than the length of {@code csq}. */
+&nbsp;	public StringBuilder append (CharSequence csq, int start, int end) {
+<b class="nc">&nbsp;		append0(csq, start, end);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public StringBuilder append (StringBuilder builder, int start, int end) {
+<b class="nc">&nbsp;		if (builder == null)</b>
+<b class="nc">&nbsp;			appendNull();</b>
+&nbsp;		else
+<b class="nc">&nbsp;			append0(builder.chars, start, end);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Appends the encoded Unicode code point. The code point is converted to a {@code char[]} as defined by
+&nbsp;	 * {@link Character#toChars(int)}.
+&nbsp;	 * 
+&nbsp;	 * @param codePoint the Unicode code point to encode and append.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @see Character#toChars(int) */
+&nbsp;	public StringBuilder appendCodePoint (int codePoint) {
+<b class="nc">&nbsp;		append0(Character.toChars(codePoint));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Deletes a sequence of characters specified by {@code start} and {@code end}. Shifts any remaining characters to the left.
+&nbsp;	 * 
+&nbsp;	 * @param start the inclusive start index.
+&nbsp;	 * @param end the exclusive end index.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code start} is less than zero, greater than the current length or greater than
+&nbsp;	 *            {@code end}. */
+&nbsp;	public StringBuilder delete (int start, int end) {
+<b class="nc">&nbsp;		delete0(start, end);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Deletes the character at the specified index. shifts any remaining characters to the left.
+&nbsp;	 * 
+&nbsp;	 * @param index the index of the character to delete.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code index} is less than zero or is greater than or equal to the current
+&nbsp;	 *            length. */
+&nbsp;	public StringBuilder deleteCharAt (int index) {
+<b class="nc">&nbsp;		deleteCharAt0(index);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets length to 0. */
+&nbsp;	public void clear () {
+<b class="nc">&nbsp;		length = 0;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code boolean} value at the specified {@code offset}. The
+&nbsp;	 * {@code boolean} value is converted to a string according to the rule defined by {@link String#valueOf(boolean)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param b the {@code boolean} value to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length}.
+&nbsp;	 * @see String#valueOf(boolean) */
+&nbsp;	public StringBuilder insert (int offset, boolean b) {
+<b class="nc">&nbsp;		insert0(offset, b ? &quot;true&quot; : &quot;false&quot;); //$NON-NLS-1$ //$NON-NLS-2$</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code char} value at the specified {@code offset}. The {@code char}
+&nbsp;	 * value is converted to a string according to the rule defined by {@link String#valueOf(char)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param c the {@code char} value to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}.
+&nbsp;	 * @see String#valueOf(char) */
+&nbsp;	public StringBuilder insert (int offset, char c) {
+<b class="nc">&nbsp;		insert0(offset, c);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code int} value at the specified {@code offset}. The {@code int} value
+&nbsp;	 * is converted to a String according to the rule defined by {@link String#valueOf(int)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param i the {@code int} value to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}.
+&nbsp;	 * @see String#valueOf(int) */
+&nbsp;	public StringBuilder insert (int offset, int i) {
+<b class="nc">&nbsp;		insert0(offset, Integer.toString(i));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code long} value at the specified {@code offset}. The {@code long}
+&nbsp;	 * value is converted to a String according to the rule defined by {@link String#valueOf(long)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param l the {@code long} value to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {code length()}.
+&nbsp;	 * @see String#valueOf(long) */
+&nbsp;	public StringBuilder insert (int offset, long l) {
+<b class="nc">&nbsp;		insert0(offset, Long.toString(l));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code float} value at the specified {@code offset}. The {@code float}
+&nbsp;	 * value is converted to a string according to the rule defined by {@link String#valueOf(float)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param f the {@code float} value to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}.
+&nbsp;	 * @see String#valueOf(float) */
+&nbsp;	public StringBuilder insert (int offset, float f) {
+<b class="nc">&nbsp;		insert0(offset, Float.toString(f));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code double} value at the specified {@code offset}. The {@code double}
+&nbsp;	 * value is converted to a String according to the rule defined by {@link String#valueOf(double)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param d the {@code double} value to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}.
+&nbsp;	 * @see String#valueOf(double) */
+&nbsp;	public StringBuilder insert (int offset, double d) {
+<b class="nc">&nbsp;		insert0(offset, Double.toString(d));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code Object} at the specified {@code offset}. The {@code Object} value
+&nbsp;	 * is converted to a String according to the rule defined by {@link String#valueOf(Object)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param obj the {@code Object} to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}.
+&nbsp;	 * @see String#valueOf(Object) */
+&nbsp;	public StringBuilder insert (int offset, Object obj) {
+<b class="nc">&nbsp;		insert0(offset, obj == null ? &quot;null&quot; : obj.toString()); //$NON-NLS-1$</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the specified string at the specified {@code offset}. If the specified string is null, then the String
+&nbsp;	 * {@code &quot;null&quot;} is inserted.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param str the {@code String} to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}. */
+&nbsp;	public StringBuilder insert (int offset, String str) {
+<b class="nc">&nbsp;		insert0(offset, str);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code char[]} at the specified {@code offset}. The {@code char[]} value
+&nbsp;	 * is converted to a String according to the rule defined by {@link String#valueOf(char[])}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param ch the {@code char[]} to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}.
+&nbsp;	 * @see String#valueOf(char[]) */
+&nbsp;	public StringBuilder insert (int offset, char[] ch) {
+<b class="nc">&nbsp;		insert0(offset, ch);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified subsequence of the {@code char[]} at the specified {@code offset}. The
+&nbsp;	 * {@code char[]} value is converted to a String according to the rule defined by {@link String#valueOf(char[],int,int)}.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param str the {@code char[]} to insert.
+&nbsp;	 * @param strOffset the inclusive index.
+&nbsp;	 * @param strLen the number of characters.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}, or
+&nbsp;	 *            {@code strOffset} and {@code strLen} do not specify a valid subsequence.
+&nbsp;	 * @see String#valueOf(char[],int,int) */
+&nbsp;	public StringBuilder insert (int offset, char[] str, int strOffset, int strLen) {
+<b class="nc">&nbsp;		insert0(offset, str, strOffset, strLen);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified {@code CharSequence} at the specified {@code offset}. The
+&nbsp;	 * {@code CharSequence} is converted to a String as defined by {@link CharSequence#toString()}. If {@code s} is {@code null},
+&nbsp;	 * then the String {@code &quot;null&quot;} is inserted.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param s the {@code CharSequence} to insert.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}.
+&nbsp;	 * @see CharSequence#toString() */
+&nbsp;	public StringBuilder insert (int offset, CharSequence s) {
+<b class="nc">&nbsp;		insert0(offset, s == null ? &quot;null&quot; : s.toString()); //$NON-NLS-1$</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inserts the string representation of the specified subsequence of the {@code CharSequence} at the specified {@code offset}.
+&nbsp;	 * The {@code CharSequence} is converted to a String as defined by {@link CharSequence#subSequence(int, int)}. If the
+&nbsp;	 * {@code CharSequence} is {@code null}, then the string {@code &quot;null&quot;} is used to determine the subsequence.
+&nbsp;	 * 
+&nbsp;	 * @param offset the index to insert at.
+&nbsp;	 * @param s the {@code CharSequence} to insert.
+&nbsp;	 * @param start the start of the subsequence of the character sequence.
+&nbsp;	 * @param end the end of the subsequence of the character sequence.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws IndexOutOfBoundsException if {@code offset} is negative or greater than the current {@code length()}, or
+&nbsp;	 *            {@code start} and {@code end} do not specify a valid subsequence.
+&nbsp;	 * @see CharSequence#subSequence(int, int) */
+&nbsp;	public StringBuilder insert (int offset, CharSequence s, int start, int end) {
+<b class="nc">&nbsp;		insert0(offset, s, start, end);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Replaces the specified subsequence in this builder with the specified string.
+&nbsp;	 * 
+&nbsp;	 * @param start the inclusive begin index.
+&nbsp;	 * @param end the exclusive end index.
+&nbsp;	 * @param str the replacement string.
+&nbsp;	 * @return this builder.
+&nbsp;	 * @throws StringIndexOutOfBoundsException if {@code start} is negative, greater than the current {@code length()} or greater
+&nbsp;	 *            than {@code end}.
+&nbsp;	 * @throws NullPointerException if {@code str} is {@code null}. */
+&nbsp;	public StringBuilder replace (int start, int end, String str) {
+<b class="nc">&nbsp;		replace0(start, end, str);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Replaces all instances of {@code find} with {@code replace}. */
+&nbsp;	public StringBuilder replace (String find, String replace) {
+<b class="nc">&nbsp;		int findLength = find.length(), replaceLength = replace.length();</b>
+<b class="nc">&nbsp;		int index = 0;</b>
+&nbsp;		while (true) {
+<b class="nc">&nbsp;			index = indexOf(find, index);</b>
+<b class="nc">&nbsp;			if (index == -1) break;</b>
+<b class="nc">&nbsp;			replace0(index, index + findLength, replace);</b>
+<b class="nc">&nbsp;			index += replaceLength;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Replaces all instances of {@code find} with {@code replace}. */
+&nbsp;	public StringBuilder replace (char find, String replace) {
+<b class="nc">&nbsp;		int replaceLength = replace.length();</b>
+<b class="nc">&nbsp;		int index = 0;</b>
+&nbsp;		while (true) {
+&nbsp;			while (true) {
+<b class="nc">&nbsp;				if (index == length) return this;</b>
+<b class="nc">&nbsp;				if (chars[index] == find) break;</b>
+<b class="nc">&nbsp;				index++;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			replace0(index, index + 1, replace);</b>
+<b class="nc">&nbsp;			index += replaceLength;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reverses the order of characters in this builder.
+&nbsp;	 * 
+&nbsp;	 * @return this buffer. */
+&nbsp;	public StringBuilder reverse () {
+<b class="nc">&nbsp;		reverse0();</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isEmpty () {
+<b class="nc">&nbsp;		return length == 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean notEmpty () {
+<b class="nc">&nbsp;		return length != 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		int result = 31 + length;</b>
+<b class="nc">&nbsp;		for (int index = 0; index &lt; length; ++index)</b>
+<b class="nc">&nbsp;			result = 31 * result + chars[index];</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean equals (Object obj) {
+<b class="nc">&nbsp;		if (this == obj) return true;</b>
+<b class="nc">&nbsp;		if (obj == null) return false;</b>
+<b class="nc">&nbsp;		if (getClass() != obj.getClass()) return false;</b>
+<b class="nc">&nbsp;		StringBuilder other = (StringBuilder)obj;</b>
+<b class="nc">&nbsp;		int length = this.length;</b>
+<b class="nc">&nbsp;		if (length != other.length) return false;</b>
+<b class="nc">&nbsp;		char[] chars = this.chars, chars2 = other.chars;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; length; i++)</b>
+<b class="nc">&nbsp;			if (chars[i] != chars2[i]) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean equalsIgnoreCase (@Null StringBuilder other) {
+<b class="nc">&nbsp;		if (this == other) return true;</b>
+<b class="nc">&nbsp;		if (other == null) return false;</b>
+<b class="nc">&nbsp;		int length = this.length;</b>
+<b class="nc">&nbsp;		if (length != other.length) return false;</b>
+<b class="nc">&nbsp;		char[] chars = this.chars, chars2 = other.chars;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; length; i++) {</b>
+<b class="nc">&nbsp;			char c = chars[i];</b>
+<b class="nc">&nbsp;			char upper = Character.toUpperCase(chars2[i]);</b>
+<b class="nc">&nbsp;			if (c != upper &amp;&amp; c != Character.toLowerCase(upper)) return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean equalsIgnoreCase (@Null String other) {
+<b class="nc">&nbsp;		if (other == null) return false;</b>
+<b class="nc">&nbsp;		int length = this.length;</b>
+<b class="nc">&nbsp;		if (length != other.length()) return false;</b>
+<b class="nc">&nbsp;		char[] chars = this.chars;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; length; i++) {</b>
+<b class="nc">&nbsp;			char c = chars[i];</b>
+<b class="nc">&nbsp;			char upper = Character.toUpperCase(other.charAt(i));</b>
+<b class="nc">&nbsp;			if (c != upper &amp;&amp; c != Character.toLowerCase(upper)) return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

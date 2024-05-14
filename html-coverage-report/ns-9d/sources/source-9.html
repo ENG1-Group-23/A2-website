@@ -1,0 +1,378 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ModuleHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.mockito.internal.creation.bytebuddy</a>
+</div>
+
+<h1>Coverage Summary for Class: ModuleHandler (org.mockito.internal.creation.bytebuddy)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ModuleHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ModuleHandler$ModuleSystemFound</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (4/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (6/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.5%
+  </span>
+  <span class="absValue">
+    (22/142)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ModuleHandler$NoModuleSystemFound</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    35.3%
+  </span>
+  <span class="absValue">
+    (6/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (6/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.7%
+  </span>
+  <span class="absValue">
+    (24/153)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package org.mockito.internal.creation.bytebuddy;
+&nbsp;
+&nbsp;import java.lang.reflect.Field;
+&nbsp;import java.lang.reflect.Method;
+&nbsp;import net.bytebuddy.ByteBuddy;
+&nbsp;import net.bytebuddy.description.modifier.ModifierContributor;
+&nbsp;import net.bytebuddy.description.modifier.Ownership;
+&nbsp;import net.bytebuddy.description.modifier.Visibility;
+&nbsp;import net.bytebuddy.dynamic.scaffold.subclass.ConstructorStrategy.Default;
+&nbsp;import net.bytebuddy.implementation.Implementation;
+&nbsp;import net.bytebuddy.implementation.MethodCall;
+&nbsp;import net.bytebuddy.implementation.StubMethod;
+&nbsp;import net.bytebuddy.matcher.ElementMatchers;
+&nbsp;import net.bytebuddy.utility.GraalImageCode;
+&nbsp;import net.bytebuddy.utility.RandomString;
+&nbsp;import org.mockito.Mockito;
+&nbsp;import org.mockito.codegen.InjectionBase;
+&nbsp;import org.mockito.exceptions.base.MockitoException;
+&nbsp;import org.mockito.internal.util.StringUtil;
+&nbsp;
+<b class="fc">&nbsp;abstract class ModuleHandler {</b>
+&nbsp;    ModuleHandler() {
+&nbsp;    }
+&nbsp;
+&nbsp;    abstract boolean isOpened(Class&lt;?&gt; var1, Class&lt;?&gt; var2);
+&nbsp;
+&nbsp;    abstract boolean canRead(Class&lt;?&gt; var1, Class&lt;?&gt; var2);
+&nbsp;
+&nbsp;    abstract boolean isExported(Class&lt;?&gt; var1);
+&nbsp;
+&nbsp;    abstract boolean isExported(Class&lt;?&gt; var1, Class&lt;?&gt; var2);
+&nbsp;
+&nbsp;    abstract Class&lt;?&gt; injectionBase(ClassLoader var1, String var2);
+&nbsp;
+&nbsp;    abstract void adjustModuleGraph(Class&lt;?&gt; var1, Class&lt;?&gt; var2, boolean var3, boolean var4);
+&nbsp;
+<b class="fc">&nbsp;    static ModuleHandler make(ByteBuddy byteBuddy, SubclassLoader loader) {</b>
+<b class="nc">&nbsp;        try {</b>
+<b class="nc">&nbsp;            return new ModuleSystemFound(byteBuddy, loader);</b>
+&nbsp;        } catch (Exception var3) {
+&nbsp;            return new NoModuleSystemFound();
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static class NoModuleSystemFound extends ModuleHandler {
+&nbsp;        private NoModuleSystemFound() {
+&nbsp;        }
+&nbsp;
+&nbsp;        boolean isOpened(Class&lt;?&gt; source, Class&lt;?&gt; target) {
+&nbsp;            return true;
+&nbsp;        }
+&nbsp;
+&nbsp;        boolean canRead(Class&lt;?&gt; source, Class&lt;?&gt; target) {
+&nbsp;            return true;
+&nbsp;        }
+&nbsp;
+&nbsp;        boolean isExported(Class&lt;?&gt; source) {
+&nbsp;            return true;
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        boolean isExported(Class&lt;?&gt; source, Class&lt;?&gt; target) {</b>
+<b class="fc">&nbsp;            return true;</b>
+<b class="pc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+<b class="fc">&nbsp;        Class&lt;?&gt; injectionBase(ClassLoader classLoader, String tyoeName) {</b>
+<b class="fc">&nbsp;            return InjectionBase.class;</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        void adjustModuleGraph(Class&lt;?&gt; source, Class&lt;?&gt; target, boolean export, boolean read) {</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    private static class ModuleSystemFound extends ModuleHandler {</b>
+<b class="fc">&nbsp;        private final ByteBuddy byteBuddy;</b>
+<b class="fc">&nbsp;        private final SubclassLoader loader;</b>
+&nbsp;        private final int injectonBaseSuffix;
+&nbsp;        private final Method getModule;
+&nbsp;        private final Method isOpen;
+<b class="nc">&nbsp;        private final Method isExported;</b>
+<b class="nc">&nbsp;        private final Method isExportedUnqualified;</b>
+&nbsp;        private final Method canRead;
+<b class="nc">&nbsp;        private final Method addExports;</b>
+<b class="nc">&nbsp;        private final Method addReads;</b>
+&nbsp;        private final Method forName;
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        private ModuleSystemFound(ByteBuddy byteBuddy, SubclassLoader loader) throws Exception {</b>
+<b class="nc">&nbsp;            this.byteBuddy = byteBuddy;</b>
+&nbsp;            this.loader = loader;
+&nbsp;            this.injectonBaseSuffix = GraalImageCode.getCurrent().isDefined() ? 0 : Math.abs(Mockito.class.hashCode());
+&nbsp;            Class&lt;?&gt; moduleType = Class.forName(&quot;java.lang.Module&quot;);
+&nbsp;            this.getModule = Class.class.getMethod(&quot;getModule&quot;);
+<b class="fc">&nbsp;            this.isOpen = moduleType.getMethod(&quot;isOpen&quot;, String.class, moduleType);</b>
+&nbsp;            this.isExported = moduleType.getMethod(&quot;isExported&quot;, String.class, moduleType);
+&nbsp;            this.isExportedUnqualified = moduleType.getMethod(&quot;isExported&quot;, String.class);
+&nbsp;            this.canRead = moduleType.getMethod(&quot;canRead&quot;, moduleType);
+&nbsp;            this.addExports = moduleType.getMethod(&quot;addExports&quot;, String.class, moduleType);
+<b class="nc">&nbsp;            this.addReads = moduleType.getMethod(&quot;addReads&quot;, moduleType);</b>
+<b class="nc">&nbsp;            this.forName = Class.class.getMethod(&quot;forName&quot;, String.class);</b>
+&nbsp;        }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        boolean isOpened(Class&lt;?&gt; source, Class&lt;?&gt; target) {</b>
+&nbsp;            return source.getPackage() == null ? true : (Boolean)invoke(this.isOpen, invoke(this.getModule, source), source.getPackage().getName(), invoke(this.getModule, target));
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;        boolean canRead(Class&lt;?&gt; source, Class&lt;?&gt; target) {
+&nbsp;            return (Boolean)invoke(this.canRead, invoke(this.getModule, source), invoke(this.getModule, target));
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        boolean isExported(Class&lt;?&gt; source) {</b>
+<b class="nc">&nbsp;            return source.getPackage() == null ? true : (Boolean)invoke(this.isExportedUnqualified, invoke(this.getModule, source), source.getPackage().getName());</b>
+&nbsp;        }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        boolean isExported(Class&lt;?&gt; source, Class&lt;?&gt; target) {</b>
+&nbsp;            return source.getPackage() == null ? true : (Boolean)invoke(this.isExported, invoke(this.getModule, source), source.getPackage().getName(), invoke(this.getModule, target));
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        Class&lt;?&gt; injectionBase(ClassLoader classLoader, String typeName) {</b>
+&nbsp;            String packageName = typeName.substring(0, typeName.lastIndexOf(46));
+&nbsp;            if (classLoader == InjectionBase.class.getClassLoader() &amp;&amp; InjectionBase.class.getPackage().getName().equals(packageName)) {
+&nbsp;                return InjectionBase.class;
+&nbsp;            } else {
+<b class="nc">&nbsp;                synchronized(this) {</b>
+<b class="nc">&nbsp;                    int suffix = this.injectonBaseSuffix;</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;                    while(true) {</b>
+&nbsp;                        String name = packageName + &quot;.&quot; + InjectionBase.class.getSimpleName() + &quot;$&quot; + suffix++;
+<b class="nc">&nbsp;</b>
+&nbsp;                        try {
+<b class="nc">&nbsp;                            Class&lt;?&gt; type = Class.forName(name, false, classLoader);</b>
+&nbsp;                            if (type.getClassLoader() == classLoader) {
+<b class="nc">&nbsp;                                Class var10000 = type;</b>
+&nbsp;                                return var10000;
+&nbsp;                            }
+<b class="nc">&nbsp;                        } catch (ClassNotFoundException var9) {</b>
+&nbsp;                            return this.byteBuddy.subclass(Object.class, Default.NO_CONSTRUCTORS).name(name).make().load(classLoader, this.loader.resolveStrategy(InjectionBase.class, classLoader, false)).getLoaded();
+&nbsp;                        }
+&nbsp;                    }
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        void adjustModuleGraph(Class&lt;?&gt; source, Class&lt;?&gt; target, boolean export, boolean read) {
+&nbsp;            boolean needsExport = export &amp;&amp; !this.isExported(source, target);
+&nbsp;            boolean needsRead = read &amp;&amp; !this.canRead(source, target);
+<b class="nc">&nbsp;            if (needsExport || needsRead) {</b>
+<b class="nc">&nbsp;                ClassLoader classLoader = source.getClassLoader();</b>
+&nbsp;                if (classLoader == null) {
+<b class="nc">&nbsp;                    throw new MockitoException(StringUtil.join(new Object[]{&quot;Cannot adjust module graph for modules in the bootstrap loader&quot;, &quot;&quot;, &quot;&quot; + source + &quot; is declared by the bootstrap loader and cannot be adjusted&quot;, &quot;Requires package export to &quot; + target + &quot;: &quot; + needsExport, &quot;Requires adjusted reading of &quot; + target + &quot;: &quot; + needsRead}));</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    boolean targetVisible;</b>
+&nbsp;                    for(targetVisible = classLoader == target.getClassLoader(); !targetVisible &amp;&amp; classLoader != null; targetVisible = classLoader == target.getClassLoader()) {
+<b class="nc">&nbsp;                        classLoader = classLoader.getParent();</b>
+<b class="nc">&nbsp;                    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;                    MethodCall targetLookup;</b>
+<b class="nc">&nbsp;                    Object implementation;</b>
+&nbsp;                    if (targetVisible) {
+<b class="nc">&nbsp;                        targetLookup = MethodCall.invoke(this.getModule).onMethodCall(MethodCall.invoke(this.forName).with(new Object[]{target.getName()}));</b>
+<b class="nc">&nbsp;                        implementation = StubMethod.INSTANCE;</b>
+<b class="nc">&nbsp;                    } else {</b>
+&nbsp;                        Class intermediate;
+&nbsp;                        Field field;
+&nbsp;                        try {
+&nbsp;                            intermediate = this.byteBuddy.subclass(Object.class, Default.NO_CONSTRUCTORS).name(String.format(&quot;%s$%s%s&quot;, &quot;org.mockito.codegen.MockitoTypeCarrier&quot;, RandomString.hashOf(source.getName().hashCode()), RandomString.hashOf(target.getName().hashCode()))).defineField(&quot;mockitoType&quot;, Class.class, new ModifierContributor.ForField[]{Visibility.PUBLIC, Ownership.STATIC}).make().load(source.getClassLoader(), this.loader.resolveStrategy(source, source.getClassLoader(), false)).getLoaded();
+&nbsp;                            field = intermediate.getField(&quot;mockitoType&quot;);
+<b class="pc">&nbsp;                            field.set((Object)null, target);</b>
+<b class="pc">&nbsp;                        } catch (Exception var15) {</b>
+<b class="pc">&nbsp;                            Exception e = var15;</b>
+<b class="fc">&nbsp;                            throw new MockitoException(StringUtil.join(new Object[]{&quot;Could not create a carrier for making the Mockito type visible to &quot; + source, &quot;&quot;, &quot;This is required to adjust the module graph to enable mock creation&quot;}), e);</b>
+&nbsp;                        }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;                        targetLookup = MethodCall.invoke(this.getModule).onField(field);</b>
+<b class="nc">&nbsp;                        implementation = MethodCall.invoke(this.getModule).onMethodCall(MethodCall.invoke(this.forName).with(new Object[]{intermediate.getName()}));</b>
+<b class="nc">&nbsp;                    }</b>
+&nbsp;
+&nbsp;                    MethodCall sourceLookup = MethodCall.invoke(this.getModule).onMethodCall(MethodCall.invoke(this.forName).with(new Object[]{source.getName()}));
+&nbsp;                    if (needsExport) {
+&nbsp;                        implementation = ((Implementation.Composable)implementation).andThen(MethodCall.invoke(this.addExports).onMethodCall(sourceLookup).with(new Object[]{target.getPackage().getName()}).withMethodCall(targetLookup));
+&nbsp;                    }
+&nbsp;
+&nbsp;                    if (needsRead) {
+<b class="nc">&nbsp;                        implementation = ((Implementation.Composable)implementation).andThen(MethodCall.invoke(this.addReads).onMethodCall(sourceLookup).withMethodCall(targetLookup));</b>
+<b class="nc">&nbsp;                    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;                    try {</b>
+&nbsp;                        Class.forName(this.byteBuddy.subclass(Object.class).name(String.format(&quot;%s$%s$%s%s&quot;, source.getName(), &quot;MockitoModuleProbe&quot;, RandomString.hashOf(source.getName().hashCode()), RandomString.hashOf(target.getName().hashCode()))).invokable(ElementMatchers.isTypeInitializer()).intercept((Implementation)implementation).make().load(source.getClassLoader(), this.loader.resolveStrategy(source, source.getClassLoader(), false)).getLoaded().getName(), true, source.getClassLoader());
+&nbsp;                    } catch (Exception var14) {
+&nbsp;                        Exception e = var14;
+<b class="nc">&nbsp;                        throw new MockitoException(StringUtil.join(new Object[]{&quot;Could not force module adjustment of the module of &quot; + source, &quot;&quot;, &quot;This is required to adjust the module graph to enable mock creation&quot;}), e);</b>
+<b class="nc">&nbsp;                    }</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        private static Object invoke(Method method, Object target, Object... args) {
+&nbsp;            try {
+&nbsp;                return method.invoke(target, args);
+<b class="nc">&nbsp;            } catch (Exception var4) {</b>
+&nbsp;                Exception e = var4;
+<b class="nc">&nbsp;                throw new MockitoException(StringUtil.join(new Object[]{&quot;Could not invoke &quot; + method + &quot; using reflection&quot;, &quot;&quot;, &quot;Mockito attempted to interact with the Java module system but an unexpected method behavior was encountered&quot;}), e);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

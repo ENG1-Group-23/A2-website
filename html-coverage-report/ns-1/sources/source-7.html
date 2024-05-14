@@ -1,0 +1,240 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > InteractionTests</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle</a>
+</div>
+
+<h1>Coverage Summary for Class: InteractionTests (bytemusketeers.heslingtonhustle)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InteractionTests</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (15/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.1%
+  </span>
+  <span class="absValue">
+    (64/68)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.entity.Player;
+&nbsp;import bytemusketeers.heslingtonhustle.map.GameMap;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.MainGameScreen;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.Achievement;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.CollisionHandler;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.GameData;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.Score;
+&nbsp;import com.badlogic.gdx.graphics.OrthographicCamera;
+&nbsp;import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+&nbsp;import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+&nbsp;import org.junit.Before;
+&nbsp;import org.junit.Test;
+&nbsp;import org.junit.runner.RunWith;
+&nbsp;
+&nbsp;import static org.junit.Assert.assertEquals;
+&nbsp;import static org.junit.Assert.assertTrue;
+&nbsp;
+&nbsp;@RunWith(GdxTestRunner.class)
+<b class="fc">&nbsp;public class InteractionTests {</b>
+<b class="fc">&nbsp;    private final String[] layers = {&quot;Comp_sci_door&quot;, &quot;Piazza_door&quot;, &quot;Gym_door&quot;, &quot;Goodricke_door&quot;};</b>
+&nbsp;    private Player player;
+&nbsp;    private CollisionHandler collisionHandler;
+&nbsp;    private GameMap gameMap;
+&nbsp;    private int tileSize;
+<b class="fc">&nbsp;    private boolean collisionFlag = true;</b>
+&nbsp;    private MainGameScreen screen;
+&nbsp;
+&nbsp;    @Before
+&nbsp;    public void setUp() {
+<b class="fc">&nbsp;        HeslingtonHustle game = new HeslingtonHustle();</b>
+<b class="fc">&nbsp;        game.scaleFactorX = 1;</b>
+<b class="fc">&nbsp;        game.scaleFactorY = 1;</b>
+<b class="fc">&nbsp;        game.gameData = new GameData();</b>
+<b class="fc">&nbsp;        game.tiledMap = new TmxMapLoader().load(&quot;map/MainMap.tmx&quot;);</b>
+<b class="fc">&nbsp;        OrthographicCamera camera = new OrthographicCamera();</b>
+<b class="fc">&nbsp;        this.gameMap = new GameMap(camera, null, game.tiledMap);</b>
+<b class="fc">&nbsp;        this.tileSize = this.gameMap.getTileSize();</b>
+<b class="fc">&nbsp;        this.player = new Player(game, gameMap, camera);</b>
+<b class="fc">&nbsp;        this.collisionHandler = player.getCollisionHandler();</b>
+<b class="fc">&nbsp;        screen = new MainGameScreen(game, new Score(), new Achievement(&quot;Eater&quot;),</b>
+&nbsp;                new Achievement(&quot;Recreator&quot;), new Achievement(&quot;Sleeper&quot;));
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testDoorCollision() {
+<b class="fc">&nbsp;        String failedLayer = &quot;&quot;;</b>
+<b class="fc">&nbsp;        for (String layerName : layers) {</b>
+<b class="fc">&nbsp;            TiledMapTileLayer layer = (TiledMapTileLayer) this.gameMap.getMap().getLayers().get(layerName);</b>
+<b class="fc">&nbsp;            int layerX = 0;</b>
+<b class="fc">&nbsp;            int layerY = 0;</b>
+<b class="fc">&nbsp;            for (int y = 0; y &lt; layer.getHeight(); y++) {</b>
+<b class="fc">&nbsp;                for (int x = 0; x &lt; layer.getWidth(); x++) {</b>
+<b class="fc">&nbsp;                    TiledMapTileLayer.Cell cell = layer.getCell(x, y);</b>
+<b class="fc">&nbsp;                    if (cell != null) {</b>
+<b class="fc">&nbsp;                        layerX = x;</b>
+<b class="fc">&nbsp;                        layerY = y;</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+<b class="fc">&nbsp;            int spawnX = layerX * tileSize - Player.spriteX;</b>
+<b class="fc">&nbsp;            int spawnY = layerY * tileSize - Player.spriteY;</b>
+<b class="fc">&nbsp;            player.setPos(spawnX, spawnY);</b>
+<b class="fc">&nbsp;            int lastX = layerX * tileSize + tileSize - 1;</b>
+<b class="fc">&nbsp;            int lastY = layerY * tileSize;</b>
+<b class="fc">&nbsp;            for (; spawnX &lt; lastX; spawnX++) {</b>
+<b class="fc">&nbsp;                for (; spawnY &lt; lastY; spawnY++) {</b>
+<b class="fc">&nbsp;                    collisionFlag = collisionHandler.isTouching(layerName, player.getHitBox());</b>
+&nbsp;                }
+<b class="pc">&nbsp;                if (!collisionFlag) {</b>
+<b class="nc">&nbsp;                    failedLayer = layerName;</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                }
+&nbsp;            }
+<b class="pc">&nbsp;            if (!collisionFlag) {</b>
+<b class="nc">&nbsp;                break;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        assertTrue(&quot;Failed interaction with layer: &quot; + failedLayer, collisionFlag);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testEatButton() {
+<b class="fc">&nbsp;        int energy = screen.getEnergyCounter();</b>
+<b class="fc">&nbsp;        int meal = screen.getMealCount();</b>
+&nbsp;        int energyToCompare;
+<b class="pc">&nbsp;        if (energy == 10) {</b>
+<b class="fc">&nbsp;            energyToCompare = 10;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            energyToCompare = energy + 3;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        screen.eatClickHandler();</b>
+<b class="fc">&nbsp;        assertEquals(energyToCompare, screen.getEnergyCounter(), 0.0001);</b>
+<b class="fc">&nbsp;        assertEquals(meal + 1, screen.getMealCount(), 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testStudyButton() {
+<b class="fc">&nbsp;        screen.studyClickHandler();</b>
+<b class="fc">&nbsp;        assertTrue(screen.isShowMenu());</b>
+<b class="fc">&nbsp;        assertTrue(screen.isLockMovement());</b>
+<b class="fc">&nbsp;        assertEquals(&quot;study&quot;, screen.getActivity());</b>
+<b class="fc">&nbsp;        assertEquals(1, screen.getDuration(), 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testExerciseButton() {
+<b class="fc">&nbsp;        screen.exerciseClickHandler();</b>
+<b class="fc">&nbsp;        assertTrue(screen.isShowMenu());</b>
+<b class="fc">&nbsp;        assertTrue(screen.isLockMovement());</b>
+<b class="fc">&nbsp;        assertEquals(&quot;exercise&quot;, screen.getActivity());</b>
+<b class="fc">&nbsp;        assertEquals(1, screen.getDuration(), 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testSleepButton() {
+<b class="fc">&nbsp;        screen.sleepClickHandler();</b>
+<b class="fc">&nbsp;        assertTrue(screen.isShowMenu());</b>
+<b class="fc">&nbsp;        assertTrue(screen.isLockMovement());</b>
+<b class="fc">&nbsp;        assertEquals(&quot;sleep&quot;, screen.getActivity());</b>
+<b class="fc">&nbsp;        assertEquals(1, screen.getDuration(), 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

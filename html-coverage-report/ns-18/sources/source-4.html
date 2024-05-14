@@ -1,0 +1,296 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Plane</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: Plane (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Plane</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.8%
+  </span>
+  <span class="absValue">
+    (3/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.8%
+  </span>
+  <span class="absValue">
+    (9/48)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;/** A plane defined via a unit length normal and the distance from the origin, as you learned in your math class.
+&nbsp; * 
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public class Plane implements Serializable {
+&nbsp;	private static final long serialVersionUID = -1240652082930747866L;
+&nbsp;
+&nbsp;	/** Enum specifying on which side a point lies respective to the plane and it&#39;s normal. {@link PlaneSide#Front} is the side to
+&nbsp;	 * which the normal points.
+&nbsp;	 * 
+&nbsp;	 * @author mzechner */
+&nbsp;	public enum PlaneSide {
+&nbsp;		OnPlane, Back, Front
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	public final Vector3 normal = new Vector3();</b>
+<b class="fc">&nbsp;	public float d = 0;</b>
+&nbsp;
+&nbsp;	/** Constructs a new plane with all values set to 0 */
+<b class="nc">&nbsp;	public Plane () {</b>
+&nbsp;
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new plane based on the normal and distance to the origin.
+&nbsp;	 * 
+&nbsp;	 * @param normal The plane normal
+&nbsp;	 * @param d The distance to the origin */
+<b class="fc">&nbsp;	public Plane (Vector3 normal, float d) {</b>
+<b class="fc">&nbsp;		this.normal.set(normal).nor();</b>
+<b class="fc">&nbsp;		this.d = d;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new plane based on the normal and a point on the plane.
+&nbsp;	 * 
+&nbsp;	 * @param normal The normal
+&nbsp;	 * @param point The point on the plane */
+<b class="nc">&nbsp;	public Plane (Vector3 normal, Vector3 point) {</b>
+<b class="nc">&nbsp;		this.normal.set(normal).nor();</b>
+<b class="nc">&nbsp;		this.d = -this.normal.dot(point);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new plane out of the three given points that are considered to be on the plane. The normal is calculated via a
+&nbsp;	 * cross product between (point1-point2)x(point2-point3)
+&nbsp;	 * 
+&nbsp;	 * @param point1 The first point
+&nbsp;	 * @param point2 The second point
+&nbsp;	 * @param point3 The third point */
+<b class="nc">&nbsp;	public Plane (Vector3 point1, Vector3 point2, Vector3 point3) {</b>
+<b class="nc">&nbsp;		set(point1, point2, point3);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the plane normal and distance to the origin based on the three given points which are considered to be on the plane.
+&nbsp;	 * The normal is calculated via a cross product between (point1-point2)x(point2-point3)
+&nbsp;	 * 
+&nbsp;	 * @param point1
+&nbsp;	 * @param point2
+&nbsp;	 * @param point3 */
+&nbsp;	public void set (Vector3 point1, Vector3 point2, Vector3 point3) {
+<b class="fc">&nbsp;		normal.set(point1).sub(point2).crs(point2.x - point3.x, point2.y - point3.y, point2.z - point3.z).nor();</b>
+<b class="fc">&nbsp;		d = -point1.dot(normal);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the plane normal and distance
+&nbsp;	 * 
+&nbsp;	 * @param nx normal x-component
+&nbsp;	 * @param ny normal y-component
+&nbsp;	 * @param nz normal z-component
+&nbsp;	 * @param d distance to origin */
+&nbsp;	public void set (float nx, float ny, float nz, float d) {
+<b class="nc">&nbsp;		normal.set(nx, ny, nz);</b>
+<b class="nc">&nbsp;		this.d = d;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Calculates the shortest signed distance between the plane and the given point.
+&nbsp;	 * 
+&nbsp;	 * @param point The point
+&nbsp;	 * @return the shortest signed distance between the plane and the point */
+&nbsp;	public float distance (Vector3 point) {
+<b class="nc">&nbsp;		return normal.dot(point) + d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns on which side the given point lies relative to the plane and its normal. PlaneSide.Front refers to the side the
+&nbsp;	 * plane normal points to.
+&nbsp;	 * 
+&nbsp;	 * @param point The point
+&nbsp;	 * @return The side the point lies relative to the plane */
+&nbsp;	public PlaneSide testPoint (Vector3 point) {
+<b class="nc">&nbsp;		float dist = normal.dot(point) + d;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (dist == 0)</b>
+<b class="nc">&nbsp;			return PlaneSide.OnPlane;</b>
+<b class="nc">&nbsp;		else if (dist &lt; 0)</b>
+<b class="nc">&nbsp;			return PlaneSide.Back;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return PlaneSide.Front;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns on which side the given point lies relative to the plane and its normal. PlaneSide.Front refers to the side the
+&nbsp;	 * plane normal points to.
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 * @param y
+&nbsp;	 * @param z
+&nbsp;	 * @return The side the point lies relative to the plane */
+&nbsp;	public PlaneSide testPoint (float x, float y, float z) {
+<b class="nc">&nbsp;		float dist = normal.dot(x, y, z) + d;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (dist == 0)</b>
+<b class="nc">&nbsp;			return PlaneSide.OnPlane;</b>
+<b class="nc">&nbsp;		else if (dist &lt; 0)</b>
+<b class="nc">&nbsp;			return PlaneSide.Back;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return PlaneSide.Front;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the plane is facing the direction vector. Think of the direction vector as the direction a camera looks in.
+&nbsp;	 * This method will return true if the front side of the plane determined by its normal faces the camera.
+&nbsp;	 * 
+&nbsp;	 * @param direction the direction
+&nbsp;	 * @return whether the plane is front facing */
+&nbsp;	public boolean isFrontFacing (Vector3 direction) {
+<b class="nc">&nbsp;		float dot = normal.dot(direction);</b>
+<b class="nc">&nbsp;		return dot &lt;= 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The normal */
+&nbsp;	public Vector3 getNormal () {
+<b class="nc">&nbsp;		return normal;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The distance to the origin */
+&nbsp;	public float getD () {
+<b class="nc">&nbsp;		return d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the plane to the given point and normal.
+&nbsp;	 * 
+&nbsp;	 * @param point the point on the plane
+&nbsp;	 * @param normal the normal of the plane */
+&nbsp;	public void set (Vector3 point, Vector3 normal) {
+<b class="nc">&nbsp;		this.normal.set(normal);</b>
+<b class="nc">&nbsp;		d = -point.dot(normal);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void set (float pointX, float pointY, float pointZ, float norX, float norY, float norZ) {
+<b class="nc">&nbsp;		this.normal.set(norX, norY, norZ);</b>
+<b class="nc">&nbsp;		d = -(pointX * norX + pointY * norY + pointZ * norZ);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets this plane from the given plane
+&nbsp;	 * 
+&nbsp;	 * @param plane the plane */
+&nbsp;	public void set (Plane plane) {
+<b class="nc">&nbsp;		this.normal.set(plane.normal);</b>
+<b class="nc">&nbsp;		this.d = plane.d;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return normal.toString() + &quot;, &quot; + d;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

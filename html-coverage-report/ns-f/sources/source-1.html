@@ -1,0 +1,888 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FileHandle</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.files</a>
+</div>
+
+<h1>Coverage Summary for Class: FileHandle (com.badlogic.gdx.files)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileHandle</td>
+<td class="coverageStat">
+  <span class="percent">
+    19.7%
+  </span>
+  <span class="absValue">
+    (12/61)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.2%
+  </span>
+  <span class="absValue">
+    (12/166)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10.5%
+  </span>
+  <span class="absValue">
+    (33/314)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FileHandle$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    21%
+  </span>
+  <span class="absValue">
+    (13/62)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.2%
+  </span>
+  <span class="absValue">
+    (12/166)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10.8%
+  </span>
+  <span class="absValue">
+    (34/315)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.files;
+&nbsp;
+&nbsp;import java.io.BufferedInputStream;
+&nbsp;import java.io.BufferedOutputStream;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileFilter;
+&nbsp;import java.io.FileInputStream;
+&nbsp;import java.io.FileOutputStream;
+&nbsp;import java.io.FilenameFilter;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.io.OutputStream;
+&nbsp;import java.io.OutputStreamWriter;
+&nbsp;import java.io.RandomAccessFile;
+&nbsp;import java.io.Reader;
+&nbsp;import java.io.UnsupportedEncodingException;
+&nbsp;import java.io.Writer;
+&nbsp;import java.nio.ByteBuffer;
+&nbsp;import java.nio.ByteOrder;
+&nbsp;import java.nio.channels.FileChannel;
+&nbsp;import java.nio.channels.FileChannel.MapMode;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Files;
+&nbsp;import com.badlogic.gdx.Files.FileType;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;import com.badlogic.gdx.utils.StreamUtils;
+&nbsp;
+&nbsp;/** Represents a file or directory on the filesystem, classpath, Android app storage, or Android assets directory. FileHandles are
+&nbsp; * created via a {@link Files} instance.
+&nbsp; * 
+&nbsp; * Because some of the file types are backed by composite files and may be compressed (for example, if they are in an Android .apk
+&nbsp; * or are found via the classpath), the methods for extracting a {@link #path()} or {@link #file()} may not be appropriate for all
+&nbsp; * types. Use the Reader or Stream methods here to hide these dependencies from your platform independent code.
+&nbsp; * 
+&nbsp; * @author mzechner
+&nbsp; * @author Nathan Sweet */
+&nbsp;public class FileHandle {
+&nbsp;	protected File file;
+&nbsp;	protected FileType type;
+&nbsp;
+<b class="nc">&nbsp;	protected FileHandle () {</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new absolute FileHandle for the file name. Use this for tools on the desktop that don&#39;t need any of the backends.
+&nbsp;	 * Do not use this constructor in case you write something cross-platform. Use the {@link Files} interface instead.
+&nbsp;	 * @param fileName the filename. */
+<b class="nc">&nbsp;	public FileHandle (String fileName) {</b>
+<b class="nc">&nbsp;		this.file = new File(fileName);</b>
+<b class="nc">&nbsp;		this.type = FileType.Absolute;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new absolute FileHandle for the {@link File}. Use this for tools on the desktop that don&#39;t need any of the
+&nbsp;	 * backends. Do not use this constructor in case you write something cross-platform. Use the {@link Files} interface instead.
+&nbsp;	 * @param file the file. */
+<b class="nc">&nbsp;	public FileHandle (File file) {</b>
+<b class="nc">&nbsp;		this.file = file;</b>
+<b class="nc">&nbsp;		this.type = FileType.Absolute;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+<b class="fc">&nbsp;	protected FileHandle (String fileName, FileType type) {</b>
+<b class="fc">&nbsp;		this.type = type;</b>
+<b class="fc">&nbsp;		file = new File(fileName);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+<b class="fc">&nbsp;	protected FileHandle (File file, FileType type) {</b>
+<b class="fc">&nbsp;		this.file = file;</b>
+<b class="fc">&nbsp;		this.type = type;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return the path of the file as specified on construction, e.g. Gdx.files.internal(&quot;dir/file.png&quot;) -&gt; dir/file.png.
+&nbsp;	 *         backward slashes will be replaced by forward slashes. */
+&nbsp;	public String path () {
+<b class="fc">&nbsp;		return file.getPath().replace(&#39;\\&#39;, &#39;/&#39;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the name of the file, without any parent paths. */
+&nbsp;	public String name () {
+<b class="fc">&nbsp;		return file.getName();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the file extension (without the dot) or an empty string if the file name doesn&#39;t contain a dot. */
+&nbsp;	public String extension () {
+<b class="nc">&nbsp;		String name = file.getName();</b>
+<b class="nc">&nbsp;		int dotIndex = name.lastIndexOf(&#39;.&#39;);</b>
+<b class="nc">&nbsp;		if (dotIndex == -1) return &quot;&quot;;</b>
+<b class="nc">&nbsp;		return name.substring(dotIndex + 1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the name of the file, without parent paths or the extension. */
+&nbsp;	public String nameWithoutExtension () {
+<b class="fc">&nbsp;		String name = file.getName();</b>
+<b class="fc">&nbsp;		int dotIndex = name.lastIndexOf(&#39;.&#39;);</b>
+<b class="pc">&nbsp;		if (dotIndex == -1) return name;</b>
+<b class="fc">&nbsp;		return name.substring(0, dotIndex);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the path and filename without the extension, e.g. dir/dir2/file.png -&gt; dir/dir2/file. backward slashes will be
+&nbsp;	 *         returned as forward slashes. */
+&nbsp;	public String pathWithoutExtension () {
+<b class="nc">&nbsp;		String path = file.getPath().replace(&#39;\\&#39;, &#39;/&#39;);</b>
+<b class="nc">&nbsp;		int dotIndex = path.lastIndexOf(&#39;.&#39;);</b>
+<b class="nc">&nbsp;		if (dotIndex == -1) return path;</b>
+<b class="nc">&nbsp;		return path.substring(0, dotIndex);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public FileType type () {
+<b class="fc">&nbsp;		return type;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a java.io.File that represents this file handle. Note the returned file will only be usable for
+&nbsp;	 * {@link FileType#Absolute} and {@link FileType#External} file handles. */
+&nbsp;	public File file () {
+<b class="nc">&nbsp;		if (type == FileType.External) return new File(Gdx.files.getExternalStoragePath(), file.getPath());</b>
+<b class="nc">&nbsp;		return file;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a stream for reading this file as bytes.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public InputStream read () {
+<b class="pc">&nbsp;		if (type == FileType.Classpath || (type == FileType.Internal &amp;&amp; !file().exists())</b>
+<b class="nc">&nbsp;			|| (type == FileType.Local &amp;&amp; !file().exists())) {</b>
+<b class="fc">&nbsp;			InputStream input = FileHandle.class.getResourceAsStream(&quot;/&quot; + file.getPath().replace(&#39;\\&#39;, &#39;/&#39;));</b>
+<b class="pc">&nbsp;			if (input == null) throw new GdxRuntimeException(&quot;File not found: &quot; + file + &quot; (&quot; + type + &quot;)&quot;);</b>
+<b class="fc">&nbsp;			return input;</b>
+&nbsp;		}
+&nbsp;		try {
+<b class="nc">&nbsp;			return new FileInputStream(file());</b>
+<b class="nc">&nbsp;		} catch (Exception ex) {</b>
+<b class="nc">&nbsp;			if (file().isDirectory())</b>
+<b class="nc">&nbsp;				throw new GdxRuntimeException(&quot;Cannot open a stream to a directory: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error reading file: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a buffered stream for reading this file as bytes.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public BufferedInputStream read (int bufferSize) {
+<b class="nc">&nbsp;		return new BufferedInputStream(read(), bufferSize);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a reader for reading this file as characters the platform&#39;s default charset.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public Reader reader () {
+<b class="nc">&nbsp;		return new InputStreamReader(read());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a reader for reading this file as characters.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public Reader reader (String charset) {
+<b class="fc">&nbsp;		InputStream stream = read();</b>
+&nbsp;		try {
+<b class="fc">&nbsp;			return new InputStreamReader(stream, charset);</b>
+<b class="nc">&nbsp;		} catch (UnsupportedEncodingException ex) {</b>
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(stream);</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error reading file: &quot; + this, ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a buffered reader for reading this file as characters using the platform&#39;s default charset.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public BufferedReader reader (int bufferSize) {
+<b class="nc">&nbsp;		return new BufferedReader(new InputStreamReader(read()), bufferSize);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a buffered reader for reading this file as characters.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public BufferedReader reader (int bufferSize, String charset) {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new BufferedReader(new InputStreamReader(read(), charset), bufferSize);</b>
+<b class="nc">&nbsp;		} catch (UnsupportedEncodingException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error reading file: &quot; + this, ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reads the entire file into a string using the platform&#39;s default charset.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public String readString () {
+<b class="nc">&nbsp;		return readString(null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reads the entire file into a string using the specified charset.
+&nbsp;	 * @param charset If null the default charset is used.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public String readString (String charset) {
+<b class="nc">&nbsp;		StringBuilder output = new StringBuilder(estimateLength());</b>
+<b class="nc">&nbsp;		InputStreamReader reader = null;</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			if (charset == null)</b>
+<b class="nc">&nbsp;				reader = new InputStreamReader(read());</b>
+&nbsp;			else
+<b class="nc">&nbsp;				reader = new InputStreamReader(read(), charset);</b>
+<b class="nc">&nbsp;			char[] buffer = new char[256];</b>
+&nbsp;			while (true) {
+<b class="nc">&nbsp;				int length = reader.read(buffer);</b>
+<b class="nc">&nbsp;				if (length == -1) break;</b>
+<b class="nc">&nbsp;				output.append(buffer, 0, length);</b>
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error reading layout file: &quot; + this, ex);</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(reader);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return output.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reads the entire file into a byte array.
+&nbsp;	 * @throws GdxRuntimeException if the file handle represents a directory, doesn&#39;t exist, or could not be read. */
+&nbsp;	public byte[] readBytes () {
+<b class="fc">&nbsp;		InputStream input = read();</b>
+&nbsp;		try {
+<b class="fc">&nbsp;			return StreamUtils.copyStreamToByteArray(input, estimateLength());</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error reading file: &quot; + this, ex);</b>
+&nbsp;		} finally {
+<b class="fc">&nbsp;			StreamUtils.closeQuietly(input);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private int estimateLength () {
+<b class="fc">&nbsp;		int length = (int)length();</b>
+<b class="pc">&nbsp;		return length != 0 ? length : 512;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reads the entire file into the byte array. The byte array must be big enough to hold the file&#39;s data.
+&nbsp;	 * @param bytes the array to load the file into
+&nbsp;	 * @param offset the offset to start writing bytes
+&nbsp;	 * @param size the number of bytes to read, see {@link #length()}
+&nbsp;	 * @return the number of read bytes */
+&nbsp;	public int readBytes (byte[] bytes, int offset, int size) {
+<b class="nc">&nbsp;		InputStream input = read();</b>
+<b class="nc">&nbsp;		int position = 0;</b>
+&nbsp;		try {
+&nbsp;			while (true) {
+<b class="nc">&nbsp;				int count = input.read(bytes, offset + position, size - position);</b>
+<b class="nc">&nbsp;				if (count &lt;= 0) break;</b>
+<b class="nc">&nbsp;				position += count;</b>
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error reading file: &quot; + this, ex);</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(input);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return position - offset;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Attempts to memory map this file in READ_ONLY mode. Android files must not be compressed.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, doesn&#39;t exist, or could not be read, or memory
+&nbsp;	 *            mapping fails, or is a {@link FileType#Classpath} file. */
+&nbsp;	public ByteBuffer map () {
+<b class="nc">&nbsp;		return map(MapMode.READ_ONLY);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Attempts to memory map this file. Android files must not be compressed.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, doesn&#39;t exist, or could not be read, or memory
+&nbsp;	 *            mapping fails, or is a {@link FileType#Classpath} file. */
+&nbsp;	public ByteBuffer map (FileChannel.MapMode mode) {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot map a classpath file: &quot; + this);</b>
+<b class="nc">&nbsp;		RandomAccessFile raf = null;</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			File f = file();</b>
+<b class="nc">&nbsp;			raf = new RandomAccessFile(f, mode == MapMode.READ_ONLY ? &quot;r&quot; : &quot;rw&quot;);</b>
+<b class="nc">&nbsp;			FileChannel fileChannel = raf.getChannel();</b>
+<b class="nc">&nbsp;			ByteBuffer map = fileChannel.map(mode, 0, f.length());</b>
+<b class="nc">&nbsp;			map.order(ByteOrder.nativeOrder());</b>
+<b class="nc">&nbsp;			return map;</b>
+<b class="nc">&nbsp;		} catch (Exception ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error memory mapping file: &quot; + this + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(raf);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a stream for writing to this file. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public OutputStream write (boolean append) {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot write to a classpath file: &quot; + file);</b>
+<b class="nc">&nbsp;		if (type == FileType.Internal) throw new GdxRuntimeException(&quot;Cannot write to an internal file: &quot; + file);</b>
+<b class="nc">&nbsp;		parent().mkdirs();</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			return new FileOutputStream(file(), append);</b>
+<b class="nc">&nbsp;		} catch (Exception ex) {</b>
+<b class="nc">&nbsp;			if (file().isDirectory())</b>
+<b class="nc">&nbsp;				throw new GdxRuntimeException(&quot;Cannot open a stream to a directory: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error writing file: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a buffered stream for writing to this file. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @param bufferSize The size of the buffer.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public OutputStream write (boolean append, int bufferSize) {
+<b class="nc">&nbsp;		return new BufferedOutputStream(write(append), bufferSize);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reads the remaining bytes from the specified stream and writes them to this file. The stream is closed. Parent directories
+&nbsp;	 * will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public void write (InputStream input, boolean append) {
+<b class="nc">&nbsp;		OutputStream output = null;</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			output = write(append);</b>
+<b class="nc">&nbsp;			StreamUtils.copyStream(input, output);</b>
+<b class="nc">&nbsp;		} catch (Exception ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error stream writing to file: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(input);</b>
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(output);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns a writer for writing to this file using the default charset. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public Writer writer (boolean append) {
+<b class="nc">&nbsp;		return writer(append, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a writer for writing to this file. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @param charset May be null to use the default charset.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public Writer writer (boolean append, String charset) {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot write to a classpath file: &quot; + file);</b>
+<b class="nc">&nbsp;		if (type == FileType.Internal) throw new GdxRuntimeException(&quot;Cannot write to an internal file: &quot; + file);</b>
+<b class="nc">&nbsp;		parent().mkdirs();</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			FileOutputStream output = new FileOutputStream(file(), append);</b>
+<b class="nc">&nbsp;			if (charset == null)</b>
+<b class="nc">&nbsp;				return new OutputStreamWriter(output);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return new OutputStreamWriter(output, charset);</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			if (file().isDirectory())</b>
+<b class="nc">&nbsp;				throw new GdxRuntimeException(&quot;Cannot open a stream to a directory: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error writing file: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Writes the specified string to the file using the default charset. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public void writeString (String string, boolean append) {
+<b class="nc">&nbsp;		writeString(string, append, null);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Writes the specified string to the file using the specified charset. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @param charset May be null to use the default charset.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public void writeString (String string, boolean append, String charset) {
+<b class="nc">&nbsp;		Writer writer = null;</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			writer = writer(append, charset);</b>
+<b class="nc">&nbsp;			writer.write(string);</b>
+<b class="nc">&nbsp;		} catch (Exception ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error writing file: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(writer);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Writes the specified bytes to the file. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public void writeBytes (byte[] bytes, boolean append) {
+<b class="nc">&nbsp;		OutputStream output = write(append);</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			output.write(bytes);</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error writing file: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(output);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Writes the specified bytes to the file. Parent directories will be created if necessary.
+&nbsp;	 * @param append If false, this file will be overwritten if it exists, otherwise it will be appended.
+&nbsp;	 * @throws GdxRuntimeException if this file handle represents a directory, if it is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file, or if it could not be written. */
+&nbsp;	public void writeBytes (byte[] bytes, int offset, int length, boolean append) {
+<b class="nc">&nbsp;		OutputStream output = write(append);</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			output.write(bytes, offset, length);</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error writing file: &quot; + file + &quot; (&quot; + type + &quot;)&quot;, ex);</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			StreamUtils.closeQuietly(output);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the paths to the children of this directory. Returns an empty list if this file handle represents a file and not a
+&nbsp;	 * directory. On the desktop, an {@link FileType#Internal} handle to a directory on the classpath will return a zero length
+&nbsp;	 * array.
+&nbsp;	 * @throws GdxRuntimeException if this file is an {@link FileType#Classpath} file. */
+&nbsp;	public FileHandle[] list () {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot list a classpath directory: &quot; + file);</b>
+<b class="nc">&nbsp;		String[] relativePaths = file().list();</b>
+<b class="nc">&nbsp;		if (relativePaths == null) return new FileHandle[0];</b>
+<b class="nc">&nbsp;		FileHandle[] handles = new FileHandle[relativePaths.length];</b>
+<b class="nc">&nbsp;		for (int i = 0, n = relativePaths.length; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			handles[i] = child(relativePaths[i]);</b>
+<b class="nc">&nbsp;		return handles;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the paths to the children of this directory that satisfy the specified filter. Returns an empty list if this file
+&nbsp;	 * handle represents a file and not a directory. On the desktop, an {@link FileType#Internal} handle to a directory on the
+&nbsp;	 * classpath will return a zero length array.
+&nbsp;	 * @param filter the {@link FileFilter} to filter files
+&nbsp;	 * @throws GdxRuntimeException if this file is an {@link FileType#Classpath} file. */
+&nbsp;	public FileHandle[] list (FileFilter filter) {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot list a classpath directory: &quot; + file);</b>
+<b class="nc">&nbsp;		File file = file();</b>
+<b class="nc">&nbsp;		String[] relativePaths = file.list();</b>
+<b class="nc">&nbsp;		if (relativePaths == null) return new FileHandle[0];</b>
+<b class="nc">&nbsp;		FileHandle[] handles = new FileHandle[relativePaths.length];</b>
+<b class="nc">&nbsp;		int count = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = relativePaths.length; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			String path = relativePaths[i];</b>
+<b class="nc">&nbsp;			FileHandle child = child(path);</b>
+<b class="nc">&nbsp;			if (!filter.accept(child.file())) continue;</b>
+<b class="nc">&nbsp;			handles[count] = child;</b>
+<b class="nc">&nbsp;			count++;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (count &lt; relativePaths.length) {</b>
+<b class="nc">&nbsp;			FileHandle[] newHandles = new FileHandle[count];</b>
+<b class="nc">&nbsp;			System.arraycopy(handles, 0, newHandles, 0, count);</b>
+<b class="nc">&nbsp;			handles = newHandles;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return handles;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the paths to the children of this directory that satisfy the specified filter. Returns an empty list if this file
+&nbsp;	 * handle represents a file and not a directory. On the desktop, an {@link FileType#Internal} handle to a directory on the
+&nbsp;	 * classpath will return a zero length array.
+&nbsp;	 * @param filter the {@link FilenameFilter} to filter files
+&nbsp;	 * @throws GdxRuntimeException if this file is an {@link FileType#Classpath} file. */
+&nbsp;	public FileHandle[] list (FilenameFilter filter) {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot list a classpath directory: &quot; + file);</b>
+<b class="nc">&nbsp;		File file = file();</b>
+<b class="nc">&nbsp;		String[] relativePaths = file.list();</b>
+<b class="nc">&nbsp;		if (relativePaths == null) return new FileHandle[0];</b>
+<b class="nc">&nbsp;		FileHandle[] handles = new FileHandle[relativePaths.length];</b>
+<b class="nc">&nbsp;		int count = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = relativePaths.length; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			String path = relativePaths[i];</b>
+<b class="nc">&nbsp;			if (!filter.accept(file, path)) continue;</b>
+<b class="nc">&nbsp;			handles[count] = child(path);</b>
+<b class="nc">&nbsp;			count++;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (count &lt; relativePaths.length) {</b>
+<b class="nc">&nbsp;			FileHandle[] newHandles = new FileHandle[count];</b>
+<b class="nc">&nbsp;			System.arraycopy(handles, 0, newHandles, 0, count);</b>
+<b class="nc">&nbsp;			handles = newHandles;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return handles;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the paths to the children of this directory with the specified suffix. Returns an empty list if this file handle
+&nbsp;	 * represents a file and not a directory. On the desktop, an {@link FileType#Internal} handle to a directory on the classpath
+&nbsp;	 * will return a zero length array.
+&nbsp;	 * @throws GdxRuntimeException if this file is an {@link FileType#Classpath} file. */
+&nbsp;	public FileHandle[] list (String suffix) {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot list a classpath directory: &quot; + file);</b>
+<b class="nc">&nbsp;		String[] relativePaths = file().list();</b>
+<b class="nc">&nbsp;		if (relativePaths == null) return new FileHandle[0];</b>
+<b class="nc">&nbsp;		FileHandle[] handles = new FileHandle[relativePaths.length];</b>
+<b class="nc">&nbsp;		int count = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = relativePaths.length; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			String path = relativePaths[i];</b>
+<b class="nc">&nbsp;			if (!path.endsWith(suffix)) continue;</b>
+<b class="nc">&nbsp;			handles[count] = child(path);</b>
+<b class="nc">&nbsp;			count++;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (count &lt; relativePaths.length) {</b>
+<b class="nc">&nbsp;			FileHandle[] newHandles = new FileHandle[count];</b>
+<b class="nc">&nbsp;			System.arraycopy(handles, 0, newHandles, 0, count);</b>
+<b class="nc">&nbsp;			handles = newHandles;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return handles;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if this file is a directory. Always returns false for classpath files. On Android, an
+&nbsp;	 * {@link FileType#Internal} handle to an empty directory will return false. On the desktop, an {@link FileType#Internal}
+&nbsp;	 * handle to a directory on the classpath will return false. */
+&nbsp;	public boolean isDirectory () {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) return false;</b>
+<b class="nc">&nbsp;		return file().isDirectory();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a handle to the child with the specified name. */
+&nbsp;	public FileHandle child (String name) {
+<b class="nc">&nbsp;		if (file.getPath().length() == 0) return new FileHandle(new File(name), type);</b>
+<b class="nc">&nbsp;		return new FileHandle(new File(file, name), type);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a handle to the sibling with the specified name.
+&nbsp;	 * @throws GdxRuntimeException if this file is the root. */
+&nbsp;	public FileHandle sibling (String name) {
+<b class="nc">&nbsp;		if (file.getPath().length() == 0) throw new GdxRuntimeException(&quot;Cannot get the sibling of the root.&quot;);</b>
+<b class="nc">&nbsp;		return new FileHandle(new File(file.getParent(), name), type);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public FileHandle parent () {
+<b class="nc">&nbsp;		File parent = file.getParentFile();</b>
+<b class="nc">&nbsp;		if (parent == null) {</b>
+<b class="nc">&nbsp;			if (type == FileType.Absolute)</b>
+<b class="nc">&nbsp;				parent = new File(&quot;/&quot;);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				parent = new File(&quot;&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return new FileHandle(parent, type);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @throws GdxRuntimeException if this file handle is a {@link FileType#Classpath} or {@link FileType#Internal} file. */
+&nbsp;	public void mkdirs () {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot mkdirs with a classpath file: &quot; + file);</b>
+<b class="nc">&nbsp;		if (type == FileType.Internal) throw new GdxRuntimeException(&quot;Cannot mkdirs with an internal file: &quot; + file);</b>
+<b class="nc">&nbsp;		file().mkdirs();</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns true if the file exists. On Android, a {@link FileType#Classpath} or {@link FileType#Internal} handle to a
+&nbsp;	 * directory will always return false. Note that this can be very slow for internal files on Android! */
+&nbsp;	public boolean exists () {
+<b class="pc">&nbsp;		switch (type) {</b>
+&nbsp;		case Internal:
+<b class="pc">&nbsp;			if (file().exists()) return true;</b>
+&nbsp;			// Fall through.
+&nbsp;		case Classpath:
+<b class="pc">&nbsp;			return FileHandle.class.getResource(&quot;/&quot; + file.getPath().replace(&#39;\\&#39;, &#39;/&#39;)) != null;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return file().exists();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Deletes this file or empty directory and returns success. Will not delete a directory that has children.
+&nbsp;	 * @throws GdxRuntimeException if this file handle is a {@link FileType#Classpath} or {@link FileType#Internal} file. */
+&nbsp;	public boolean delete () {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot delete a classpath file: &quot; + file);</b>
+<b class="nc">&nbsp;		if (type == FileType.Internal) throw new GdxRuntimeException(&quot;Cannot delete an internal file: &quot; + file);</b>
+<b class="nc">&nbsp;		return file().delete();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Deletes this file or directory and all children, recursively.
+&nbsp;	 * @throws GdxRuntimeException if this file handle is a {@link FileType#Classpath} or {@link FileType#Internal} file. */
+&nbsp;	public boolean deleteDirectory () {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot delete a classpath file: &quot; + file);</b>
+<b class="nc">&nbsp;		if (type == FileType.Internal) throw new GdxRuntimeException(&quot;Cannot delete an internal file: &quot; + file);</b>
+<b class="nc">&nbsp;		return deleteDirectory(file());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Deletes all children of this directory, recursively.
+&nbsp;	 * @throws GdxRuntimeException if this file handle is a {@link FileType#Classpath} or {@link FileType#Internal} file. */
+&nbsp;	public void emptyDirectory () {
+<b class="nc">&nbsp;		emptyDirectory(false);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Deletes all children of this directory, recursively. Optionally preserving the folder structure.
+&nbsp;	 * @throws GdxRuntimeException if this file handle is a {@link FileType#Classpath} or {@link FileType#Internal} file. */
+&nbsp;	public void emptyDirectory (boolean preserveTree) {
+<b class="nc">&nbsp;		if (type == FileType.Classpath) throw new GdxRuntimeException(&quot;Cannot delete a classpath file: &quot; + file);</b>
+<b class="nc">&nbsp;		if (type == FileType.Internal) throw new GdxRuntimeException(&quot;Cannot delete an internal file: &quot; + file);</b>
+<b class="nc">&nbsp;		emptyDirectory(file(), preserveTree);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Copies this file or directory to the specified file or directory. If this handle is a file, then 1) if the destination is a
+&nbsp;	 * file, it is overwritten, or 2) if the destination is a directory, this file is copied into it, or 3) if the destination
+&nbsp;	 * doesn&#39;t exist, {@link #mkdirs()} is called on the destination&#39;s parent and this file is copied into it with a new name. If
+&nbsp;	 * this handle is a directory, then 1) if the destination is a file, GdxRuntimeException is thrown, or 2) if the destination is
+&nbsp;	 * a directory, this directory is copied into it recursively, overwriting existing files, or 3) if the destination doesn&#39;t
+&nbsp;	 * exist, {@link #mkdirs()} is called on the destination and this directory is copied into it recursively.
+&nbsp;	 * @throws GdxRuntimeException if the destination file handle is a {@link FileType#Classpath} or {@link FileType#Internal}
+&nbsp;	 *            file, or copying failed. */
+&nbsp;	public void copyTo (FileHandle dest) {
+<b class="nc">&nbsp;		if (!isDirectory()) {</b>
+<b class="nc">&nbsp;			if (dest.isDirectory()) dest = dest.child(name());</b>
+<b class="nc">&nbsp;			copyFile(this, dest);</b>
+<b class="nc">&nbsp;			return;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (dest.exists()) {</b>
+<b class="nc">&nbsp;			if (!dest.isDirectory()) throw new GdxRuntimeException(&quot;Destination exists but is not a directory: &quot; + dest);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			dest.mkdirs();</b>
+<b class="nc">&nbsp;			if (!dest.isDirectory()) throw new GdxRuntimeException(&quot;Destination directory cannot be created: &quot; + dest);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		copyDirectory(this, dest.child(name()));</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Moves this file to the specified file, overwriting the file if it already exists.
+&nbsp;	 * @throws GdxRuntimeException if the source or destination file handle is a {@link FileType#Classpath} or
+&nbsp;	 *            {@link FileType#Internal} file. */
+&nbsp;	public void moveTo (FileHandle dest) {
+<b class="nc">&nbsp;		switch (type) {</b>
+&nbsp;		case Classpath:
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Cannot move a classpath file: &quot; + file);</b>
+&nbsp;		case Internal:
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Cannot move an internal file: &quot; + file);</b>
+&nbsp;		case Absolute:
+&nbsp;		case External:
+&nbsp;			// Try rename for efficiency and to change case on case-insensitive file systems.
+<b class="nc">&nbsp;			if (file().renameTo(dest.file())) return;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		copyTo(dest);</b>
+<b class="nc">&nbsp;		delete();</b>
+<b class="nc">&nbsp;		if (exists() &amp;&amp; isDirectory()) deleteDirectory();</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the length in bytes of this file, or 0 if this file is a directory, does not exist, or the size cannot otherwise be
+&nbsp;	 * determined. */
+&nbsp;	public long length () {
+<b class="pc">&nbsp;		if (type == FileType.Classpath || (type == FileType.Internal &amp;&amp; !file.exists())) {</b>
+<b class="fc">&nbsp;			InputStream input = read();</b>
+&nbsp;			try {
+<b class="fc">&nbsp;				return input.available();</b>
+<b class="nc">&nbsp;			} catch (Exception ignored) {</b>
+&nbsp;			} finally {
+<b class="fc">&nbsp;				StreamUtils.closeQuietly(input);</b>
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;			return 0;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return file().length();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the last modified time in milliseconds for this file. Zero is returned if the file doesn&#39;t exist. Zero is returned
+&nbsp;	 * for {@link FileType#Classpath} files. On Android, zero is returned for {@link FileType#Internal} files. On the desktop, zero
+&nbsp;	 * is returned for {@link FileType#Internal} files on the classpath. */
+&nbsp;	public long lastModified () {
+<b class="nc">&nbsp;		return file().lastModified();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean equals (Object obj) {
+<b class="nc">&nbsp;		if (!(obj instanceof FileHandle)) return false;</b>
+<b class="nc">&nbsp;		FileHandle other = (FileHandle)obj;</b>
+<b class="nc">&nbsp;		return type == other.type &amp;&amp; path().equals(other.path());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		int hash = 1;</b>
+<b class="nc">&nbsp;		hash = hash * 37 + type.hashCode();</b>
+<b class="nc">&nbsp;		hash = hash * 67 + path().hashCode();</b>
+<b class="nc">&nbsp;		return hash;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return file.getPath().replace(&#39;\\&#39;, &#39;/&#39;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public FileHandle tempFile (String prefix) {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new FileHandle(File.createTempFile(prefix, null));</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Unable to create temp file.&quot;, ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	static public FileHandle tempDirectory (String prefix) {
+&nbsp;		try {
+<b class="nc">&nbsp;			File file = File.createTempFile(prefix, null);</b>
+<b class="nc">&nbsp;			if (!file.delete()) throw new IOException(&quot;Unable to delete temp file: &quot; + file);</b>
+<b class="nc">&nbsp;			if (!file.mkdir()) throw new IOException(&quot;Unable to create temp directory: &quot; + file);</b>
+<b class="nc">&nbsp;			return new FileHandle(file);</b>
+<b class="nc">&nbsp;		} catch (IOException ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Unable to create temp file.&quot;, ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	static private void emptyDirectory (File file, boolean preserveTree) {
+<b class="nc">&nbsp;		if (file.exists()) {</b>
+<b class="nc">&nbsp;			File[] files = file.listFiles();</b>
+<b class="nc">&nbsp;			if (files != null) {</b>
+<b class="nc">&nbsp;				for (int i = 0, n = files.length; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;					if (!files[i].isDirectory())</b>
+<b class="nc">&nbsp;						files[i].delete();</b>
+<b class="nc">&nbsp;					else if (preserveTree)</b>
+<b class="nc">&nbsp;						emptyDirectory(files[i], true);</b>
+&nbsp;					else
+<b class="nc">&nbsp;						deleteDirectory(files[i]);</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	static private boolean deleteDirectory (File file) {
+<b class="nc">&nbsp;		emptyDirectory(file, false);</b>
+<b class="nc">&nbsp;		return file.delete();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static private void copyFile (FileHandle source, FileHandle dest) {
+&nbsp;		try {
+<b class="nc">&nbsp;			dest.write(source.read(), false);</b>
+<b class="nc">&nbsp;		} catch (Exception ex) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Error copying source file: &quot; + source.file + &quot; (&quot; + source.type + &quot;)\n&quot; //</b>
+&nbsp;				+ &quot;To destination: &quot; + dest.file + &quot; (&quot; + dest.type + &quot;)&quot;, ex);
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	static private void copyDirectory (FileHandle sourceDir, FileHandle destDir) {
+<b class="nc">&nbsp;		destDir.mkdirs();</b>
+<b class="nc">&nbsp;		FileHandle[] files = sourceDir.list();</b>
+<b class="nc">&nbsp;		for (int i = 0, n = files.length; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			FileHandle srcFile = files[i];</b>
+<b class="nc">&nbsp;			FileHandle destFile = destDir.child(srcFile.name());</b>
+<b class="nc">&nbsp;			if (srcFile.isDirectory())</b>
+<b class="nc">&nbsp;				copyDirectory(srcFile, destFile);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				copyFile(srcFile, destFile);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

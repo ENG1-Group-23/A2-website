@@ -1,0 +1,462 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > HeadlessApplication</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.backends.headless</a>
+</div>
+
+<h1>Coverage Summary for Class: HeadlessApplication (com.badlogic.gdx.backends.headless)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HeadlessApplication</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.1%
+  </span>
+  <span class="absValue">
+    (5/31)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (8/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    46.6%
+  </span>
+  <span class="absValue">
+    (54/116)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">HeadlessApplication$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28.6%
+  </span>
+  <span class="absValue">
+    (2/7)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    21.2%
+  </span>
+  <span class="absValue">
+    (7/33)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23.5%
+  </span>
+  <span class="absValue">
+    (8/34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.5%
+  </span>
+  <span class="absValue">
+    (56/123)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package com.badlogic.gdx.backends.headless;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Application;
+&nbsp;import com.badlogic.gdx.ApplicationListener;
+&nbsp;import com.badlogic.gdx.ApplicationLogger;
+&nbsp;import com.badlogic.gdx.Audio;
+&nbsp;import com.badlogic.gdx.Files;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.Graphics;
+&nbsp;import com.badlogic.gdx.Input;
+&nbsp;import com.badlogic.gdx.LifecycleListener;
+&nbsp;import com.badlogic.gdx.Net;
+&nbsp;import com.badlogic.gdx.Preferences;
+&nbsp;import com.badlogic.gdx.Application.ApplicationType;
+&nbsp;import com.badlogic.gdx.backends.headless.mock.audio.MockAudio;
+&nbsp;import com.badlogic.gdx.backends.headless.mock.graphics.MockGraphics;
+&nbsp;import com.badlogic.gdx.backends.headless.mock.input.MockInput;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;import com.badlogic.gdx.utils.Clipboard;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;import com.badlogic.gdx.utils.ObjectMap;
+&nbsp;import com.badlogic.gdx.utils.TimeUtils;
+&nbsp;
+&nbsp;public class HeadlessApplication implements Application {
+&nbsp;    protected final ApplicationListener listener;
+&nbsp;    protected Thread mainLoopThread;
+&nbsp;    protected final HeadlessFiles files;
+&nbsp;    protected final HeadlessNet net;
+&nbsp;    protected final MockAudio audio;
+&nbsp;    protected final MockInput input;
+&nbsp;    protected final MockGraphics graphics;
+&nbsp;    protected boolean running;
+&nbsp;    protected final Array&lt;Runnable&gt; runnables;
+&nbsp;    protected final Array&lt;Runnable&gt; executedRunnables;
+&nbsp;    protected final Array&lt;LifecycleListener&gt; lifecycleListeners;
+&nbsp;    protected int logLevel;
+&nbsp;    protected ApplicationLogger applicationLogger;
+&nbsp;    private String preferencesdir;
+&nbsp;    ObjectMap&lt;String, Preferences&gt; preferences;
+&nbsp;
+&nbsp;    public HeadlessApplication(ApplicationListener listener) {
+&nbsp;        this(listener, (HeadlessApplicationConfiguration)null);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    public HeadlessApplication(ApplicationListener listener, HeadlessApplicationConfiguration config) {</b>
+<b class="fc">&nbsp;        this.running = true;</b>
+<b class="fc">&nbsp;        this.runnables = new Array();</b>
+<b class="fc">&nbsp;        this.executedRunnables = new Array();</b>
+&nbsp;        this.lifecycleListeners = new Array();
+&nbsp;        this.logLevel = 2;
+&nbsp;        this.preferences = new ObjectMap();
+&nbsp;        if (config == null) {
+<b class="nc">&nbsp;            config = new HeadlessApplicationConfiguration();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        HeadlessNativesLoader.load();</b>
+<b class="pc">&nbsp;        this.setApplicationLogger(new HeadlessApplicationLogger());</b>
+&nbsp;        this.listener = listener;
+<b class="fc">&nbsp;        this.files = new HeadlessFiles();</b>
+<b class="fc">&nbsp;        this.net = new HeadlessNet(config);</b>
+<b class="fc">&nbsp;        this.graphics = new MockGraphics();</b>
+<b class="fc">&nbsp;        this.graphics.setForegroundFPS(config.updatesPerSecond);</b>
+<b class="fc">&nbsp;        this.audio = new MockAudio();</b>
+&nbsp;        this.input = new MockInput();
+&nbsp;        this.preferencesdir = config.preferencesDirectory;
+<b class="fc">&nbsp;        Gdx.app = this;</b>
+<b class="fc">&nbsp;        Gdx.files = this.files;</b>
+<b class="fc">&nbsp;        Gdx.net = this.net;</b>
+<b class="fc">&nbsp;        Gdx.audio = this.audio;</b>
+&nbsp;        Gdx.graphics = this.graphics;
+<b class="fc">&nbsp;        Gdx.input = this.input;</b>
+&nbsp;        this.initialize();
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    private void initialize() {</b>
+<b class="fc">&nbsp;        this.mainLoopThread = new Thread(&quot;HeadlessApplication&quot;) {</b>
+<b class="fc">&nbsp;            public void run() {</b>
+<b class="fc">&nbsp;                try {</b>
+&nbsp;                    HeadlessApplication.this.mainLoop();
+<b class="fc">&nbsp;                } catch (Throwable var2) {</b>
+<b class="fc">&nbsp;                    Throwable t = var2;</b>
+&nbsp;                    if (t instanceof RuntimeException) {
+&nbsp;                        throw (RuntimeException)t;
+<b class="fc">&nbsp;                    } else {</b>
+&nbsp;                        throw new GdxRuntimeException(t);
+&nbsp;                    }
+&nbsp;                }
+<b class="fc">&nbsp;            }</b>
+<b class="nc">&nbsp;        };</b>
+<b class="nc">&nbsp;        this.mainLoopThread.start();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+<b class="nc">&nbsp;    protected void mainLoop() {</b>
+&nbsp;        Array&lt;LifecycleListener&gt; lifecycleListeners = this.lifecycleListeners;
+<b class="nc">&nbsp;        this.listener.create();</b>
+&nbsp;        long t = TimeUtils.nanoTime() + this.graphics.getTargetRenderInterval();
+<b class="fc">&nbsp;        if ((float)this.graphics.getTargetRenderInterval() &gt;= 0.0F) {</b>
+<b class="fc">&nbsp;            while(this.running) {</b>
+&nbsp;                long n = TimeUtils.nanoTime();
+&nbsp;                if (t &gt; n) {
+<b class="fc">&nbsp;                    try {</b>
+&nbsp;                        long sleep = t - n;
+<b class="fc">&nbsp;                        Thread.sleep(sleep / 1000000L, (int)(sleep % 1000000L));</b>
+&nbsp;                    } catch (InterruptedException var9) {
+&nbsp;                    }
+&nbsp;
+<b class="fc">&nbsp;                    t += this.graphics.getTargetRenderInterval();</b>
+<b class="pc">&nbsp;                } else {</b>
+<b class="pc">&nbsp;                    t = n + this.graphics.getTargetRenderInterval();</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;                this.executeRunnables();
+<b class="fc">&nbsp;                this.graphics.incrementFrameId();</b>
+<b class="fc">&nbsp;                this.listener.render();</b>
+<b class="nc">&nbsp;                this.graphics.updateTime();</b>
+<b class="fc">&nbsp;                if (!this.running) {</b>
+<b class="fc">&nbsp;                    break;</b>
+&nbsp;                }
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        synchronized(lifecycleListeners) {</b>
+<b class="fc">&nbsp;            Array.ArrayIterator var5 = lifecycleListeners.iterator();</b>
+<b class="fc">&nbsp;</b>
+&nbsp;            while(var5.hasNext()) {
+&nbsp;                LifecycleListener listener = (LifecycleListener)var5.next();
+<b class="pc">&nbsp;                listener.pause();</b>
+<b class="fc">&nbsp;                listener.dispose();</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        this.listener.pause();</b>
+<b class="nc">&nbsp;        this.listener.dispose();</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public boolean executeRunnables() {</b>
+<b class="nc">&nbsp;        synchronized(this.runnables) {</b>
+<b class="nc">&nbsp;            int i = this.runnables.size - 1;</b>
+<b class="nc">&nbsp;</b>
+&nbsp;            while(true) {
+&nbsp;                if (i &lt; 0) {
+<b class="fc">&nbsp;                    this.runnables.clear();</b>
+<b class="pc">&nbsp;                    break;</b>
+<b class="nc">&nbsp;                }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;                this.executedRunnables.add(this.runnables.get(i));</b>
+<b class="pc">&nbsp;                --i;</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;        if (this.executedRunnables.size == 0) {
+&nbsp;            return false;
+&nbsp;        } else {
+&nbsp;            for(int i = this.executedRunnables.size - 1; i &gt;= 0; --i) {
+<b class="nc">&nbsp;                ((Runnable)this.executedRunnables.removeIndex(i)).run();</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            return true;
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public ApplicationListener getApplicationListener() {
+&nbsp;        return this.listener;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public Graphics getGraphics() {
+&nbsp;        return this.graphics;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public Audio getAudio() {</b>
+&nbsp;        return this.audio;
+&nbsp;    }
+&nbsp;
+&nbsp;    public Input getInput() {
+<b class="nc">&nbsp;        return this.input;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Files getFiles() {
+&nbsp;        return this.files;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public Net getNet() {
+&nbsp;        return this.net;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public Application.ApplicationType getType() {
+&nbsp;        return ApplicationType.HeadlessDesktop;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public int getVersion() {</b>
+&nbsp;        return 0;
+&nbsp;    }
+&nbsp;
+&nbsp;    public long getJavaHeap() {
+<b class="nc">&nbsp;        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public long getNativeHeap() {
+&nbsp;        return this.getJavaHeap();
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public Preferences getPreferences(String name) {
+<b class="fc">&nbsp;        if (this.preferences.containsKey(name)) {</b>
+&nbsp;            return (Preferences)this.preferences.get(name);
+&nbsp;        } else {
+&nbsp;            Preferences prefs = new HeadlessPreferences(name, this.preferencesdir);
+<b class="nc">&nbsp;            this.preferences.put(name, prefs);</b>
+<b class="nc">&nbsp;            return prefs;</b>
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public Clipboard getClipboard() {</b>
+&nbsp;        return null;
+&nbsp;    }
+&nbsp;
+&nbsp;    public void postRunnable(Runnable runnable) {
+&nbsp;        synchronized(this.runnables) {
+&nbsp;            this.runnables.add(runnable);
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void debug(String tag, String message) {
+&nbsp;        if (this.logLevel &gt;= 3) {
+<b class="nc">&nbsp;            this.getApplicationLogger().debug(tag, message);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void debug(String tag, String message, Throwable exception) {
+&nbsp;        if (this.logLevel &gt;= 3) {
+<b class="nc">&nbsp;            this.getApplicationLogger().debug(tag, message, exception);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void log(String tag, String message) {</b>
+<b class="nc">&nbsp;        if (this.logLevel &gt;= 2) {</b>
+&nbsp;            this.getApplicationLogger().log(tag, message);
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public void log(String tag, String message, Throwable exception) {
+&nbsp;        if (this.logLevel &gt;= 2) {
+&nbsp;            this.getApplicationLogger().log(tag, message, exception);
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void error(String tag, String message) {
+<b class="nc">&nbsp;        if (this.logLevel &gt;= 1) {</b>
+<b class="nc">&nbsp;            this.getApplicationLogger().error(tag, message);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public void error(String tag, String message, Throwable exception) {</b>
+&nbsp;        if (this.logLevel &gt;= 1) {
+&nbsp;            this.getApplicationLogger().error(tag, message, exception);
+&nbsp;        }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void setLogLevel(int logLevel) {
+&nbsp;        this.logLevel = logLevel;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public int getLogLevel() {
+&nbsp;        return this.logLevel;
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    public void setApplicationLogger(ApplicationLogger applicationLogger) {</b>
+&nbsp;        this.applicationLogger = applicationLogger;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public ApplicationLogger getApplicationLogger() {</b>
+&nbsp;        return this.applicationLogger;
+&nbsp;    }
+&nbsp;
+&nbsp;    public void exit() {
+<b class="nc">&nbsp;        this.postRunnable(new Runnable() {</b>
+&nbsp;            public void run() {
+&nbsp;                HeadlessApplication.this.running = false;
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public void addLifecycleListener(LifecycleListener listener) {
+&nbsp;        synchronized(this.lifecycleListeners) {
+&nbsp;            this.lifecycleListeners.add(listener);
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public void removeLifecycleListener(LifecycleListener listener) {</b>
+&nbsp;        synchronized(this.lifecycleListeners) {
+&nbsp;            this.lifecycleListeners.removeValue(listener, true);
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

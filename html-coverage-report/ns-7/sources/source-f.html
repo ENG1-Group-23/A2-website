@@ -1,0 +1,467 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Net</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx</a>
+</div>
+
+<h1>Coverage Summary for Class: Net (com.badlogic.gdx)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">Net$HttpResponseListener</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx;
+&nbsp;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.OutputStream;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Application.ApplicationType;
+&nbsp;import com.badlogic.gdx.net.HttpRequestHeader;
+&nbsp;import com.badlogic.gdx.net.HttpResponseHeader;
+&nbsp;import com.badlogic.gdx.net.HttpStatus;
+&nbsp;import com.badlogic.gdx.net.ServerSocket;
+&nbsp;import com.badlogic.gdx.net.ServerSocketHints;
+&nbsp;import com.badlogic.gdx.net.Socket;
+&nbsp;import com.badlogic.gdx.net.SocketHints;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;import com.badlogic.gdx.utils.Null;
+&nbsp;import com.badlogic.gdx.utils.Pool.Poolable;
+&nbsp;
+&nbsp;/** Provides methods to perform networking operations, such as simple HTTP get and post requests, and TCP server/client socket
+&nbsp; * communication.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * To perform an HTTP request create a {@link HttpRequest} with the HTTP method (see {@link HttpMethods} for common methods) and
+&nbsp; * invoke {@link #sendHttpRequest(HttpRequest, HttpResponseListener)} with it and a {@link HttpResponseListener}. After the HTTP
+&nbsp; * request was processed, the {@link HttpResponseListener} is called with a {@link HttpResponse} with the HTTP response values and
+&nbsp; * an status code to determine if the request was successful or not.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * To create a TCP client socket to communicate with a remote TCP server, invoke the
+&nbsp; * {@link #newClientSocket(Protocol, String, int, SocketHints)} method. The returned {@link Socket} offers an {@link InputStream}
+&nbsp; * and {@link OutputStream} to communicate with the end point.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * To create a TCP server socket that waits for incoming connections, invoke the
+&nbsp; * {@link #newServerSocket(Protocol, int, ServerSocketHints)} method. The returned {@link ServerSocket} offers an
+&nbsp; * {@link ServerSocket#accept(SocketHints options)} method that waits for an incoming connection.
+&nbsp; * 
+&nbsp; * @author mzechner
+&nbsp; * @author noblemaster
+&nbsp; * @author arielsan */
+&nbsp;public interface Net {
+&nbsp;
+&nbsp;	/** HTTP response interface with methods to get the response data as a byte[], a {@link String} or an {@link InputStream}. */
+&nbsp;	public static interface HttpResponse {
+&nbsp;		/** Returns the data of the HTTP response as a byte[].
+&nbsp;		 * &lt;p&gt;
+&nbsp;		 * &lt;b&gt;Note&lt;/b&gt;: This method may only be called once per response.
+&nbsp;		 * &lt;/p&gt;
+&nbsp;		 * @return the result as a byte[] or null in case of a timeout or if the operation was canceled/terminated abnormally. The
+&nbsp;		 *         timeout is specified when creating the HTTP request, with {@link HttpRequest#setTimeOut(int)} */
+&nbsp;		byte[] getResult ();
+&nbsp;
+&nbsp;		/** Returns the data of the HTTP response as a {@link String}.
+&nbsp;		 * &lt;p&gt;
+&nbsp;		 * &lt;b&gt;Note&lt;/b&gt;: This method may only be called once per response.
+&nbsp;		 * &lt;/p&gt;
+&nbsp;		 * @return the result as a string or null in case of a timeout or if the operation was canceled/terminated abnormally. The
+&nbsp;		 *         timeout is specified when creating the HTTP request, with {@link HttpRequest#setTimeOut(int)} */
+&nbsp;		String getResultAsString ();
+&nbsp;
+&nbsp;		/** Returns the data of the HTTP response as an {@link InputStream}. &lt;b&gt;&lt;br&gt;
+&nbsp;		 * Warning:&lt;/b&gt; Do not store a reference to this InputStream outside of
+&nbsp;		 * {@link HttpResponseListener#handleHttpResponse(HttpResponse)}. The underlying HTTP connection will be closed after that
+&nbsp;		 * callback finishes executing. Reading from the InputStream after it&#39;s connection has been closed will lead to exception.
+&nbsp;		 * @return An {@link InputStream} with the {@link HttpResponse} data. */
+&nbsp;		InputStream getResultAsStream ();
+&nbsp;
+&nbsp;		/** Returns the {@link HttpStatus} containing the statusCode of the HTTP response. */
+&nbsp;		HttpStatus getStatus ();
+&nbsp;
+&nbsp;		/** Returns the value of the header with the given name as a {@link String}, or null if the header is not set. See
+&nbsp;		 * {@link HttpResponseHeader}. */
+&nbsp;		String getHeader (String name);
+&nbsp;
+&nbsp;		/** Returns a Map of the headers. The keys are Strings that represent the header name. Each values is a List of Strings that
+&nbsp;		 * represent the corresponding header values. See {@link HttpResponseHeader}. */
+&nbsp;		Map&lt;String, List&lt;String&gt;&gt; getHeaders ();
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Provides common HTTP methods to use when creating a {@link HttpRequest}.
+&nbsp;	 * &lt;ul&gt;
+&nbsp;	 * &lt;li&gt;&lt;b&gt;HEAD&lt;/b&gt; Asks for a response identical to that of a GET request but without the response body.&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;b&gt;GET&lt;/b&gt; requests a representation of the specified resource. Requests using GET should only retrieve data.&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;b&gt;POST&lt;/b&gt; is used to submit an entity to the specified resource, often causing a change in state or side effects on
+&nbsp;	 * the server.&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;b&gt;PUT&lt;/b&gt; replaces all current representations of the target resource with the request payload.&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;b&gt;PATCH&lt;/b&gt; method is used to apply partial modifications to a resource.&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;b&gt;DELETE&lt;/b&gt; deletes the specified resource.&lt;/li&gt;
+&nbsp;	 * &lt;/ul&gt;
+&nbsp;	 */
+&nbsp;	public static interface HttpMethods {
+&nbsp;		/** The HEAD method asks for a response identical to that of a GET request, but without the response body. **/
+&nbsp;		public static final String HEAD = &quot;HEAD&quot;;
+&nbsp;
+&nbsp;		/** The GET method requests a representation of the specified resource. Requests using GET should only retrieve data. **/
+&nbsp;		public static final String GET = &quot;GET&quot;;
+&nbsp;
+&nbsp;		/** The POST method is used to submit an entity to the specified resource, often causing a change in state or side effects
+&nbsp;		 * on the server. **/
+&nbsp;		public static final String POST = &quot;POST&quot;;
+&nbsp;
+&nbsp;		/** The PUT method replaces all current representations of the target resource with the request payload. **/
+&nbsp;		public static final String PUT = &quot;PUT&quot;;
+&nbsp;
+&nbsp;		/** The PATCH method is used to apply partial modifications to a resource. **/
+&nbsp;		public static final String PATCH = &quot;PATCH&quot;;
+&nbsp;
+&nbsp;		/** The DELETE method deletes the specified resource. **/
+&nbsp;		public static final String DELETE = &quot;DELETE&quot;;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Contains getters and setters for the following parameters:
+&nbsp;	 * &lt;ul&gt;
+&nbsp;	 * &lt;li&gt;&lt;strong&gt;httpMethod:&lt;/strong&gt; GET or POST are most common, can use {@link Net.HttpMethods HttpMethods} for static
+&nbsp;	 * references&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;strong&gt;url:&lt;/strong&gt; the url&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;strong&gt;headers:&lt;/strong&gt; a map of the headers, setter can be called multiple times&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;strong&gt;timeout:&lt;/strong&gt; time spent trying to connect before giving up&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;&lt;strong&gt;content:&lt;/strong&gt; A string containing the data to be used when processing the HTTP request.&lt;/li&gt;
+&nbsp;	 * &lt;/ul&gt;
+&nbsp;	 * 
+&nbsp;	 * Abstracts the concept of a HTTP Request:
+&nbsp;	 * 
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 * Map&lt;String, String&gt; parameters = new HashMap&lt;String, String&gt;();
+&nbsp;	 * parameters.put(&quot;user&quot;, &quot;myuser&quot;);
+&nbsp;	 * 
+&nbsp;	 * HttpRequest httpGet = new HttpRequest(HttpMethods.Get);
+&nbsp;	 * httpGet.setUrl(&quot;http://somewhere.net&quot;);
+&nbsp;	 * httpGet.setContent(HttpParametersUtils.convertHttpParameters(parameters));
+&nbsp;	 * ...
+&nbsp;	 * Gdx.net.sendHttpRequest (httpGet, new HttpResponseListener() {
+&nbsp;	 * 	public void handleHttpResponse(HttpResponse httpResponse) {
+&nbsp;	 * 		status = httpResponse.getResultAsString();
+&nbsp;	 * 		//do stuff here based on response
+&nbsp;	 * 	}
+&nbsp;	 * 
+&nbsp;	 * 	public void failed(Throwable t) {
+&nbsp;	 * 		status = &quot;failed&quot;;
+&nbsp;	 * 		//do stuff here based on the failed attempt
+&nbsp;	 * 	}
+&nbsp;	 * });
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 */
+&nbsp;	public static class HttpRequest implements Poolable {
+&nbsp;
+&nbsp;		private String httpMethod;
+&nbsp;		private String url;
+&nbsp;		private Map&lt;String, String&gt; headers;
+&nbsp;		private int timeOut = 0;
+&nbsp;
+&nbsp;		private String content;
+&nbsp;		private InputStream contentStream;
+&nbsp;		private long contentLength;
+&nbsp;
+&nbsp;		private boolean followRedirects = true;
+&nbsp;
+&nbsp;		private boolean includeCredentials = false;
+&nbsp;
+&nbsp;		public HttpRequest () {
+&nbsp;			this.headers = new HashMap&lt;String, String&gt;();
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Creates a new HTTP request with the specified HTTP method, see {@link HttpMethods}.
+&nbsp;		 * @param httpMethod This is the HTTP method for the request, see {@link HttpMethods} */
+&nbsp;		public HttpRequest (String httpMethod) {
+&nbsp;			this();
+&nbsp;			this.httpMethod = httpMethod;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets the URL of the HTTP request.
+&nbsp;		 * @param url The URL to set. */
+&nbsp;		public void setUrl (String url) {
+&nbsp;			this.url = url;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets a header to this HTTP request, see {@link HttpRequestHeader}.
+&nbsp;		 * @param name the name of the header.
+&nbsp;		 * @param value the value of the header. */
+&nbsp;		public void setHeader (String name, String value) {
+&nbsp;			headers.put(name, value);
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets the content to be used in the HTTP request.
+&nbsp;		 * @param content A string encoded in the corresponding Content-Encoding set in the headers, with the data to send with the
+&nbsp;		 *           HTTP request. For example, in case of HTTP GET, the content is used as the query string of the GET while on a
+&nbsp;		 *           HTTP POST it is used to send the POST data. */
+&nbsp;		public void setContent (String content) {
+&nbsp;			this.content = content;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets the content as a stream to be used for a POST for example, to transmit custom data.
+&nbsp;		 * @param contentStream The stream with the content data. */
+&nbsp;		public void setContent (InputStream contentStream, long contentLength) {
+&nbsp;			this.contentStream = contentStream;
+&nbsp;			this.contentLength = contentLength;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets the time to wait for the HTTP request to be processed, use 0 block until it is done. The timeout is used for both
+&nbsp;		 * the timeout when establishing TCP connection, and the timeout until the first byte of data is received.
+&nbsp;		 * @param timeOut the number of milliseconds to wait before giving up, 0 or negative to block until the operation is done */
+&nbsp;		public void setTimeOut (int timeOut) {
+&nbsp;			this.timeOut = timeOut;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets whether 301 and 302 redirects are followed. By default true. Can&#39;t be changed in the GWT backend because this uses
+&nbsp;		 * XmlHttpRequests which always redirect.
+&nbsp;		 * @param followRedirects whether to follow redirects.
+&nbsp;		 * @exception IllegalArgumentException if redirection is disabled on the GWT backend. */
+&nbsp;		public void setFollowRedirects (boolean followRedirects) throws IllegalArgumentException {
+&nbsp;			if (followRedirects || Gdx.app.getType() != ApplicationType.WebGL) {
+&nbsp;				this.followRedirects = followRedirects;
+&nbsp;			} else {
+&nbsp;				throw new IllegalArgumentException(&quot;Following redirects can&#39;t be disabled using the GWT/WebGL backend!&quot;);
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets whether a cross-origin request will include credentials. Only used on GWT backend to allow cross-origin requests to
+&nbsp;		 * include credentials such as cookies, authorization headers, etc... */
+&nbsp;		public void setIncludeCredentials (boolean includeCredentials) {
+&nbsp;			this.includeCredentials = includeCredentials;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets the HTTP method of the HttpRequest. */
+&nbsp;		public void setMethod (String httpMethod) {
+&nbsp;			this.httpMethod = httpMethod;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the timeOut of the HTTP request.
+&nbsp;		 * @return the timeOut. */
+&nbsp;		public int getTimeOut () {
+&nbsp;			return timeOut;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the HTTP method of the HttpRequest. */
+&nbsp;		public String getMethod () {
+&nbsp;			return httpMethod;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the URL of the HTTP request. */
+&nbsp;		public String getUrl () {
+&nbsp;			return url;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the content string to be used for the HTTP request. */
+&nbsp;		public String getContent () {
+&nbsp;			return content;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the content stream. */
+&nbsp;		public InputStream getContentStream () {
+&nbsp;			return contentStream;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the content length in case content is a stream. */
+&nbsp;		public long getContentLength () {
+&nbsp;			return contentLength;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns a Map&lt;String, String&gt; with the headers of the HTTP request. */
+&nbsp;		public Map&lt;String, String&gt; getHeaders () {
+&nbsp;			return headers;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns whether 301 and 302 redirects are followed. By default true. Whether to follow redirects. */
+&nbsp;		public boolean getFollowRedirects () {
+&nbsp;			return followRedirects;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns whether a cross-origin request will include credentials. By default false. */
+&nbsp;		public boolean getIncludeCredentials () {
+&nbsp;			return includeCredentials;
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void reset () {
+&nbsp;			httpMethod = null;
+&nbsp;			url = null;
+&nbsp;			headers.clear();
+&nbsp;			timeOut = 0;
+&nbsp;
+&nbsp;			content = null;
+&nbsp;			contentStream = null;
+&nbsp;			contentLength = 0;
+&nbsp;
+&nbsp;			followRedirects = true;
+&nbsp;		}
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Listener to be able to do custom logic once the {@link HttpResponse} is ready to be processed, register it with
+&nbsp;	 * {@link Net#sendHttpRequest(HttpRequest, HttpResponseListener)}. */
+&nbsp;	public static interface HttpResponseListener {
+&nbsp;
+&nbsp;		/** Called when the {@link HttpRequest} has been processed and there is a {@link HttpResponse} ready. Passing data to the
+&nbsp;		 * rendering thread should be done using {@link Application#postRunnable(java.lang.Runnable runnable)} {@link HttpResponse}
+&nbsp;		 * contains the {@link HttpStatus} and should be used to determine if the request was successful or not (see more info at
+&nbsp;		 * {@link HttpStatus#getStatusCode()}). For example:
+&nbsp;		 * 
+&nbsp;		 * &lt;pre&gt;
+&nbsp;		 *  HttpResponseListener listener = new HttpResponseListener() {
+&nbsp;		 *  	public void handleHttpResponse (HttpResponse httpResponse) {
+&nbsp;		 *  		HttpStatus status = httpResponse.getStatus();
+&nbsp;		 *  		if (status.getStatusCode() &gt;= 200 &amp;&amp; status.getStatusCode() &lt; 300) {
+&nbsp;		 *  			// it was successful
+&nbsp;		 *  		} else {
+&nbsp;		 *  			// do something else
+&nbsp;		 *  		}
+&nbsp;		 *  	}
+&nbsp;		 *  }
+&nbsp;		 * &lt;/pre&gt;
+&nbsp;		 * 
+&nbsp;		 * @param httpResponse The {@link HttpResponse} with the HTTP response values. */
+&nbsp;		void handleHttpResponse (HttpResponse httpResponse);
+&nbsp;
+&nbsp;		/** Called if the {@link HttpRequest} failed because an exception when processing the HTTP request, could be a timeout any
+&nbsp;		 * other reason (not an HTTP error).
+&nbsp;		 * @param t If the HTTP request failed because an Exception, t encapsulates it to give more information. */
+&nbsp;		void failed (Throwable t);
+&nbsp;
+&nbsp;		void cancelled ();
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Process the specified {@link HttpRequest} and reports the {@link HttpResponse} to the specified
+&nbsp;	 * {@link HttpResponseListener}.
+&nbsp;	 * @param httpRequest The {@link HttpRequest} to be performed.
+&nbsp;	 * @param httpResponseListener The {@link HttpResponseListener} to call once the HTTP response is ready to be processed. Could
+&nbsp;	 *           be null, in that case no listener is called. */
+&nbsp;	public void sendHttpRequest (HttpRequest httpRequest, @Null HttpResponseListener httpResponseListener);
+&nbsp;
+&nbsp;	public void cancelHttpRequest (HttpRequest httpRequest);
+&nbsp;
+&nbsp;	/** Protocol used by {@link Net#newServerSocket(Protocol, int, ServerSocketHints)} and
+&nbsp;	 * {@link Net#newClientSocket(Protocol, String, int, SocketHints)}.
+&nbsp;	 * @author mzechner */
+&nbsp;	public enum Protocol {
+&nbsp;		TCP
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates a new server socket on the given address and port, using the given {@link Protocol}, waiting for incoming
+&nbsp;	 * connections.
+&nbsp;	 * 
+&nbsp;	 * @param hostname the hostname or ip address to bind the socket to
+&nbsp;	 * @param port the port to listen on
+&nbsp;	 * @param hints additional {@link ServerSocketHints} used to create the socket. Input null to use the default setting provided
+&nbsp;	 *           by the system.
+&nbsp;	 * @return the {@link ServerSocket}
+&nbsp;	 * @throws GdxRuntimeException in case the socket couldn&#39;t be opened */
+&nbsp;	public ServerSocket newServerSocket (Protocol protocol, String hostname, int port, ServerSocketHints hints);
+&nbsp;
+&nbsp;	/** Creates a new server socket on the given port, using the given {@link Protocol}, waiting for incoming connections.
+&nbsp;	 * 
+&nbsp;	 * @param port the port to listen on
+&nbsp;	 * @param hints additional {@link ServerSocketHints} used to create the socket. Input null to use the default setting provided
+&nbsp;	 *           by the system.
+&nbsp;	 * @return the {@link ServerSocket}
+&nbsp;	 * @throws GdxRuntimeException in case the socket couldn&#39;t be opened */
+&nbsp;	public ServerSocket newServerSocket (Protocol protocol, int port, ServerSocketHints hints);
+&nbsp;
+&nbsp;	/** Creates a new TCP client socket that connects to the given host and port.
+&nbsp;	 * 
+&nbsp;	 * @param host the host address
+&nbsp;	 * @param port the port
+&nbsp;	 * @param hints additional {@link SocketHints} used to create the socket. Input null to use the default setting provided by the
+&nbsp;	 *           system.
+&nbsp;	 * @throws GdxRuntimeException in case the socket couldn&#39;t be opened */
+&nbsp;	public Socket newClientSocket (Protocol protocol, String host, int port, SocketHints hints);
+&nbsp;
+&nbsp;	/** Launches the default browser to display a URI. If the default browser is not able to handle the specified URI, the
+&nbsp;	 * application registered for handling URIs of the specified type is invoked. The application is determined from the protocol
+&nbsp;	 * and path of the URI. A best effort is made to open the given URI; however, since external applications are involved, no
+&nbsp;	 * guarantee can be made as to whether the URI was actually opened. If it is known that the URI was not opened, false will be
+&nbsp;	 * returned; otherwise, true will be returned.
+&nbsp;	 * 
+&nbsp;	 * @param URI the URI to be opened.
+&nbsp;	 * @return false if it is known the uri was not opened, true otherwise. */
+&nbsp;	public boolean openURI (String URI);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

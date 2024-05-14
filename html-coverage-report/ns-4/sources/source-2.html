@@ -1,0 +1,474 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FeedDucks</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.screens</a>
+</div>
+
+<h1>Coverage Summary for Class: FeedDucks (bytemusketeers.heslingtonhustle.screens)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FeedDucks</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/25)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/136)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.screens;
+&nbsp;
+&nbsp;import static com.badlogic.gdx.graphics.g2d.TextureRegion.split;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.HeslingtonHustle;
+&nbsp;import bytemusketeers.heslingtonhustle.entity.Duck;
+&nbsp;import bytemusketeers.heslingtonhustle.entity.Entity;
+&nbsp;import bytemusketeers.heslingtonhustle.map.GameMap;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.Score;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.ScreenType;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.ScreenAdapter;
+&nbsp;import com.badlogic.gdx.graphics.OrthographicCamera;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.g2d.BitmapFont;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureRegion;
+&nbsp;import com.badlogic.gdx.math.Rectangle;
+&nbsp;import com.badlogic.gdx.utils.Align;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a duck feeding mini-game in which the player clicks
+&nbsp; * on the ducks and new ducks appear.
+&nbsp; */
+&nbsp;
+&nbsp;public class FeedDucks extends ScreenAdapter implements Screen, InputProcessor {
+<b class="nc">&nbsp;    private final int duckScale = 7;</b>
+&nbsp;    private final HeslingtonHustle game;
+&nbsp;    private final OrthographicCamera camera;
+&nbsp;    private final GameMap gameMap;
+<b class="nc">&nbsp;    private final int initialDuckCount = 3;</b>
+&nbsp;    private final Texture backButton;
+<b class="nc">&nbsp;    private final float period = 15.0f;</b>
+<b class="nc">&nbsp;    private final List&lt;Entity&gt; entities = new ArrayList&lt;&gt;(); // ducks and lilypads</b>
+&nbsp;    private final Score score;
+&nbsp;    BitmapFont displayText;
+&nbsp;    String gameObjective;
+&nbsp;    private float displayTextY, displayTextHeight;
+&nbsp;    private float gameObjectiveY;
+&nbsp;    private float titleX, titleY, titleWidth, titleHeight;
+&nbsp;    private float backButtonX, backButtonY, backButtonWidth, backButtonHeight;
+<b class="nc">&nbsp;    private int ducksFed = 0;</b>
+<b class="nc">&nbsp;    private float timeSeconds = 0.0f;</b>
+<b class="nc">&nbsp;    private boolean gameOver = false;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialises the mini-game and starts it by running playGame()
+&nbsp;     *
+&nbsp;     * @param game The parental {@link com.badlogic.gdx.Game} reference
+&nbsp;     * @param camera The {@link OrthographicCamera} responsible for rendering
+&nbsp;     * @param gameMap The {@link GameMap} of the current level
+&nbsp;     * @param score The {@link Score} object regarding the current playing session
+&nbsp;     */
+<b class="nc">&nbsp;    public FeedDucks(HeslingtonHustle game, OrthographicCamera camera, GameMap gameMap, Score score) {</b>
+<b class="nc">&nbsp;        this.game = game;</b>
+<b class="nc">&nbsp;        this.camera = camera;</b>
+<b class="nc">&nbsp;        this.gameMap = gameMap;</b>
+<b class="nc">&nbsp;        this.score = score;</b>
+<b class="nc">&nbsp;        displayText = new BitmapFont(Gdx.files.internal(&quot;font/WhitePeaberry.fnt&quot;));</b>
+<b class="nc">&nbsp;        backButton = new Texture(&quot;menu_gui/exit_button.png&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        calculateDimensions();</b>
+<b class="nc">&nbsp;        calculatePositions();</b>
+&nbsp;
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(this);</b>
+&nbsp;
+<b class="nc">&nbsp;        gameObjective = &quot;Feed the ducks&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        playGame();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adjusts dimensions after rescaling of window
+&nbsp;     */
+&nbsp;    private void calculateDimensions() {
+<b class="nc">&nbsp;        displayText.getData().setScale(3f * game.scaleFactorX, 3f * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        displayTextHeight = 100 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        gameObjectiveY = game.screenHeight - 80 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        backButtonHeight = 100 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        backButtonWidth = 250 * game.scaleFactorX;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adjusts positions after rescaling of window
+&nbsp;     */
+&nbsp;    private void calculatePositions() {
+<b class="nc">&nbsp;        displayTextY = game.screenHeight / 2f - displayTextHeight;</b>
+<b class="nc">&nbsp;        backButtonY = game.screenHeight / 5f;</b>
+<b class="nc">&nbsp;        backButtonX = game.screenWidth / 2f - (backButtonWidth / 2);</b>
+<b class="nc">&nbsp;        titleX = (game.screenWidth - titleWidth) / 2f;</b>
+<b class="nc">&nbsp;        titleY = (game.screenHeight - titleHeight) / 2f + 400 * game.scaleFactorY;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Spawns the first ducks and lily pads
+&nbsp;     */
+&nbsp;    private void playGame() {
+<b class="nc">&nbsp;        initialiseDucks();</b>
+<b class="nc">&nbsp;        addLilyPads(6);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void endGame() {
+<b class="nc">&nbsp;        gameOver = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void initialiseDucks() {
+<b class="nc">&nbsp;        for (int i = 0; i &lt; initialDuckCount; i++) {</b>
+<b class="nc">&nbsp;            Duck tmp = new Duck(game, gameMap, camera);</b>
+<b class="nc">&nbsp;            setNonOverlappingPosition(tmp);</b>
+<b class="nc">&nbsp;            entities.add(tmp);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a position for the duck that does not overlap
+&nbsp;     * with another entity on the screen
+&nbsp;     *
+&nbsp;     * @param duck The duck
+&nbsp;     */
+&nbsp;    private void setNonOverlappingPosition(Duck duck) {
+<b class="nc">&nbsp;        Random random = new Random();</b>
+<b class="nc">&nbsp;        duck.setPosition(random.nextInt(game.screenWidth - 100), random.nextInt(game.screenHeight / 2));</b>
+<b class="nc">&nbsp;        Rectangle[] boundingRectangles = new Rectangle[entities.size()];</b>
+<b class="nc">&nbsp;        int counter = 0;</b>
+<b class="nc">&nbsp;        for (Entity entity : entities) {</b>
+<b class="nc">&nbsp;            boundingRectangles[counter] = entity.getBoundingRectangle();</b>
+<b class="nc">&nbsp;            counter++;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        while (overlapsAny(boundingRectangles, duck.getBoundingRectangle())) {</b>
+<b class="nc">&nbsp;            duck.setPosition(random.nextInt(game.screenWidth - 100), random.nextInt(game.screenHeight / 2));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether one bounding rectangle overlaps with any other in
+&nbsp;     * the list
+&nbsp;     *
+&nbsp;     * @param list The list of bounding {@link Rectangle}s whose union should be checked
+&nbsp;     * @param item The candidate {@link Rectangle}
+&nbsp;     * @return does any {@link Rectangle} in the list overlaps with the given item?
+&nbsp;     */
+&nbsp;    private boolean overlapsAny(Rectangle[] list, Rectangle item) {
+<b class="nc">&nbsp;        for (Rectangle listItem : list)</b>
+<b class="nc">&nbsp;            if (listItem.overlaps(item))</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds and sets the position of the lily pad such that it does
+&nbsp;     * not overlap with any entity on the screen
+&nbsp;     *
+&nbsp;     * @param lilyPad The lilypad to consider
+&nbsp;     */
+&nbsp;    private void setNonOverlappingPosition(Entity lilyPad) {
+<b class="nc">&nbsp;        Random random = new Random();</b>
+<b class="nc">&nbsp;        lilyPad.worldX = random.nextInt(game.screenWidth - 64);</b>
+<b class="nc">&nbsp;        lilyPad.worldY = random.nextInt(game.screenHeight / 2);</b>
+<b class="nc">&nbsp;        Rectangle[] boundingRectangles = new Rectangle[entities.size()];</b>
+<b class="nc">&nbsp;        int counter = 0;</b>
+<b class="nc">&nbsp;        for (Entity entity : entities) {</b>
+<b class="nc">&nbsp;            if (entity.equals(lilyPad)) continue;</b>
+<b class="nc">&nbsp;            boundingRectangles[counter] = entity.getBoundingRectangle();</b>
+<b class="nc">&nbsp;            counter++;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        while (overlapsAny(boundingRectangles, lilyPad.getBoundingRectangle())) {</b>
+<b class="nc">&nbsp;            lilyPad.worldX = random.nextInt(game.screenWidth - 64);</b>
+<b class="nc">&nbsp;            lilyPad.worldY = random.nextInt(game.screenHeight / 2);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a single duck to the screen
+&nbsp;     */
+&nbsp;    private void addDuck() {
+<b class="nc">&nbsp;        Duck tmp = new Duck(game, gameMap, camera);</b>
+<b class="nc">&nbsp;        setNonOverlappingPosition(tmp);</b>
+<b class="nc">&nbsp;        entities.add(tmp);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void addLilyPads() {
+<b class="nc">&nbsp;        addLilyPads(1);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds amount of lily pads to the screen
+&nbsp;     *
+&nbsp;     * @param amount The number of lilypads to add
+&nbsp;     */
+&nbsp;    private void addLilyPads(int amount) {
+<b class="nc">&nbsp;        for (int i = 0; i &lt; amount; i++) {</b>
+<b class="nc">&nbsp;            Texture texture = new Texture(&quot;map/Basic_Grass_Biom_things.png&quot;);</b>
+<b class="nc">&nbsp;            TextureRegion[][] textureRegion = split(texture, 16, 16);</b>
+<b class="nc">&nbsp;            Entity lilyPad = new Entity();</b>
+<b class="nc">&nbsp;            setNonOverlappingPosition(lilyPad);</b>
+<b class="nc">&nbsp;            lilyPad.setTr(textureRegion[4][7]); // texture position in sprite sheet</b>
+<b class="nc">&nbsp;            entities.add(lilyPad);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void show() {
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles all the visual elements of the mini-game including the
+&nbsp;     * rendering of the ducks/lily pads etc
+&nbsp;     *
+&nbsp;     * @param delta The time passed, in milliseconds, since the last render. Currently unused in the implementation.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void render(float delta) {
+<b class="nc">&nbsp;        ScreenUtils.clear(0.3f, 0.55f, 0.7f, 1);</b>
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+<b class="nc">&nbsp;        game.batch.begin();</b>
+<b class="nc">&nbsp;        if (!gameOver) {</b>
+<b class="nc">&nbsp;            timeSeconds += Gdx.graphics.getDeltaTime();</b>
+<b class="nc">&nbsp;            if (timeSeconds &gt; period) {</b>
+<b class="nc">&nbsp;                timeSeconds -= period;</b>
+<b class="nc">&nbsp;                endGame();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            for (Entity entity : entities) {</b>
+<b class="nc">&nbsp;                if (entity instanceof Duck) {</b>
+<b class="nc">&nbsp;                    ((Duck) entity).update(delta);</b>
+<b class="nc">&nbsp;                    game.batch.draw(entity.currentAnimation.getKeyFrame(entity.stateTime, true), entity.getX(),</b>
+<b class="nc">&nbsp;                            entity.getY(), ((Duck) entity).getSpriteX() * duckScale,</b>
+<b class="nc">&nbsp;                            ((Duck) entity).getSpriteY() * duckScale);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    game.batch.draw(entity.getTr(), entity.worldX, entity.worldY, 16 * 7, 16 * 7);</b>
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;            displayText.draw(game.batch, gameObjective, 0, gameObjectiveY, game.screenWidth, Align.center,</b>
+&nbsp;                    false);
+<b class="nc">&nbsp;            displayText.draw(game.batch, ducksFed + &quot;&quot;, 0, gameObjectiveY - 50, game.screenWidth, Align.center,</b>
+&nbsp;                    false);
+<b class="nc">&nbsp;            displayText.draw(game.batch, &quot;Time left &quot; + (int) (period - timeSeconds + 1), 0, 150,</b>
+&nbsp;                    game.screenWidth, Align.center, false);
+<b class="nc">&nbsp;            game.batch.end();</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        displayText.draw(game.batch, &quot;You fed &quot; + ducksFed + &quot; ducks!&quot;, 0, game.screenHeight, game.screenWidth,</b>
+&nbsp;                Align.center, false);
+<b class="nc">&nbsp;        displayText.draw(game.batch, &quot;Back to studying&quot;, 0, backButtonY + 200 + backButtonHeight,</b>
+&nbsp;                game.screenWidth, Align.center, false);
+<b class="nc">&nbsp;        game.batch.draw(backButton, backButtonX, backButtonY, backButtonWidth, backButtonHeight);</b>
+<b class="nc">&nbsp;        game.batch.end();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        calculateDimensions();</b>
+<b class="nc">&nbsp;        calculatePositions();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        for (Entity entity : entities) {</b>
+<b class="nc">&nbsp;            entity.dispose();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        displayText.dispose();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyDown(int keycode) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyUp(int keycode) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyTyped(char character) {
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles mouse button presses including the interaction with clicking
+&nbsp;     * on a duck or the return button at the end of the game
+&nbsp;     *
+&nbsp;     * @param touchX The X position of the touch
+&nbsp;     * @param touchY The Y position of the touch
+&nbsp;     * @param pointer Is the pointer active?
+&nbsp;     * @param button Is the button active?
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchDown(int touchX, int touchY, int pointer, int button) {
+<b class="nc">&nbsp;        touchY = game.screenHeight - touchY;</b>
+<b class="nc">&nbsp;        if (gameOver) {</b>
+<b class="nc">&nbsp;            if (touchX &gt;= backButtonX &amp;&amp; touchX &lt;= backButtonX + backButtonWidth &amp;&amp; touchY &gt;= backButtonY</b>
+&nbsp;                    &amp;&amp; touchY &lt;= backButtonY + backButtonHeight) {
+<b class="nc">&nbsp;                game.gameData.buttonClickedSoundActivate();</b>
+<b class="nc">&nbsp;                MainGameScreen mgs = (MainGameScreen) game.screenManager.getScreen(ScreenType.GAME_SCREEN);</b>
+<b class="nc">&nbsp;                mgs.lowerEnergyCounter();</b>
+<b class="nc">&nbsp;                mgs.lowerEnergyCounter();</b>
+<b class="nc">&nbsp;                mgs.lowerEnergyCounter();</b>
+<b class="nc">&nbsp;                mgs.lowerEnergyCounter();</b>
+<b class="nc">&nbsp;                mgs.incrementRecActivity();</b>
+<b class="nc">&nbsp;                score.incrementRec(ducksFed / 10);</b>
+<b class="nc">&nbsp;                game.screenManager.setScreen(ScreenType.GAME_SCREEN);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        for (Entity entity : entities) {</b>
+<b class="nc">&nbsp;            if (entity instanceof Duck) {</b>
+<b class="nc">&nbsp;                Duck duck = (Duck) entity;</b>
+<b class="nc">&nbsp;                float duckX = duck.getX();</b>
+<b class="nc">&nbsp;                float duckY = duck.getY();</b>
+<b class="nc">&nbsp;                int width = 16 * 7;</b>
+<b class="nc">&nbsp;                int height = 16 * 7;</b>
+<b class="nc">&nbsp;                if (touchX &gt;= duckX &amp;&amp; touchX &lt;= duckX + width &amp;&amp; touchY &gt;= duckY &amp;&amp; touchY &lt;= duckY + height) {</b>
+<b class="nc">&nbsp;                    game.gameData.duckSoundActivate();</b>
+<b class="nc">&nbsp;                    ducksFed++;</b>
+<b class="nc">&nbsp;                    duck.dispose();</b>
+<b class="nc">&nbsp;                    entities.remove(entity);</b>
+<b class="nc">&nbsp;                    addDuck();</b>
+&nbsp;                    break;
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchDragged(int screenX, int screenY, int pointer) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean mouseMoved(int screenX, int screenY) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean scrolled(float amountX, float amountY) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

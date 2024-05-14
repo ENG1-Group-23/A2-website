@@ -1,0 +1,127 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AudioDevice</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.audio</a>
+</div>
+
+<h1>Coverage Summary for Class: AudioDevice (com.badlogic.gdx.audio)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">AudioDevice</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.audio;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.Disposable;
+&nbsp;
+&nbsp;/** Encapsulates an audio device in mono or stereo mode. Use the {@link #writeSamples(float[], int, int)} and
+&nbsp; * {@link #writeSamples(short[], int, int)} methods to write float or 16-bit signed short PCM data directly to the audio device.
+&nbsp; * Stereo samples are interleaved in the order left channel sample, right channel sample. The {@link #dispose()} method must be
+&nbsp; * called when this AudioDevice is no longer needed.
+&nbsp; * 
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public interface AudioDevice extends Disposable {
+&nbsp;	/** @return whether this AudioDevice is in mono or stereo mode. */
+&nbsp;	public boolean isMono ();
+&nbsp;
+&nbsp;	/** Writes the array of 16-bit signed PCM samples to the audio device and blocks until they have been processed.
+&nbsp;	 * 
+&nbsp;	 * @param samples The samples.
+&nbsp;	 * @param offset The offset into the samples array
+&nbsp;	 * @param numSamples the number of samples to write to the device */
+&nbsp;	public void writeSamples (short[] samples, int offset, int numSamples);
+&nbsp;
+&nbsp;	/** Writes the array of float PCM samples to the audio device and blocks until they have been processed.
+&nbsp;	 * 
+&nbsp;	 * @param samples The samples.
+&nbsp;	 * @param offset The offset into the samples array
+&nbsp;	 * @param numSamples the number of samples to write to the device */
+&nbsp;	public void writeSamples (float[] samples, int offset, int numSamples);
+&nbsp;
+&nbsp;	/** @return the latency in samples. */
+&nbsp;	public int getLatency ();
+&nbsp;
+&nbsp;	/** Frees all resources associated with this AudioDevice. Needs to be called when the device is no longer needed. */
+&nbsp;	public void dispose ();
+&nbsp;
+&nbsp;	/** Sets the volume in the range [0,1]. */
+&nbsp;	public void setVolume (float volume);
+&nbsp;
+&nbsp;	/** Pauses the audio device if supported */
+&nbsp;	public void pause ();
+&nbsp;
+&nbsp;	/** Unpauses the audio device if supported */
+&nbsp;	public void resume ();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,328 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ScreenManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: ScreenManager (bytemusketeers.heslingtonhustle.utils)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ScreenManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/37)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ScreenManager$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.utils;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.HeslingtonHustle;
+&nbsp;import bytemusketeers.heslingtonhustle.map.GameMap;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.EndScreen;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.FeedDucks;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.MainControlScreen;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.MainGameScreen;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.MainMenuScreen;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.MainSettingsScreen;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.TappingGame;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.TypingGame;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.graphics.OrthographicCamera;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * The {@link ScreenManager} manages the required {@link Screen} implementations, including creation, switching, and
+&nbsp; * memory-management.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class ScreenManager {
+&nbsp;    /**
+&nbsp;     * The parental {@link com.badlogic.gdx.Game} reference
+&nbsp;     */
+&nbsp;    private final HeslingtonHustle game;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The {@link Screen} storage map, associating constituent values with their corresponding {@link ScreenType}
+&nbsp;     * identifier
+&nbsp;     *
+&nbsp;     * @see ScreenType
+&nbsp;     */
+&nbsp;    private final Score score;
+&nbsp;    private final Achievement eatAch;
+&nbsp;    private final Achievement recAch;
+&nbsp;    private final Achievement sleepAch;
+&nbsp;    private final Map&lt;ScreenType, Screen&gt; screensInMemory;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The currently visible {@link Screen}
+&nbsp;     *
+&nbsp;     * @see #curScreenType
+&nbsp;     * @see #screensInMemory
+&nbsp;     */
+&nbsp;    private Screen curScreen;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The type of the currently visible {@link Screen}
+&nbsp;     *
+&nbsp;     * @see #curScreen
+&nbsp;     * @see #screensInMemory
+&nbsp;     */
+&nbsp;    private ScreenType curScreenType;
+&nbsp;    private Screen lastScreen;
+&nbsp;    private ScreenType lastScreenType;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the ScreenManager with a reference to the main game class.
+&nbsp;     *
+&nbsp;     * @param game The main game class instance.
+&nbsp;     */
+<b class="nc">&nbsp;    public ScreenManager(HeslingtonHustle game) {</b>
+<b class="nc">&nbsp;        this.game = game;</b>
+<b class="nc">&nbsp;        this.score = new Score();</b>
+<b class="nc">&nbsp;        this.eatAch = new Achievement(&quot;Eater&quot;);</b>
+<b class="nc">&nbsp;        this.recAch = new Achievement(&quot;Recreator&quot;);</b>
+<b class="nc">&nbsp;        this.sleepAch = new Achievement(&quot;Sleeper&quot;);</b>
+<b class="nc">&nbsp;        this.screensInMemory = new HashMap&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Keeps a screen in memory for quick access without having to recreate it.
+&nbsp;     *
+&nbsp;     * @param screenType The type of the screen to keep in memory.
+&nbsp;     */
+&nbsp;    public void keepInMemory(ScreenType screenType) {
+<b class="nc">&nbsp;        if (screenType.equals(curScreenType) &amp;&amp; curScreen != null)</b>
+<b class="nc">&nbsp;            screensInMemory.put(screenType, curScreen);</b>
+&nbsp;        else
+<b class="nc">&nbsp;            screensInMemory.put(screenType, createScreen(screenType));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clears the entire memory, disposing of all loaded {@link Screen} objects
+&nbsp;     *
+&nbsp;     * @see Screen#dispose()
+&nbsp;     * @see com.badlogic.gdx.utils.Disposable
+&nbsp;     */
+&nbsp;    public void clearMemory() {
+<b class="nc">&nbsp;        for (Screen screen : screensInMemory.values())</b>
+<b class="nc">&nbsp;            screen.dispose();</b>
+&nbsp;
+<b class="nc">&nbsp;        screensInMemory.clear();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the current screen of the game. If the screen is stored in memory, it uses it; otherwise, it creates a new
+&nbsp;     * screen.
+&nbsp;     *
+&nbsp;     * @param screenType The type of the screen to display.
+&nbsp;     */
+&nbsp;    public void setScreen(ScreenType screenType, Object... args) {
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(null);</b>
+&nbsp;        //screenType = ScreenType.EXERCISE_GAME;
+&nbsp;
+<b class="nc">&nbsp;        if (curScreen != null &amp;&amp; !screensInMemory.containsKey(curScreenType))</b>
+<b class="nc">&nbsp;            curScreen.dispose();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (screensInMemory.containsKey(screenType))</b>
+<b class="nc">&nbsp;            curScreen = screensInMemory.get(screenType);</b>
+&nbsp;        else
+<b class="nc">&nbsp;            curScreen = createScreen(screenType, args);</b>
+&nbsp;
+<b class="nc">&nbsp;        curScreenType = screenType;</b>
+<b class="nc">&nbsp;        game.setScreen(curScreen);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the resizing of the current screen and all screens held in memory.
+&nbsp;     * This method is called whenever the window size changes and ensures that
+&nbsp;     * the screen elements and layouts are adjusted accordingly across all screens.
+&nbsp;     *
+&nbsp;     * @param width  The new width of the window.
+&nbsp;     * @param height The new height of the window.
+&nbsp;     */
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        curScreen.resize(width, height);</b>
+<b class="nc">&nbsp;        for (Screen screen : screensInMemory.values())</b>
+<b class="nc">&nbsp;            screen.resize(width, height);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a screen based on the given screen type. This method defines how each screen type is instantiated.
+&nbsp;     *
+&nbsp;     * @param type The type of the screen to create.
+&nbsp;     * @return The created screen, or null if the type is unknown.
+&nbsp;     */
+&nbsp;    private Screen createScreen(ScreenType type, Object... args) {
+<b class="nc">&nbsp;        switch (type) {</b>
+&nbsp;            case MAIN_MENU:
+<b class="nc">&nbsp;                return new MainMenuScreen(game);</b>
+&nbsp;            case GAME_SCREEN:
+<b class="nc">&nbsp;                return new MainGameScreen(game, score, eatAch, recAch, sleepAch);</b>
+&nbsp;            case SETTINGS:
+<b class="nc">&nbsp;                return new MainSettingsScreen(game);</b>
+&nbsp;            case CONTROLS:
+<b class="nc">&nbsp;                return new MainControlScreen(game);</b>
+&nbsp;            case MINI_GAME:
+<b class="nc">&nbsp;                return new TypingGame(game, (int) args[0]);</b>
+&nbsp;            case FEED_DUCKS:
+<b class="nc">&nbsp;                return new FeedDucks(game, (OrthographicCamera) args[0], (GameMap) args[1], (Score) args[2]);</b>
+&nbsp;            case EXERCISE_GAME:
+<b class="nc">&nbsp;                return new TappingGame(game, (int) args[0]);</b>
+&nbsp;            case END_SCREEN:
+<b class="nc">&nbsp;                return new EndScreen(game, score, new Achievement[]{eatAch, recAch, sleepAch});</b>
+&nbsp;            default:
+<b class="nc">&nbsp;                return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Screen getLastScreen() {
+<b class="nc">&nbsp;        return this.lastScreen;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ScreenType getLastScreenType() {
+<b class="nc">&nbsp;        return this.lastScreenType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Screen getScreen(ScreenType type) {
+<b class="nc">&nbsp;        return this.screensInMemory.get(type);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TextureMapObject</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps.objects</a>
+</div>
+
+<h1>Coverage Summary for Class: TextureMapObject (com.badlogic.gdx.maps.objects)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TextureMapObject</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/37)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.maps.objects;
+&nbsp;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureRegion;
+&nbsp;import com.badlogic.gdx.maps.MapObject;
+&nbsp;
+&nbsp;/** @brief Represents a map object containing a texture (region) */
+&nbsp;public class TextureMapObject extends MapObject {
+&nbsp;
+<b class="nc">&nbsp;	private float x = 0.0f;</b>
+<b class="nc">&nbsp;	private float y = 0.0f;</b>
+<b class="nc">&nbsp;	private float originX = 0.0f;</b>
+<b class="nc">&nbsp;	private float originY = 0.0f;</b>
+<b class="nc">&nbsp;	private float scaleX = 1.0f;</b>
+<b class="nc">&nbsp;	private float scaleY = 1.0f;</b>
+<b class="nc">&nbsp;	private float rotation = 0.0f;</b>
+<b class="nc">&nbsp;	private TextureRegion textureRegion = null;</b>
+&nbsp;
+&nbsp;	/** @return x axis coordinate */
+&nbsp;	public float getX () {
+<b class="nc">&nbsp;		return x;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param x new x axis coordinate */
+&nbsp;	public void setX (float x) {
+<b class="nc">&nbsp;		this.x = x;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return y axis coordinate */
+&nbsp;	public float getY () {
+<b class="nc">&nbsp;		return y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param y new y axis coordinate */
+&nbsp;	public void setY (float y) {
+<b class="nc">&nbsp;		this.y = y;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return x axis origin */
+&nbsp;	public float getOriginX () {
+<b class="nc">&nbsp;		return originX;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param x new x axis origin */
+&nbsp;	public void setOriginX (float x) {
+<b class="nc">&nbsp;		this.originX = x;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return y axis origin */
+&nbsp;	public float getOriginY () {
+<b class="nc">&nbsp;		return originY;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param y new axis origin */
+&nbsp;	public void setOriginY (float y) {
+<b class="nc">&nbsp;		this.originY = y;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return x axis scale */
+&nbsp;	public float getScaleX () {
+<b class="nc">&nbsp;		return scaleX;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param x new x axis scale */
+&nbsp;	public void setScaleX (float x) {
+<b class="nc">&nbsp;		this.scaleX = x;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return y axis scale */
+&nbsp;	public float getScaleY () {
+<b class="nc">&nbsp;		return scaleY;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param y new y axis scale */
+&nbsp;	public void setScaleY (float y) {
+<b class="nc">&nbsp;		this.scaleY = y;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return texture&#39;s rotation in radians */
+&nbsp;	public float getRotation () {
+<b class="nc">&nbsp;		return rotation;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param rotation new texture&#39;s rotation in radians */
+&nbsp;	public void setRotation (float rotation) {
+<b class="nc">&nbsp;		this.rotation = rotation;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return region */
+&nbsp;	public TextureRegion getTextureRegion () {
+<b class="nc">&nbsp;		return textureRegion;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param region new texture region */
+&nbsp;	public void setTextureRegion (TextureRegion region) {
+<b class="nc">&nbsp;		textureRegion = region;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates an empty texture map object */
+&nbsp;	public TextureMapObject () {
+<b class="nc">&nbsp;		this(null);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates texture map object with the given region
+&nbsp;	 * 
+&nbsp;	 * @param textureRegion the {@link TextureRegion} to use. */
+&nbsp;	public TextureMapObject (TextureRegion textureRegion) {
+<b class="nc">&nbsp;		super();</b>
+<b class="nc">&nbsp;		this.textureRegion = textureRegion;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

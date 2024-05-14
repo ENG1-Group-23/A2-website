@@ -1,0 +1,750 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GL20</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics</a>
+</div>
+
+<h1>Coverage Summary for Class: GL20 (com.badlogic.gdx.graphics)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">GL20$MockitoMock$VRPtIU8v</td>
+  </tr>
+  <tr>
+    <td class="name">GL20$MockitoMock$VRPtIU8v$auxiliary$csDRsNz8</td>
+  </tr>
+  <tr>
+    <td class="name">GL20$MockitoMock$VRPtIU8v$auxiliary$RNSprQUN</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics;
+&nbsp;
+&nbsp;import java.nio.Buffer;
+&nbsp;import java.nio.FloatBuffer;
+&nbsp;import java.nio.IntBuffer;
+&nbsp;
+&nbsp;/** Interface wrapping all the methods of OpenGL ES 2.0
+&nbsp; * @author mzechner */
+&nbsp;public interface GL20 {
+&nbsp;	public static final int GL_ES_VERSION_2_0 = 1;
+&nbsp;	public static final int GL_DEPTH_BUFFER_BIT = 0x00000100;
+&nbsp;	public static final int GL_STENCIL_BUFFER_BIT = 0x00000400;
+&nbsp;	public static final int GL_COLOR_BUFFER_BIT = 0x00004000;
+&nbsp;	public static final int GL_FALSE = 0;
+&nbsp;	public static final int GL_TRUE = 1;
+&nbsp;	public static final int GL_POINTS = 0x0000;
+&nbsp;	public static final int GL_LINES = 0x0001;
+&nbsp;	public static final int GL_LINE_LOOP = 0x0002;
+&nbsp;	public static final int GL_LINE_STRIP = 0x0003;
+&nbsp;	public static final int GL_TRIANGLES = 0x0004;
+&nbsp;	public static final int GL_TRIANGLE_STRIP = 0x0005;
+&nbsp;	public static final int GL_TRIANGLE_FAN = 0x0006;
+&nbsp;	public static final int GL_ZERO = 0;
+&nbsp;	public static final int GL_ONE = 1;
+&nbsp;	public static final int GL_SRC_COLOR = 0x0300;
+&nbsp;	public static final int GL_ONE_MINUS_SRC_COLOR = 0x0301;
+&nbsp;	public static final int GL_SRC_ALPHA = 0x0302;
+&nbsp;	public static final int GL_ONE_MINUS_SRC_ALPHA = 0x0303;
+&nbsp;	public static final int GL_DST_ALPHA = 0x0304;
+&nbsp;	public static final int GL_ONE_MINUS_DST_ALPHA = 0x0305;
+&nbsp;	public static final int GL_DST_COLOR = 0x0306;
+&nbsp;	public static final int GL_ONE_MINUS_DST_COLOR = 0x0307;
+&nbsp;	public static final int GL_SRC_ALPHA_SATURATE = 0x0308;
+&nbsp;	public static final int GL_FUNC_ADD = 0x8006;
+&nbsp;	public static final int GL_BLEND_EQUATION = 0x8009;
+&nbsp;	public static final int GL_BLEND_EQUATION_RGB = 0x8009;
+&nbsp;	public static final int GL_BLEND_EQUATION_ALPHA = 0x883D;
+&nbsp;	public static final int GL_FUNC_SUBTRACT = 0x800A;
+&nbsp;	public static final int GL_FUNC_REVERSE_SUBTRACT = 0x800B;
+&nbsp;	public static final int GL_BLEND_DST_RGB = 0x80C8;
+&nbsp;	public static final int GL_BLEND_SRC_RGB = 0x80C9;
+&nbsp;	public static final int GL_BLEND_DST_ALPHA = 0x80CA;
+&nbsp;	public static final int GL_BLEND_SRC_ALPHA = 0x80CB;
+&nbsp;	public static final int GL_CONSTANT_COLOR = 0x8001;
+&nbsp;	public static final int GL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
+&nbsp;	public static final int GL_CONSTANT_ALPHA = 0x8003;
+&nbsp;	public static final int GL_ONE_MINUS_CONSTANT_ALPHA = 0x8004;
+&nbsp;	public static final int GL_BLEND_COLOR = 0x8005;
+&nbsp;	public static final int GL_ARRAY_BUFFER = 0x8892;
+&nbsp;	public static final int GL_ELEMENT_ARRAY_BUFFER = 0x8893;
+&nbsp;	public static final int GL_ARRAY_BUFFER_BINDING = 0x8894;
+&nbsp;	public static final int GL_ELEMENT_ARRAY_BUFFER_BINDING = 0x8895;
+&nbsp;	public static final int GL_STREAM_DRAW = 0x88E0;
+&nbsp;	public static final int GL_STATIC_DRAW = 0x88E4;
+&nbsp;	public static final int GL_DYNAMIC_DRAW = 0x88E8;
+&nbsp;	public static final int GL_BUFFER_SIZE = 0x8764;
+&nbsp;	public static final int GL_BUFFER_USAGE = 0x8765;
+&nbsp;	public static final int GL_CURRENT_VERTEX_ATTRIB = 0x8626;
+&nbsp;	public static final int GL_FRONT = 0x0404;
+&nbsp;	public static final int GL_BACK = 0x0405;
+&nbsp;	public static final int GL_FRONT_AND_BACK = 0x0408;
+&nbsp;	public static final int GL_TEXTURE_2D = 0x0DE1;
+&nbsp;	public static final int GL_CULL_FACE = 0x0B44;
+&nbsp;	public static final int GL_BLEND = 0x0BE2;
+&nbsp;	public static final int GL_DITHER = 0x0BD0;
+&nbsp;	public static final int GL_STENCIL_TEST = 0x0B90;
+&nbsp;	public static final int GL_DEPTH_TEST = 0x0B71;
+&nbsp;	public static final int GL_SCISSOR_TEST = 0x0C11;
+&nbsp;	public static final int GL_POLYGON_OFFSET_FILL = 0x8037;
+&nbsp;	public static final int GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
+&nbsp;	public static final int GL_SAMPLE_COVERAGE = 0x80A0;
+&nbsp;	public static final int GL_NO_ERROR = 0;
+&nbsp;	public static final int GL_INVALID_ENUM = 0x0500;
+&nbsp;	public static final int GL_INVALID_VALUE = 0x0501;
+&nbsp;	public static final int GL_INVALID_OPERATION = 0x0502;
+&nbsp;	public static final int GL_OUT_OF_MEMORY = 0x0505;
+&nbsp;	public static final int GL_CW = 0x0900;
+&nbsp;	public static final int GL_CCW = 0x0901;
+&nbsp;	public static final int GL_LINE_WIDTH = 0x0B21;
+&nbsp;	public static final int GL_ALIASED_POINT_SIZE_RANGE = 0x846D;
+&nbsp;	public static final int GL_ALIASED_LINE_WIDTH_RANGE = 0x846E;
+&nbsp;	public static final int GL_CULL_FACE_MODE = 0x0B45;
+&nbsp;	public static final int GL_FRONT_FACE = 0x0B46;
+&nbsp;	public static final int GL_DEPTH_RANGE = 0x0B70;
+&nbsp;	public static final int GL_DEPTH_WRITEMASK = 0x0B72;
+&nbsp;	public static final int GL_DEPTH_CLEAR_VALUE = 0x0B73;
+&nbsp;	public static final int GL_DEPTH_FUNC = 0x0B74;
+&nbsp;	public static final int GL_STENCIL_CLEAR_VALUE = 0x0B91;
+&nbsp;	public static final int GL_STENCIL_FUNC = 0x0B92;
+&nbsp;	public static final int GL_STENCIL_FAIL = 0x0B94;
+&nbsp;	public static final int GL_STENCIL_PASS_DEPTH_FAIL = 0x0B95;
+&nbsp;	public static final int GL_STENCIL_PASS_DEPTH_PASS = 0x0B96;
+&nbsp;	public static final int GL_STENCIL_REF = 0x0B97;
+&nbsp;	public static final int GL_STENCIL_VALUE_MASK = 0x0B93;
+&nbsp;	public static final int GL_STENCIL_WRITEMASK = 0x0B98;
+&nbsp;	public static final int GL_STENCIL_BACK_FUNC = 0x8800;
+&nbsp;	public static final int GL_STENCIL_BACK_FAIL = 0x8801;
+&nbsp;	public static final int GL_STENCIL_BACK_PASS_DEPTH_FAIL = 0x8802;
+&nbsp;	public static final int GL_STENCIL_BACK_PASS_DEPTH_PASS = 0x8803;
+&nbsp;	public static final int GL_STENCIL_BACK_REF = 0x8CA3;
+&nbsp;	public static final int GL_STENCIL_BACK_VALUE_MASK = 0x8CA4;
+&nbsp;	public static final int GL_STENCIL_BACK_WRITEMASK = 0x8CA5;
+&nbsp;	public static final int GL_VIEWPORT = 0x0BA2;
+&nbsp;	public static final int GL_SCISSOR_BOX = 0x0C10;
+&nbsp;	public static final int GL_COLOR_CLEAR_VALUE = 0x0C22;
+&nbsp;	public static final int GL_COLOR_WRITEMASK = 0x0C23;
+&nbsp;	public static final int GL_UNPACK_ALIGNMENT = 0x0CF5;
+&nbsp;	public static final int GL_PACK_ALIGNMENT = 0x0D05;
+&nbsp;	public static final int GL_MAX_TEXTURE_SIZE = 0x0D33;
+&nbsp;	public static final int GL_MAX_TEXTURE_UNITS = 0x84E2;
+&nbsp;	public static final int GL_MAX_VIEWPORT_DIMS = 0x0D3A;
+&nbsp;	public static final int GL_SUBPIXEL_BITS = 0x0D50;
+&nbsp;	public static final int GL_RED_BITS = 0x0D52;
+&nbsp;	public static final int GL_GREEN_BITS = 0x0D53;
+&nbsp;	public static final int GL_BLUE_BITS = 0x0D54;
+&nbsp;	public static final int GL_ALPHA_BITS = 0x0D55;
+&nbsp;	public static final int GL_DEPTH_BITS = 0x0D56;
+&nbsp;	public static final int GL_STENCIL_BITS = 0x0D57;
+&nbsp;	public static final int GL_POLYGON_OFFSET_UNITS = 0x2A00;
+&nbsp;	public static final int GL_POLYGON_OFFSET_FACTOR = 0x8038;
+&nbsp;	public static final int GL_TEXTURE_BINDING_2D = 0x8069;
+&nbsp;	public static final int GL_SAMPLE_BUFFERS = 0x80A8;
+&nbsp;	public static final int GL_SAMPLES = 0x80A9;
+&nbsp;	public static final int GL_SAMPLE_COVERAGE_VALUE = 0x80AA;
+&nbsp;	public static final int GL_SAMPLE_COVERAGE_INVERT = 0x80AB;
+&nbsp;	public static final int GL_NUM_COMPRESSED_TEXTURE_FORMATS = 0x86A2;
+&nbsp;	public static final int GL_COMPRESSED_TEXTURE_FORMATS = 0x86A3;
+&nbsp;	public static final int GL_DONT_CARE = 0x1100;
+&nbsp;	public static final int GL_FASTEST = 0x1101;
+&nbsp;	public static final int GL_NICEST = 0x1102;
+&nbsp;	public static final int GL_GENERATE_MIPMAP = 0x8191;
+&nbsp;	public static final int GL_GENERATE_MIPMAP_HINT = 0x8192;
+&nbsp;	public static final int GL_BYTE = 0x1400;
+&nbsp;	public static final int GL_UNSIGNED_BYTE = 0x1401;
+&nbsp;	public static final int GL_SHORT = 0x1402;
+&nbsp;	public static final int GL_UNSIGNED_SHORT = 0x1403;
+&nbsp;	public static final int GL_INT = 0x1404;
+&nbsp;	public static final int GL_UNSIGNED_INT = 0x1405;
+&nbsp;	public static final int GL_FLOAT = 0x1406;
+&nbsp;	public static final int GL_FIXED = 0x140C;
+&nbsp;	public static final int GL_DEPTH_COMPONENT = 0x1902;
+&nbsp;	public static final int GL_ALPHA = 0x1906;
+&nbsp;	public static final int GL_RGB = 0x1907;
+&nbsp;	public static final int GL_RGBA = 0x1908;
+&nbsp;	public static final int GL_LUMINANCE = 0x1909;
+&nbsp;	public static final int GL_LUMINANCE_ALPHA = 0x190A;
+&nbsp;	public static final int GL_UNSIGNED_SHORT_4_4_4_4 = 0x8033;
+&nbsp;	public static final int GL_UNSIGNED_SHORT_5_5_5_1 = 0x8034;
+&nbsp;	public static final int GL_UNSIGNED_SHORT_5_6_5 = 0x8363;
+&nbsp;	public static final int GL_FRAGMENT_SHADER = 0x8B30;
+&nbsp;	public static final int GL_VERTEX_SHADER = 0x8B31;
+&nbsp;	public static final int GL_MAX_VERTEX_ATTRIBS = 0x8869;
+&nbsp;	public static final int GL_MAX_VERTEX_UNIFORM_VECTORS = 0x8DFB;
+&nbsp;	public static final int GL_MAX_VARYING_VECTORS = 0x8DFC;
+&nbsp;	public static final int GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0x8B4D;
+&nbsp;	public static final int GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0x8B4C;
+&nbsp;	public static final int GL_MAX_TEXTURE_IMAGE_UNITS = 0x8872;
+&nbsp;	public static final int GL_MAX_FRAGMENT_UNIFORM_VECTORS = 0x8DFD;
+&nbsp;	public static final int GL_SHADER_TYPE = 0x8B4F;
+&nbsp;	public static final int GL_DELETE_STATUS = 0x8B80;
+&nbsp;	public static final int GL_LINK_STATUS = 0x8B82;
+&nbsp;	public static final int GL_VALIDATE_STATUS = 0x8B83;
+&nbsp;	public static final int GL_ATTACHED_SHADERS = 0x8B85;
+&nbsp;	public static final int GL_ACTIVE_UNIFORMS = 0x8B86;
+&nbsp;	public static final int GL_ACTIVE_UNIFORM_MAX_LENGTH = 0x8B87;
+&nbsp;	public static final int GL_ACTIVE_ATTRIBUTES = 0x8B89;
+&nbsp;	public static final int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 0x8B8A;
+&nbsp;	public static final int GL_SHADING_LANGUAGE_VERSION = 0x8B8C;
+&nbsp;	public static final int GL_CURRENT_PROGRAM = 0x8B8D;
+&nbsp;	public static final int GL_NEVER = 0x0200;
+&nbsp;	public static final int GL_LESS = 0x0201;
+&nbsp;	public static final int GL_EQUAL = 0x0202;
+&nbsp;	public static final int GL_LEQUAL = 0x0203;
+&nbsp;	public static final int GL_GREATER = 0x0204;
+&nbsp;	public static final int GL_NOTEQUAL = 0x0205;
+&nbsp;	public static final int GL_GEQUAL = 0x0206;
+&nbsp;	public static final int GL_ALWAYS = 0x0207;
+&nbsp;	public static final int GL_KEEP = 0x1E00;
+&nbsp;	public static final int GL_REPLACE = 0x1E01;
+&nbsp;	public static final int GL_INCR = 0x1E02;
+&nbsp;	public static final int GL_DECR = 0x1E03;
+&nbsp;	public static final int GL_INVERT = 0x150A;
+&nbsp;	public static final int GL_INCR_WRAP = 0x8507;
+&nbsp;	public static final int GL_DECR_WRAP = 0x8508;
+&nbsp;	public static final int GL_VENDOR = 0x1F00;
+&nbsp;	public static final int GL_RENDERER = 0x1F01;
+&nbsp;	public static final int GL_VERSION = 0x1F02;
+&nbsp;	public static final int GL_EXTENSIONS = 0x1F03;
+&nbsp;	public static final int GL_NEAREST = 0x2600;
+&nbsp;	public static final int GL_LINEAR = 0x2601;
+&nbsp;	public static final int GL_NEAREST_MIPMAP_NEAREST = 0x2700;
+&nbsp;	public static final int GL_LINEAR_MIPMAP_NEAREST = 0x2701;
+&nbsp;	public static final int GL_NEAREST_MIPMAP_LINEAR = 0x2702;
+&nbsp;	public static final int GL_LINEAR_MIPMAP_LINEAR = 0x2703;
+&nbsp;	public static final int GL_TEXTURE_MAG_FILTER = 0x2800;
+&nbsp;	public static final int GL_TEXTURE_MIN_FILTER = 0x2801;
+&nbsp;	public static final int GL_TEXTURE_WRAP_S = 0x2802;
+&nbsp;	public static final int GL_TEXTURE_WRAP_T = 0x2803;
+&nbsp;	public static final int GL_TEXTURE = 0x1702;
+&nbsp;	public static final int GL_TEXTURE_CUBE_MAP = 0x8513;
+&nbsp;	public static final int GL_TEXTURE_BINDING_CUBE_MAP = 0x8514;
+&nbsp;	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515;
+&nbsp;	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_X = 0x8516;
+&nbsp;	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Y = 0x8517;
+&nbsp;	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Y = 0x8518;
+&nbsp;	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Z = 0x8519;
+&nbsp;	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z = 0x851A;
+&nbsp;	public static final int GL_MAX_CUBE_MAP_TEXTURE_SIZE = 0x851C;
+&nbsp;	public static final int GL_TEXTURE0 = 0x84C0;
+&nbsp;	public static final int GL_TEXTURE1 = 0x84C1;
+&nbsp;	public static final int GL_TEXTURE2 = 0x84C2;
+&nbsp;	public static final int GL_TEXTURE3 = 0x84C3;
+&nbsp;	public static final int GL_TEXTURE4 = 0x84C4;
+&nbsp;	public static final int GL_TEXTURE5 = 0x84C5;
+&nbsp;	public static final int GL_TEXTURE6 = 0x84C6;
+&nbsp;	public static final int GL_TEXTURE7 = 0x84C7;
+&nbsp;	public static final int GL_TEXTURE8 = 0x84C8;
+&nbsp;	public static final int GL_TEXTURE9 = 0x84C9;
+&nbsp;	public static final int GL_TEXTURE10 = 0x84CA;
+&nbsp;	public static final int GL_TEXTURE11 = 0x84CB;
+&nbsp;	public static final int GL_TEXTURE12 = 0x84CC;
+&nbsp;	public static final int GL_TEXTURE13 = 0x84CD;
+&nbsp;	public static final int GL_TEXTURE14 = 0x84CE;
+&nbsp;	public static final int GL_TEXTURE15 = 0x84CF;
+&nbsp;	public static final int GL_TEXTURE16 = 0x84D0;
+&nbsp;	public static final int GL_TEXTURE17 = 0x84D1;
+&nbsp;	public static final int GL_TEXTURE18 = 0x84D2;
+&nbsp;	public static final int GL_TEXTURE19 = 0x84D3;
+&nbsp;	public static final int GL_TEXTURE20 = 0x84D4;
+&nbsp;	public static final int GL_TEXTURE21 = 0x84D5;
+&nbsp;	public static final int GL_TEXTURE22 = 0x84D6;
+&nbsp;	public static final int GL_TEXTURE23 = 0x84D7;
+&nbsp;	public static final int GL_TEXTURE24 = 0x84D8;
+&nbsp;	public static final int GL_TEXTURE25 = 0x84D9;
+&nbsp;	public static final int GL_TEXTURE26 = 0x84DA;
+&nbsp;	public static final int GL_TEXTURE27 = 0x84DB;
+&nbsp;	public static final int GL_TEXTURE28 = 0x84DC;
+&nbsp;	public static final int GL_TEXTURE29 = 0x84DD;
+&nbsp;	public static final int GL_TEXTURE30 = 0x84DE;
+&nbsp;	public static final int GL_TEXTURE31 = 0x84DF;
+&nbsp;	public static final int GL_ACTIVE_TEXTURE = 0x84E0;
+&nbsp;	public static final int GL_REPEAT = 0x2901;
+&nbsp;	public static final int GL_CLAMP_TO_EDGE = 0x812F;
+&nbsp;	public static final int GL_MIRRORED_REPEAT = 0x8370;
+&nbsp;	public static final int GL_FLOAT_VEC2 = 0x8B50;
+&nbsp;	public static final int GL_FLOAT_VEC3 = 0x8B51;
+&nbsp;	public static final int GL_FLOAT_VEC4 = 0x8B52;
+&nbsp;	public static final int GL_INT_VEC2 = 0x8B53;
+&nbsp;	public static final int GL_INT_VEC3 = 0x8B54;
+&nbsp;	public static final int GL_INT_VEC4 = 0x8B55;
+&nbsp;	public static final int GL_BOOL = 0x8B56;
+&nbsp;	public static final int GL_BOOL_VEC2 = 0x8B57;
+&nbsp;	public static final int GL_BOOL_VEC3 = 0x8B58;
+&nbsp;	public static final int GL_BOOL_VEC4 = 0x8B59;
+&nbsp;	public static final int GL_FLOAT_MAT2 = 0x8B5A;
+&nbsp;	public static final int GL_FLOAT_MAT3 = 0x8B5B;
+&nbsp;	public static final int GL_FLOAT_MAT4 = 0x8B5C;
+&nbsp;	public static final int GL_SAMPLER_2D = 0x8B5E;
+&nbsp;	public static final int GL_SAMPLER_CUBE = 0x8B60;
+&nbsp;	public static final int GL_VERTEX_ATTRIB_ARRAY_ENABLED = 0x8622;
+&nbsp;	public static final int GL_VERTEX_ATTRIB_ARRAY_SIZE = 0x8623;
+&nbsp;	public static final int GL_VERTEX_ATTRIB_ARRAY_STRIDE = 0x8624;
+&nbsp;	public static final int GL_VERTEX_ATTRIB_ARRAY_TYPE = 0x8625;
+&nbsp;	public static final int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED = 0x886A;
+&nbsp;	public static final int GL_VERTEX_ATTRIB_ARRAY_POINTER = 0x8645;
+&nbsp;	public static final int GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = 0x889F;
+&nbsp;	public static final int GL_IMPLEMENTATION_COLOR_READ_TYPE = 0x8B9A;
+&nbsp;	public static final int GL_IMPLEMENTATION_COLOR_READ_FORMAT = 0x8B9B;
+&nbsp;	public static final int GL_COMPILE_STATUS = 0x8B81;
+&nbsp;	public static final int GL_INFO_LOG_LENGTH = 0x8B84;
+&nbsp;	public static final int GL_SHADER_SOURCE_LENGTH = 0x8B88;
+&nbsp;	public static final int GL_SHADER_COMPILER = 0x8DFA;
+&nbsp;	public static final int GL_SHADER_BINARY_FORMATS = 0x8DF8;
+&nbsp;	public static final int GL_NUM_SHADER_BINARY_FORMATS = 0x8DF9;
+&nbsp;	public static final int GL_LOW_FLOAT = 0x8DF0;
+&nbsp;	public static final int GL_MEDIUM_FLOAT = 0x8DF1;
+&nbsp;	public static final int GL_HIGH_FLOAT = 0x8DF2;
+&nbsp;	public static final int GL_LOW_INT = 0x8DF3;
+&nbsp;	public static final int GL_MEDIUM_INT = 0x8DF4;
+&nbsp;	public static final int GL_HIGH_INT = 0x8DF5;
+&nbsp;	public static final int GL_FRAMEBUFFER = 0x8D40;
+&nbsp;	public static final int GL_RENDERBUFFER = 0x8D41;
+&nbsp;	public static final int GL_RGBA4 = 0x8056;
+&nbsp;	public static final int GL_RGB5_A1 = 0x8057;
+&nbsp;	public static final int GL_RGB565 = 0x8D62;
+&nbsp;	public static final int GL_DEPTH_COMPONENT16 = 0x81A5;
+&nbsp;	public static final int GL_STENCIL_INDEX = 0x1901;
+&nbsp;	public static final int GL_STENCIL_INDEX8 = 0x8D48;
+&nbsp;	public static final int GL_RENDERBUFFER_WIDTH = 0x8D42;
+&nbsp;	public static final int GL_RENDERBUFFER_HEIGHT = 0x8D43;
+&nbsp;	public static final int GL_RENDERBUFFER_INTERNAL_FORMAT = 0x8D44;
+&nbsp;	public static final int GL_RENDERBUFFER_RED_SIZE = 0x8D50;
+&nbsp;	public static final int GL_RENDERBUFFER_GREEN_SIZE = 0x8D51;
+&nbsp;	public static final int GL_RENDERBUFFER_BLUE_SIZE = 0x8D52;
+&nbsp;	public static final int GL_RENDERBUFFER_ALPHA_SIZE = 0x8D53;
+&nbsp;	public static final int GL_RENDERBUFFER_DEPTH_SIZE = 0x8D54;
+&nbsp;	public static final int GL_RENDERBUFFER_STENCIL_SIZE = 0x8D55;
+&nbsp;	public static final int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE = 0x8CD0;
+&nbsp;	public static final int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME = 0x8CD1;
+&nbsp;	public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL = 0x8CD2;
+&nbsp;	public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE = 0x8CD3;
+&nbsp;	public static final int GL_COLOR_ATTACHMENT0 = 0x8CE0;
+&nbsp;	public static final int GL_DEPTH_ATTACHMENT = 0x8D00;
+&nbsp;	public static final int GL_STENCIL_ATTACHMENT = 0x8D20;
+&nbsp;	public static final int GL_NONE = 0;
+&nbsp;	public static final int GL_FRAMEBUFFER_COMPLETE = 0x8CD5;
+&nbsp;	public static final int GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 0x8CD6;
+&nbsp;	public static final int GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = 0x8CD7;
+&nbsp;	public static final int GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS = 0x8CD9;
+&nbsp;	public static final int GL_FRAMEBUFFER_UNSUPPORTED = 0x8CDD;
+&nbsp;	public static final int GL_FRAMEBUFFER_BINDING = 0x8CA6;
+&nbsp;	public static final int GL_RENDERBUFFER_BINDING = 0x8CA7;
+&nbsp;	public static final int GL_MAX_RENDERBUFFER_SIZE = 0x84E8;
+&nbsp;	public static final int GL_INVALID_FRAMEBUFFER_OPERATION = 0x0506;
+&nbsp;	public static final int GL_VERTEX_PROGRAM_POINT_SIZE = 0x8642;
+&nbsp;
+&nbsp;	// Extensions
+&nbsp;	public static final int GL_COVERAGE_BUFFER_BIT_NV = 0x8000;
+&nbsp;	public static final int GL_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FE;
+&nbsp;	public static final int GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FF;
+&nbsp;
+&nbsp;	public void glActiveTexture (int texture);
+&nbsp;
+&nbsp;	public void glBindTexture (int target, int texture);
+&nbsp;
+&nbsp;	public void glBlendFunc (int sfactor, int dfactor);
+&nbsp;
+&nbsp;	public void glClear (int mask);
+&nbsp;
+&nbsp;	public void glClearColor (float red, float green, float blue, float alpha);
+&nbsp;
+&nbsp;	public void glClearDepthf (float depth);
+&nbsp;
+&nbsp;	public void glClearStencil (int s);
+&nbsp;
+&nbsp;	public void glColorMask (boolean red, boolean green, boolean blue, boolean alpha);
+&nbsp;
+&nbsp;	public void glCompressedTexImage2D (int target, int level, int internalformat, int width, int height, int border,
+&nbsp;		int imageSize, Buffer data);
+&nbsp;
+&nbsp;	public void glCompressedTexSubImage2D (int target, int level, int xoffset, int yoffset, int width, int height, int format,
+&nbsp;		int imageSize, Buffer data);
+&nbsp;
+&nbsp;	public void glCopyTexImage2D (int target, int level, int internalformat, int x, int y, int width, int height, int border);
+&nbsp;
+&nbsp;	public void glCopyTexSubImage2D (int target, int level, int xoffset, int yoffset, int x, int y, int width, int height);
+&nbsp;
+&nbsp;	public void glCullFace (int mode);
+&nbsp;
+&nbsp;	public void glDeleteTextures (int n, IntBuffer textures);
+&nbsp;
+&nbsp;	public void glDeleteTexture (int texture);
+&nbsp;
+&nbsp;	public void glDepthFunc (int func);
+&nbsp;
+&nbsp;	public void glDepthMask (boolean flag);
+&nbsp;
+&nbsp;	public void glDepthRangef (float zNear, float zFar);
+&nbsp;
+&nbsp;	public void glDisable (int cap);
+&nbsp;
+&nbsp;	public void glDrawArrays (int mode, int first, int count);
+&nbsp;
+&nbsp;	/** Not fully supported with GWT backend: indices content is ignored, only buffer position is used. */
+&nbsp;	public void glDrawElements (int mode, int count, int type, Buffer indices);
+&nbsp;
+&nbsp;	public void glEnable (int cap);
+&nbsp;
+&nbsp;	public void glFinish ();
+&nbsp;
+&nbsp;	public void glFlush ();
+&nbsp;
+&nbsp;	public void glFrontFace (int mode);
+&nbsp;
+&nbsp;	public void glGenTextures (int n, IntBuffer textures);
+&nbsp;
+&nbsp;	public int glGenTexture ();
+&nbsp;
+&nbsp;	public int glGetError ();
+&nbsp;
+&nbsp;	public void glGetIntegerv (int pname, IntBuffer params);
+&nbsp;
+&nbsp;	public String glGetString (int name);
+&nbsp;
+&nbsp;	public void glHint (int target, int mode);
+&nbsp;
+&nbsp;	public void glLineWidth (float width);
+&nbsp;
+&nbsp;	public void glPixelStorei (int pname, int param);
+&nbsp;
+&nbsp;	public void glPolygonOffset (float factor, float units);
+&nbsp;
+&nbsp;	public void glReadPixels (int x, int y, int width, int height, int format, int type, Buffer pixels);
+&nbsp;
+&nbsp;	public void glScissor (int x, int y, int width, int height);
+&nbsp;
+&nbsp;	public void glStencilFunc (int func, int ref, int mask);
+&nbsp;
+&nbsp;	public void glStencilMask (int mask);
+&nbsp;
+&nbsp;	public void glStencilOp (int fail, int zfail, int zpass);
+&nbsp;
+&nbsp;	public void glTexImage2D (int target, int level, int internalformat, int width, int height, int border, int format, int type,
+&nbsp;		Buffer pixels);
+&nbsp;
+&nbsp;	public void glTexParameterf (int target, int pname, float param);
+&nbsp;
+&nbsp;	public void glTexSubImage2D (int target, int level, int xoffset, int yoffset, int width, int height, int format, int type,
+&nbsp;		Buffer pixels);
+&nbsp;
+&nbsp;	public void glViewport (int x, int y, int width, int height);
+&nbsp;
+&nbsp;	public void glAttachShader (int program, int shader);
+&nbsp;
+&nbsp;	public void glBindAttribLocation (int program, int index, String name);
+&nbsp;
+&nbsp;	public void glBindBuffer (int target, int buffer);
+&nbsp;
+&nbsp;	public void glBindFramebuffer (int target, int framebuffer);
+&nbsp;
+&nbsp;	public void glBindRenderbuffer (int target, int renderbuffer);
+&nbsp;
+&nbsp;	public void glBlendColor (float red, float green, float blue, float alpha);
+&nbsp;
+&nbsp;	public void glBlendEquation (int mode);
+&nbsp;
+&nbsp;	public void glBlendEquationSeparate (int modeRGB, int modeAlpha);
+&nbsp;
+&nbsp;	public void glBlendFuncSeparate (int srcRGB, int dstRGB, int srcAlpha, int dstAlpha);
+&nbsp;
+&nbsp;	public void glBufferData (int target, int size, Buffer data, int usage);
+&nbsp;
+&nbsp;	public void glBufferSubData (int target, int offset, int size, Buffer data);
+&nbsp;
+&nbsp;	public int glCheckFramebufferStatus (int target);
+&nbsp;
+&nbsp;	public void glCompileShader (int shader);
+&nbsp;
+&nbsp;	public int glCreateProgram ();
+&nbsp;
+&nbsp;	public int glCreateShader (int type);
+&nbsp;
+&nbsp;	public void glDeleteBuffer (int buffer);
+&nbsp;
+&nbsp;	public void glDeleteBuffers (int n, IntBuffer buffers);
+&nbsp;
+&nbsp;	public void glDeleteFramebuffer (int framebuffer);
+&nbsp;
+&nbsp;	public void glDeleteFramebuffers (int n, IntBuffer framebuffers);
+&nbsp;
+&nbsp;	public void glDeleteProgram (int program);
+&nbsp;
+&nbsp;	public void glDeleteRenderbuffer (int renderbuffer);
+&nbsp;
+&nbsp;	public void glDeleteRenderbuffers (int n, IntBuffer renderbuffers);
+&nbsp;
+&nbsp;	public void glDeleteShader (int shader);
+&nbsp;
+&nbsp;	public void glDetachShader (int program, int shader);
+&nbsp;
+&nbsp;	public void glDisableVertexAttribArray (int index);
+&nbsp;
+&nbsp;	public void glDrawElements (int mode, int count, int type, int indices);
+&nbsp;
+&nbsp;	public void glEnableVertexAttribArray (int index);
+&nbsp;
+&nbsp;	public void glFramebufferRenderbuffer (int target, int attachment, int renderbuffertarget, int renderbuffer);
+&nbsp;
+&nbsp;	public void glFramebufferTexture2D (int target, int attachment, int textarget, int texture, int level);
+&nbsp;
+&nbsp;	public int glGenBuffer ();
+&nbsp;
+&nbsp;	public void glGenBuffers (int n, IntBuffer buffers);
+&nbsp;
+&nbsp;	public void glGenerateMipmap (int target);
+&nbsp;
+&nbsp;	public int glGenFramebuffer ();
+&nbsp;
+&nbsp;	public void glGenFramebuffers (int n, IntBuffer framebuffers);
+&nbsp;
+&nbsp;	public int glGenRenderbuffer ();
+&nbsp;
+&nbsp;	public void glGenRenderbuffers (int n, IntBuffer renderbuffers);
+&nbsp;
+&nbsp;	// deviates
+&nbsp;	public String glGetActiveAttrib (int program, int index, IntBuffer size, IntBuffer type);
+&nbsp;
+&nbsp;	// deviates
+&nbsp;	public String glGetActiveUniform (int program, int index, IntBuffer size, IntBuffer type);
+&nbsp;
+&nbsp;	public void glGetAttachedShaders (int program, int maxcount, Buffer count, IntBuffer shaders);
+&nbsp;
+&nbsp;	public int glGetAttribLocation (int program, String name);
+&nbsp;
+&nbsp;	public void glGetBooleanv (int pname, Buffer params);
+&nbsp;
+&nbsp;	public void glGetBufferParameteriv (int target, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	public void glGetFloatv (int pname, FloatBuffer params);
+&nbsp;
+&nbsp;	public void glGetFramebufferAttachmentParameteriv (int target, int attachment, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	public void glGetProgramiv (int program, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	// deviates
+&nbsp;	public String glGetProgramInfoLog (int program);
+&nbsp;
+&nbsp;	public void glGetRenderbufferParameteriv (int target, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	public void glGetShaderiv (int shader, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	// deviates
+&nbsp;	public String glGetShaderInfoLog (int shader);
+&nbsp;
+&nbsp;	public void glGetShaderPrecisionFormat (int shadertype, int precisiontype, IntBuffer range, IntBuffer precision);
+&nbsp;
+&nbsp;	public void glGetTexParameterfv (int target, int pname, FloatBuffer params);
+&nbsp;
+&nbsp;	public void glGetTexParameteriv (int target, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	public void glGetUniformfv (int program, int location, FloatBuffer params);
+&nbsp;
+&nbsp;	public void glGetUniformiv (int program, int location, IntBuffer params);
+&nbsp;
+&nbsp;	public int glGetUniformLocation (int program, String name);
+&nbsp;
+&nbsp;	public void glGetVertexAttribfv (int index, int pname, FloatBuffer params);
+&nbsp;
+&nbsp;	public void glGetVertexAttribiv (int index, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	public void glGetVertexAttribPointerv (int index, int pname, Buffer pointer);
+&nbsp;
+&nbsp;	public boolean glIsBuffer (int buffer);
+&nbsp;
+&nbsp;	public boolean glIsEnabled (int cap);
+&nbsp;
+&nbsp;	public boolean glIsFramebuffer (int framebuffer);
+&nbsp;
+&nbsp;	public boolean glIsProgram (int program);
+&nbsp;
+&nbsp;	public boolean glIsRenderbuffer (int renderbuffer);
+&nbsp;
+&nbsp;	public boolean glIsShader (int shader);
+&nbsp;
+&nbsp;	public boolean glIsTexture (int texture);
+&nbsp;
+&nbsp;	public void glLinkProgram (int program);
+&nbsp;
+&nbsp;	public void glReleaseShaderCompiler ();
+&nbsp;
+&nbsp;	public void glRenderbufferStorage (int target, int internalformat, int width, int height);
+&nbsp;
+&nbsp;	public void glSampleCoverage (float value, boolean invert);
+&nbsp;
+&nbsp;	public void glShaderBinary (int n, IntBuffer shaders, int binaryformat, Buffer binary, int length);
+&nbsp;
+&nbsp;	// Deviates
+&nbsp;	public void glShaderSource (int shader, String string);
+&nbsp;
+&nbsp;	public void glStencilFuncSeparate (int face, int func, int ref, int mask);
+&nbsp;
+&nbsp;	public void glStencilMaskSeparate (int face, int mask);
+&nbsp;
+&nbsp;	public void glStencilOpSeparate (int face, int fail, int zfail, int zpass);
+&nbsp;
+&nbsp;	public void glTexParameterfv (int target, int pname, FloatBuffer params);
+&nbsp;
+&nbsp;	public void glTexParameteri (int target, int pname, int param);
+&nbsp;
+&nbsp;	public void glTexParameteriv (int target, int pname, IntBuffer params);
+&nbsp;
+&nbsp;	public void glUniform1f (int location, float x);
+&nbsp;
+&nbsp;	public void glUniform1fv (int location, int count, FloatBuffer v);
+&nbsp;
+&nbsp;	public void glUniform1fv (int location, int count, float v[], int offset);
+&nbsp;
+&nbsp;	public void glUniform1i (int location, int x);
+&nbsp;
+&nbsp;	public void glUniform1iv (int location, int count, IntBuffer v);
+&nbsp;
+&nbsp;	public void glUniform1iv (int location, int count, int v[], int offset);
+&nbsp;
+&nbsp;	public void glUniform2f (int location, float x, float y);
+&nbsp;
+&nbsp;	public void glUniform2fv (int location, int count, FloatBuffer v);
+&nbsp;
+&nbsp;	public void glUniform2fv (int location, int count, float v[], int offset);
+&nbsp;
+&nbsp;	public void glUniform2i (int location, int x, int y);
+&nbsp;
+&nbsp;	public void glUniform2iv (int location, int count, IntBuffer v);
+&nbsp;
+&nbsp;	public void glUniform2iv (int location, int count, int[] v, int offset);
+&nbsp;
+&nbsp;	public void glUniform3f (int location, float x, float y, float z);
+&nbsp;
+&nbsp;	public void glUniform3fv (int location, int count, FloatBuffer v);
+&nbsp;
+&nbsp;	public void glUniform3fv (int location, int count, float[] v, int offset);
+&nbsp;
+&nbsp;	public void glUniform3i (int location, int x, int y, int z);
+&nbsp;
+&nbsp;	public void glUniform3iv (int location, int count, IntBuffer v);
+&nbsp;
+&nbsp;	public void glUniform3iv (int location, int count, int v[], int offset);
+&nbsp;
+&nbsp;	public void glUniform4f (int location, float x, float y, float z, float w);
+&nbsp;
+&nbsp;	public void glUniform4fv (int location, int count, FloatBuffer v);
+&nbsp;
+&nbsp;	public void glUniform4fv (int location, int count, float v[], int offset);
+&nbsp;
+&nbsp;	public void glUniform4i (int location, int x, int y, int z, int w);
+&nbsp;
+&nbsp;	public void glUniform4iv (int location, int count, IntBuffer v);
+&nbsp;
+&nbsp;	public void glUniform4iv (int location, int count, int v[], int offset);
+&nbsp;
+&nbsp;	public void glUniformMatrix2fv (int location, int count, boolean transpose, FloatBuffer value);
+&nbsp;
+&nbsp;	public void glUniformMatrix2fv (int location, int count, boolean transpose, float value[], int offset);
+&nbsp;
+&nbsp;	public void glUniformMatrix3fv (int location, int count, boolean transpose, FloatBuffer value);
+&nbsp;
+&nbsp;	public void glUniformMatrix3fv (int location, int count, boolean transpose, float value[], int offset);
+&nbsp;
+&nbsp;	public void glUniformMatrix4fv (int location, int count, boolean transpose, FloatBuffer value);
+&nbsp;
+&nbsp;	public void glUniformMatrix4fv (int location, int count, boolean transpose, float value[], int offset);
+&nbsp;
+&nbsp;	public void glUseProgram (int program);
+&nbsp;
+&nbsp;	public void glValidateProgram (int program);
+&nbsp;
+&nbsp;	public void glVertexAttrib1f (int indx, float x);
+&nbsp;
+&nbsp;	public void glVertexAttrib1fv (int indx, FloatBuffer values);
+&nbsp;
+&nbsp;	public void glVertexAttrib2f (int indx, float x, float y);
+&nbsp;
+&nbsp;	public void glVertexAttrib2fv (int indx, FloatBuffer values);
+&nbsp;
+&nbsp;	public void glVertexAttrib3f (int indx, float x, float y, float z);
+&nbsp;
+&nbsp;	public void glVertexAttrib3fv (int indx, FloatBuffer values);
+&nbsp;
+&nbsp;	public void glVertexAttrib4f (int indx, float x, float y, float z, float w);
+&nbsp;
+&nbsp;	public void glVertexAttrib4fv (int indx, FloatBuffer values);
+&nbsp;
+&nbsp;	/** In OpenGl core profiles (3.1+), passing a pointer to client memory is not valid. In 3.0 and later, use the other version of
+&nbsp;	 * this function instead, pass a zero-based offset which references the buffer currently bound to GL_ARRAY_BUFFER. */
+&nbsp;	public void glVertexAttribPointer (int indx, int size, int type, boolean normalized, int stride, Buffer ptr);
+&nbsp;
+&nbsp;	public void glVertexAttribPointer (int indx, int size, int type, boolean normalized, int stride, int ptr);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

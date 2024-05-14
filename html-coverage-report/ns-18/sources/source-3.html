@@ -1,0 +1,1770 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Matrix4</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: Matrix4 (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Matrix4</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.1%
+  </span>
+  <span class="absValue">
+    (13/92)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1.8%
+  </span>
+  <span class="absValue">
+    (1/56)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    22.9%
+  </span>
+  <span class="absValue">
+    (155/677)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;/** Encapsulates a &lt;a href=&quot;http://en.wikipedia.org/wiki/Row-major_order#Column-major_order&quot;&gt;column major&lt;/a&gt; 4 by 4 matrix. Like
+&nbsp; * the {@link Vector3} class it allows the chaining of methods by returning a reference to itself. For example:
+&nbsp; * 
+&nbsp; * &lt;pre&gt;
+&nbsp; * Matrix4 mat = new Matrix4().trn(position).mul(camera.combined);
+&nbsp; * &lt;/pre&gt;
+&nbsp; * 
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public class Matrix4 implements Serializable {
+&nbsp;	private static final long serialVersionUID = -2717655254359579617L;
+&nbsp;	/** XX: Typically the unrotated X component for scaling, also the cosine of the angle when rotated on the Y and/or Z axis. On
+&nbsp;	 * Vector3 multiplication this value is multiplied with the source X component and added to the target X component. */
+&nbsp;	public static final int M00 = 0;
+&nbsp;	/** XY: Typically the negative sine of the angle when rotated on the Z axis. On Vector3 multiplication this value is multiplied
+&nbsp;	 * with the source Y component and added to the target X component. */
+&nbsp;	public static final int M01 = 4;
+&nbsp;	/** XZ: Typically the sine of the angle when rotated on the Y axis. On Vector3 multiplication this value is multiplied with the
+&nbsp;	 * source Z component and added to the target X component. */
+&nbsp;	public static final int M02 = 8;
+&nbsp;	/** XW: Typically the translation of the X component. On Vector3 multiplication this value is added to the target X
+&nbsp;	 * component. */
+&nbsp;	public static final int M03 = 12;
+&nbsp;	/** YX: Typically the sine of the angle when rotated on the Z axis. On Vector3 multiplication this value is multiplied with the
+&nbsp;	 * source X component and added to the target Y component. */
+&nbsp;	public static final int M10 = 1;
+&nbsp;	/** YY: Typically the unrotated Y component for scaling, also the cosine of the angle when rotated on the X and/or Z axis. On
+&nbsp;	 * Vector3 multiplication this value is multiplied with the source Y component and added to the target Y component. */
+&nbsp;	public static final int M11 = 5;
+&nbsp;	/** YZ: Typically the negative sine of the angle when rotated on the X axis. On Vector3 multiplication this value is multiplied
+&nbsp;	 * with the source Z component and added to the target Y component. */
+&nbsp;	public static final int M12 = 9;
+&nbsp;	/** YW: Typically the translation of the Y component. On Vector3 multiplication this value is added to the target Y
+&nbsp;	 * component. */
+&nbsp;	public static final int M13 = 13;
+&nbsp;	/** ZX: Typically the negative sine of the angle when rotated on the Y axis. On Vector3 multiplication this value is multiplied
+&nbsp;	 * with the source X component and added to the target Z component. */
+&nbsp;	public static final int M20 = 2;
+&nbsp;	/** ZY: Typical the sine of the angle when rotated on the X axis. On Vector3 multiplication this value is multiplied with the
+&nbsp;	 * source Y component and added to the target Z component. */
+&nbsp;	public static final int M21 = 6;
+&nbsp;	/** ZZ: Typically the unrotated Z component for scaling, also the cosine of the angle when rotated on the X and/or Y axis. On
+&nbsp;	 * Vector3 multiplication this value is multiplied with the source Z component and added to the target Z component. */
+&nbsp;	public static final int M22 = 10;
+&nbsp;	/** ZW: Typically the translation of the Z component. On Vector3 multiplication this value is added to the target Z
+&nbsp;	 * component. */
+&nbsp;	public static final int M23 = 14;
+&nbsp;	/** WX: Typically the value zero. On Vector3 multiplication this value is ignored. */
+&nbsp;	public static final int M30 = 3;
+&nbsp;	/** WY: Typically the value zero. On Vector3 multiplication this value is ignored. */
+&nbsp;	public static final int M31 = 7;
+&nbsp;	/** WZ: Typically the value zero. On Vector3 multiplication this value is ignored. */
+&nbsp;	public static final int M32 = 11;
+&nbsp;	/** WW: Typically the value one. On Vector3 multiplication this value is ignored. */
+&nbsp;	public static final int M33 = 15;
+&nbsp;
+<b class="fc">&nbsp;	static final Quaternion quat = new Quaternion();</b>
+<b class="fc">&nbsp;	static final Quaternion quat2 = new Quaternion();</b>
+<b class="fc">&nbsp;	static final Vector3 l_vez = new Vector3();</b>
+<b class="fc">&nbsp;	static final Vector3 l_vex = new Vector3();</b>
+<b class="fc">&nbsp;	static final Vector3 l_vey = new Vector3();</b>
+<b class="fc">&nbsp;	static final Vector3 tmpVec = new Vector3();</b>
+<b class="fc">&nbsp;	static final Matrix4 tmpMat = new Matrix4();</b>
+<b class="fc">&nbsp;	static final Vector3 right = new Vector3();</b>
+<b class="fc">&nbsp;	static final Vector3 tmpForward = new Vector3();</b>
+<b class="fc">&nbsp;	static final Vector3 tmpUp = new Vector3();</b>
+&nbsp;
+<b class="fc">&nbsp;	public final float val[] = new float[16];</b>
+&nbsp;
+&nbsp;	/** Constructs an identity matrix */
+<b class="fc">&nbsp;	public Matrix4 () {</b>
+<b class="fc">&nbsp;		val[M00] = 1f;</b>
+<b class="fc">&nbsp;		val[M11] = 1f;</b>
+<b class="fc">&nbsp;		val[M22] = 1f;</b>
+<b class="fc">&nbsp;		val[M33] = 1f;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a matrix from the given matrix.
+&nbsp;	 * @param matrix The matrix to copy. (This matrix is not modified) */
+<b class="nc">&nbsp;	public Matrix4 (Matrix4 matrix) {</b>
+<b class="nc">&nbsp;		set(matrix);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a matrix from the given float array. The array must have at least 16 elements; the first 16 will be copied.
+&nbsp;	 * @param values The float array to copy. Remember that this matrix is in
+&nbsp;	 *           &lt;a href=&quot;http://en.wikipedia.org/wiki/Row-major_order&quot;&gt;column major&lt;/a&gt; order. (The float array is not
+&nbsp;	 *           modified) */
+<b class="nc">&nbsp;	public Matrix4 (float[] values) {</b>
+<b class="nc">&nbsp;		set(values);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a rotation matrix from the given {@link Quaternion}.
+&nbsp;	 * @param quaternion The quaternion to be copied. (The quaternion is not modified) */
+<b class="nc">&nbsp;	public Matrix4 (Quaternion quaternion) {</b>
+<b class="nc">&nbsp;		set(quaternion);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Construct a matrix from the given translation, rotation and scale.
+&nbsp;	 * @param position The translation
+&nbsp;	 * @param rotation The rotation, must be normalized
+&nbsp;	 * @param scale The scale */
+<b class="nc">&nbsp;	public Matrix4 (Vector3 position, Quaternion rotation, Vector3 scale) {</b>
+<b class="nc">&nbsp;		set(position, rotation, scale);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the matrix to the given matrix.
+&nbsp;	 * @param matrix The matrix that is to be copied. (The given matrix is not modified)
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 set (Matrix4 matrix) {
+<b class="fc">&nbsp;		return set(matrix.val);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to the given matrix as a float array. The float array must have at least 16 elements; the first 16 will be
+&nbsp;	 * copied.
+&nbsp;	 * 
+&nbsp;	 * @param values The matrix, in float form, that is to be copied. Remember that this matrix is in
+&nbsp;	 *           &lt;a href=&quot;http://en.wikipedia.org/wiki/Row-major_order&quot;&gt;column major&lt;/a&gt; order.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 set (float[] values) {
+<b class="fc">&nbsp;		System.arraycopy(values, 0, val, 0, val.length);</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix representing the quaternion.
+&nbsp;	 * @param quaternion The quaternion that is to be used to set this matrix.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 set (Quaternion quaternion) {
+<b class="nc">&nbsp;		return set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix representing the quaternion.
+&nbsp;	 * 
+&nbsp;	 * @param quaternionX The X component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionY The Y component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionZ The Z component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionW The W component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 set (float quaternionX, float quaternionY, float quaternionZ, float quaternionW) {
+<b class="nc">&nbsp;		return set(0f, 0f, 0f, quaternionX, quaternionY, quaternionZ, quaternionW);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Set this matrix to the specified translation and rotation.
+&nbsp;	 * @param position The translation
+&nbsp;	 * @param orientation The rotation, must be normalized
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 set (Vector3 position, Quaternion orientation) {
+<b class="nc">&nbsp;		return set(position.x, position.y, position.z, orientation.x, orientation.y, orientation.z, orientation.w);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix representing the translation and quaternion.
+&nbsp;	 * @param translationX The X component of the translation that is to be used to set this matrix.
+&nbsp;	 * @param translationY The Y component of the translation that is to be used to set this matrix.
+&nbsp;	 * @param translationZ The Z component of the translation that is to be used to set this matrix.
+&nbsp;	 * @param quaternionX The X component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionY The Y component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionZ The Z component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionW The W component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 set (float translationX, float translationY, float translationZ, float quaternionX, float quaternionY,
+&nbsp;		float quaternionZ, float quaternionW) {
+<b class="nc">&nbsp;		final float xs = quaternionX * 2f, ys = quaternionY * 2f, zs = quaternionZ * 2f;</b>
+<b class="nc">&nbsp;		final float wx = quaternionW * xs, wy = quaternionW * ys, wz = quaternionW * zs;</b>
+<b class="nc">&nbsp;		final float xx = quaternionX * xs, xy = quaternionX * ys, xz = quaternionX * zs;</b>
+<b class="nc">&nbsp;		final float yy = quaternionY * ys, yz = quaternionY * zs, zz = quaternionZ * zs;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M00] = 1f - (yy + zz);</b>
+<b class="nc">&nbsp;		val[M01] = xy - wz;</b>
+<b class="nc">&nbsp;		val[M02] = xz + wy;</b>
+<b class="nc">&nbsp;		val[M03] = translationX;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M10] = xy + wz;</b>
+<b class="nc">&nbsp;		val[M11] = 1f - (xx + zz);</b>
+<b class="nc">&nbsp;		val[M12] = yz - wx;</b>
+<b class="nc">&nbsp;		val[M13] = translationY;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M20] = xz - wy;</b>
+<b class="nc">&nbsp;		val[M21] = yz + wx;</b>
+<b class="nc">&nbsp;		val[M22] = 1f - (xx + yy);</b>
+<b class="nc">&nbsp;		val[M23] = translationZ;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M30] = 0f;</b>
+<b class="nc">&nbsp;		val[M31] = 0f;</b>
+<b class="nc">&nbsp;		val[M32] = 0f;</b>
+<b class="nc">&nbsp;		val[M33] = 1f;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Set this matrix to the specified translation, rotation and scale.
+&nbsp;	 * @param position The translation
+&nbsp;	 * @param orientation The rotation, must be normalized
+&nbsp;	 * @param scale The scale
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 set (Vector3 position, Quaternion orientation, Vector3 scale) {
+<b class="nc">&nbsp;		return set(position.x, position.y, position.z, orientation.x, orientation.y, orientation.z, orientation.w, scale.x, scale.y,</b>
+&nbsp;			scale.z);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix representing the translation and quaternion.
+&nbsp;	 * @param translationX The X component of the translation that is to be used to set this matrix.
+&nbsp;	 * @param translationY The Y component of the translation that is to be used to set this matrix.
+&nbsp;	 * @param translationZ The Z component of the translation that is to be used to set this matrix.
+&nbsp;	 * @param quaternionX The X component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionY The Y component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionZ The Z component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param quaternionW The W component of the quaternion that is to be used to set this matrix.
+&nbsp;	 * @param scaleX The X component of the scaling that is to be used to set this matrix.
+&nbsp;	 * @param scaleY The Y component of the scaling that is to be used to set this matrix.
+&nbsp;	 * @param scaleZ The Z component of the scaling that is to be used to set this matrix.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 set (float translationX, float translationY, float translationZ, float quaternionX, float quaternionY,
+&nbsp;		float quaternionZ, float quaternionW, float scaleX, float scaleY, float scaleZ) {
+<b class="nc">&nbsp;		final float xs = quaternionX * 2f, ys = quaternionY * 2f, zs = quaternionZ * 2f;</b>
+<b class="nc">&nbsp;		final float wx = quaternionW * xs, wy = quaternionW * ys, wz = quaternionW * zs;</b>
+<b class="nc">&nbsp;		final float xx = quaternionX * xs, xy = quaternionX * ys, xz = quaternionX * zs;</b>
+<b class="nc">&nbsp;		final float yy = quaternionY * ys, yz = quaternionY * zs, zz = quaternionZ * zs;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M00] = scaleX * (1.0f - (yy + zz));</b>
+<b class="nc">&nbsp;		val[M01] = scaleY * (xy - wz);</b>
+<b class="nc">&nbsp;		val[M02] = scaleZ * (xz + wy);</b>
+<b class="nc">&nbsp;		val[M03] = translationX;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M10] = scaleX * (xy + wz);</b>
+<b class="nc">&nbsp;		val[M11] = scaleY * (1.0f - (xx + zz));</b>
+<b class="nc">&nbsp;		val[M12] = scaleZ * (yz - wx);</b>
+<b class="nc">&nbsp;		val[M13] = translationY;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M20] = scaleX * (xz - wy);</b>
+<b class="nc">&nbsp;		val[M21] = scaleY * (yz + wx);</b>
+<b class="nc">&nbsp;		val[M22] = scaleZ * (1.0f - (xx + yy));</b>
+<b class="nc">&nbsp;		val[M23] = translationZ;</b>
+&nbsp;
+<b class="nc">&nbsp;		val[M30] = 0f;</b>
+<b class="nc">&nbsp;		val[M31] = 0f;</b>
+<b class="nc">&nbsp;		val[M32] = 0f;</b>
+<b class="nc">&nbsp;		val[M33] = 1f;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the four columns of the matrix which correspond to the x-, y- and z-axis of the vector space this matrix creates as
+&nbsp;	 * well as the 4th column representing the translation of any point that is multiplied by this matrix.
+&nbsp;	 * @param xAxis The x-axis.
+&nbsp;	 * @param yAxis The y-axis.
+&nbsp;	 * @param zAxis The z-axis.
+&nbsp;	 * @param pos The translation vector. */
+&nbsp;	public Matrix4 set (Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 pos) {
+<b class="nc">&nbsp;		val[M00] = xAxis.x;</b>
+<b class="nc">&nbsp;		val[M01] = xAxis.y;</b>
+<b class="nc">&nbsp;		val[M02] = xAxis.z;</b>
+<b class="nc">&nbsp;		val[M10] = yAxis.x;</b>
+<b class="nc">&nbsp;		val[M11] = yAxis.y;</b>
+<b class="nc">&nbsp;		val[M12] = yAxis.z;</b>
+<b class="nc">&nbsp;		val[M20] = zAxis.x;</b>
+<b class="nc">&nbsp;		val[M21] = zAxis.y;</b>
+<b class="nc">&nbsp;		val[M22] = zAxis.z;</b>
+<b class="nc">&nbsp;		val[M03] = pos.x;</b>
+<b class="nc">&nbsp;		val[M13] = pos.y;</b>
+<b class="nc">&nbsp;		val[M23] = pos.z;</b>
+<b class="nc">&nbsp;		val[M30] = 0f;</b>
+<b class="nc">&nbsp;		val[M31] = 0f;</b>
+<b class="nc">&nbsp;		val[M32] = 0f;</b>
+<b class="nc">&nbsp;		val[M33] = 1f;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return a copy of this matrix */
+&nbsp;	public Matrix4 cpy () {
+<b class="nc">&nbsp;		return new Matrix4(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Adds a translational component to the matrix in the 4th column. The other columns are untouched.
+&nbsp;	 * @param vector The translation vector to add to the current matrix. (This vector is not modified)
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 trn (Vector3 vector) {
+<b class="nc">&nbsp;		val[M03] += vector.x;</b>
+<b class="nc">&nbsp;		val[M13] += vector.y;</b>
+<b class="nc">&nbsp;		val[M23] += vector.z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Adds a translational component to the matrix in the 4th column. The other columns are untouched.
+&nbsp;	 * @param x The x-component of the translation vector.
+&nbsp;	 * @param y The y-component of the translation vector.
+&nbsp;	 * @param z The z-component of the translation vector.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 trn (float x, float y, float z) {
+<b class="nc">&nbsp;		val[M03] += x;</b>
+<b class="nc">&nbsp;		val[M13] += y;</b>
+<b class="nc">&nbsp;		val[M23] += z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the backing float array */
+&nbsp;	public float[] getValues () {
+<b class="nc">&nbsp;		return val;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix with the given matrix, storing the result in this matrix. For example:
+&nbsp;	 * 
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 * A.mul(B) results in A := AB.
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 * 
+&nbsp;	 * @param matrix The other matrix to multiply by.
+&nbsp;	 * @return This matrix for the purpose of chaining operations together. */
+&nbsp;	public Matrix4 mul (Matrix4 matrix) {
+<b class="fc">&nbsp;		mul(val, matrix.val);</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Premultiplies this matrix with the given matrix, storing the result in this matrix. For example:
+&nbsp;	 * 
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 * A.mulLeft(B) results in A := BA.
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 * 
+&nbsp;	 * @param matrix The other matrix to multiply by.
+&nbsp;	 * @return This matrix for the purpose of chaining operations together. */
+&nbsp;	public Matrix4 mulLeft (Matrix4 matrix) {
+<b class="nc">&nbsp;		tmpMat.set(matrix);</b>
+<b class="nc">&nbsp;		mul(tmpMat.val, val);</b>
+<b class="nc">&nbsp;		return set(tmpMat);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Transposes the matrix.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 tra () {
+<b class="nc">&nbsp;		float m01 = val[M01];</b>
+<b class="nc">&nbsp;		float m02 = val[M02];</b>
+<b class="nc">&nbsp;		float m03 = val[M03];</b>
+<b class="nc">&nbsp;		float m12 = val[M12];</b>
+<b class="nc">&nbsp;		float m13 = val[M13];</b>
+<b class="nc">&nbsp;		float m23 = val[M23];</b>
+<b class="nc">&nbsp;		val[M01] = val[M10];</b>
+<b class="nc">&nbsp;		val[M02] = val[M20];</b>
+<b class="nc">&nbsp;		val[M03] = val[M30];</b>
+<b class="nc">&nbsp;		val[M10] = m01;</b>
+<b class="nc">&nbsp;		val[M12] = val[M21];</b>
+<b class="nc">&nbsp;		val[M13] = val[M31];</b>
+<b class="nc">&nbsp;		val[M20] = m02;</b>
+<b class="nc">&nbsp;		val[M21] = m12;</b>
+<b class="nc">&nbsp;		val[M23] = val[M32];</b>
+<b class="nc">&nbsp;		val[M30] = m03;</b>
+<b class="nc">&nbsp;		val[M31] = m13;</b>
+<b class="nc">&nbsp;		val[M32] = m23;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to an identity matrix.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 idt () {
+<b class="fc">&nbsp;		val[M00] = 1f;</b>
+<b class="fc">&nbsp;		val[M01] = 0f;</b>
+<b class="fc">&nbsp;		val[M02] = 0f;</b>
+<b class="fc">&nbsp;		val[M03] = 0f;</b>
+<b class="fc">&nbsp;		val[M10] = 0f;</b>
+<b class="fc">&nbsp;		val[M11] = 1f;</b>
+<b class="fc">&nbsp;		val[M12] = 0f;</b>
+<b class="fc">&nbsp;		val[M13] = 0f;</b>
+<b class="fc">&nbsp;		val[M20] = 0f;</b>
+<b class="fc">&nbsp;		val[M21] = 0f;</b>
+<b class="fc">&nbsp;		val[M22] = 1f;</b>
+<b class="fc">&nbsp;		val[M23] = 0f;</b>
+<b class="fc">&nbsp;		val[M30] = 0f;</b>
+<b class="fc">&nbsp;		val[M31] = 0f;</b>
+<b class="fc">&nbsp;		val[M32] = 0f;</b>
+<b class="fc">&nbsp;		val[M33] = 1f;</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Inverts the matrix. Stores the result in this matrix.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together.
+&nbsp;	 * @throws RuntimeException if the matrix is singular (not invertible) */
+&nbsp;	public Matrix4 inv () {
+<b class="nc">&nbsp;		float l_det = val[M30] * val[M21] * val[M12] * val[M03] - val[M20] * val[M31] * val[M12] * val[M03]</b>
+&nbsp;			- val[M30] * val[M11] * val[M22] * val[M03] + val[M10] * val[M31] * val[M22] * val[M03]
+&nbsp;			+ val[M20] * val[M11] * val[M32] * val[M03] - val[M10] * val[M21] * val[M32] * val[M03]
+&nbsp;			- val[M30] * val[M21] * val[M02] * val[M13] + val[M20] * val[M31] * val[M02] * val[M13]
+&nbsp;			+ val[M30] * val[M01] * val[M22] * val[M13] - val[M00] * val[M31] * val[M22] * val[M13]
+&nbsp;			- val[M20] * val[M01] * val[M32] * val[M13] + val[M00] * val[M21] * val[M32] * val[M13]
+&nbsp;			+ val[M30] * val[M11] * val[M02] * val[M23] - val[M10] * val[M31] * val[M02] * val[M23]
+&nbsp;			- val[M30] * val[M01] * val[M12] * val[M23] + val[M00] * val[M31] * val[M12] * val[M23]
+&nbsp;			+ val[M10] * val[M01] * val[M32] * val[M23] - val[M00] * val[M11] * val[M32] * val[M23]
+&nbsp;			- val[M20] * val[M11] * val[M02] * val[M33] + val[M10] * val[M21] * val[M02] * val[M33]
+&nbsp;			+ val[M20] * val[M01] * val[M12] * val[M33] - val[M00] * val[M21] * val[M12] * val[M33]
+&nbsp;			- val[M10] * val[M01] * val[M22] * val[M33] + val[M00] * val[M11] * val[M22] * val[M33];
+<b class="nc">&nbsp;		if (l_det == 0f) throw new RuntimeException(&quot;non-invertible matrix&quot;);</b>
+<b class="nc">&nbsp;		float m00 = val[M12] * val[M23] * val[M31] - val[M13] * val[M22] * val[M31] + val[M13] * val[M21] * val[M32]</b>
+&nbsp;			- val[M11] * val[M23] * val[M32] - val[M12] * val[M21] * val[M33] + val[M11] * val[M22] * val[M33];
+<b class="nc">&nbsp;		float m01 = val[M03] * val[M22] * val[M31] - val[M02] * val[M23] * val[M31] - val[M03] * val[M21] * val[M32]</b>
+&nbsp;			+ val[M01] * val[M23] * val[M32] + val[M02] * val[M21] * val[M33] - val[M01] * val[M22] * val[M33];
+<b class="nc">&nbsp;		float m02 = val[M02] * val[M13] * val[M31] - val[M03] * val[M12] * val[M31] + val[M03] * val[M11] * val[M32]</b>
+&nbsp;			- val[M01] * val[M13] * val[M32] - val[M02] * val[M11] * val[M33] + val[M01] * val[M12] * val[M33];
+<b class="nc">&nbsp;		float m03 = val[M03] * val[M12] * val[M21] - val[M02] * val[M13] * val[M21] - val[M03] * val[M11] * val[M22]</b>
+&nbsp;			+ val[M01] * val[M13] * val[M22] + val[M02] * val[M11] * val[M23] - val[M01] * val[M12] * val[M23];
+<b class="nc">&nbsp;		float m10 = val[M13] * val[M22] * val[M30] - val[M12] * val[M23] * val[M30] - val[M13] * val[M20] * val[M32]</b>
+&nbsp;			+ val[M10] * val[M23] * val[M32] + val[M12] * val[M20] * val[M33] - val[M10] * val[M22] * val[M33];
+<b class="nc">&nbsp;		float m11 = val[M02] * val[M23] * val[M30] - val[M03] * val[M22] * val[M30] + val[M03] * val[M20] * val[M32]</b>
+&nbsp;			- val[M00] * val[M23] * val[M32] - val[M02] * val[M20] * val[M33] + val[M00] * val[M22] * val[M33];
+<b class="nc">&nbsp;		float m12 = val[M03] * val[M12] * val[M30] - val[M02] * val[M13] * val[M30] - val[M03] * val[M10] * val[M32]</b>
+&nbsp;			+ val[M00] * val[M13] * val[M32] + val[M02] * val[M10] * val[M33] - val[M00] * val[M12] * val[M33];
+<b class="nc">&nbsp;		float m13 = val[M02] * val[M13] * val[M20] - val[M03] * val[M12] * val[M20] + val[M03] * val[M10] * val[M22]</b>
+&nbsp;			- val[M00] * val[M13] * val[M22] - val[M02] * val[M10] * val[M23] + val[M00] * val[M12] * val[M23];
+<b class="nc">&nbsp;		float m20 = val[M11] * val[M23] * val[M30] - val[M13] * val[M21] * val[M30] + val[M13] * val[M20] * val[M31]</b>
+&nbsp;			- val[M10] * val[M23] * val[M31] - val[M11] * val[M20] * val[M33] + val[M10] * val[M21] * val[M33];
+<b class="nc">&nbsp;		float m21 = val[M03] * val[M21] * val[M30] - val[M01] * val[M23] * val[M30] - val[M03] * val[M20] * val[M31]</b>
+&nbsp;			+ val[M00] * val[M23] * val[M31] + val[M01] * val[M20] * val[M33] - val[M00] * val[M21] * val[M33];
+<b class="nc">&nbsp;		float m22 = val[M01] * val[M13] * val[M30] - val[M03] * val[M11] * val[M30] + val[M03] * val[M10] * val[M31]</b>
+&nbsp;			- val[M00] * val[M13] * val[M31] - val[M01] * val[M10] * val[M33] + val[M00] * val[M11] * val[M33];
+<b class="nc">&nbsp;		float m23 = val[M03] * val[M11] * val[M20] - val[M01] * val[M13] * val[M20] - val[M03] * val[M10] * val[M21]</b>
+&nbsp;			+ val[M00] * val[M13] * val[M21] + val[M01] * val[M10] * val[M23] - val[M00] * val[M11] * val[M23];
+<b class="nc">&nbsp;		float m30 = val[M12] * val[M21] * val[M30] - val[M11] * val[M22] * val[M30] - val[M12] * val[M20] * val[M31]</b>
+&nbsp;			+ val[M10] * val[M22] * val[M31] + val[M11] * val[M20] * val[M32] - val[M10] * val[M21] * val[M32];
+<b class="nc">&nbsp;		float m31 = val[M01] * val[M22] * val[M30] - val[M02] * val[M21] * val[M30] + val[M02] * val[M20] * val[M31]</b>
+&nbsp;			- val[M00] * val[M22] * val[M31] - val[M01] * val[M20] * val[M32] + val[M00] * val[M21] * val[M32];
+<b class="nc">&nbsp;		float m32 = val[M02] * val[M11] * val[M30] - val[M01] * val[M12] * val[M30] - val[M02] * val[M10] * val[M31]</b>
+&nbsp;			+ val[M00] * val[M12] * val[M31] + val[M01] * val[M10] * val[M32] - val[M00] * val[M11] * val[M32];
+<b class="nc">&nbsp;		float m33 = val[M01] * val[M12] * val[M20] - val[M02] * val[M11] * val[M20] + val[M02] * val[M10] * val[M21]</b>
+&nbsp;			- val[M00] * val[M12] * val[M21] - val[M01] * val[M10] * val[M22] + val[M00] * val[M11] * val[M22];
+<b class="nc">&nbsp;		float inv_det = 1.0f / l_det;</b>
+<b class="nc">&nbsp;		val[M00] = m00 * inv_det;</b>
+<b class="nc">&nbsp;		val[M10] = m10 * inv_det;</b>
+<b class="nc">&nbsp;		val[M20] = m20 * inv_det;</b>
+<b class="nc">&nbsp;		val[M30] = m30 * inv_det;</b>
+<b class="nc">&nbsp;		val[M01] = m01 * inv_det;</b>
+<b class="nc">&nbsp;		val[M11] = m11 * inv_det;</b>
+<b class="nc">&nbsp;		val[M21] = m21 * inv_det;</b>
+<b class="nc">&nbsp;		val[M31] = m31 * inv_det;</b>
+<b class="nc">&nbsp;		val[M02] = m02 * inv_det;</b>
+<b class="nc">&nbsp;		val[M12] = m12 * inv_det;</b>
+<b class="nc">&nbsp;		val[M22] = m22 * inv_det;</b>
+<b class="nc">&nbsp;		val[M32] = m32 * inv_det;</b>
+<b class="nc">&nbsp;		val[M03] = m03 * inv_det;</b>
+<b class="nc">&nbsp;		val[M13] = m13 * inv_det;</b>
+<b class="nc">&nbsp;		val[M23] = m23 * inv_det;</b>
+<b class="nc">&nbsp;		val[M33] = m33 * inv_det;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The determinant of this matrix */
+&nbsp;	public float det () {
+<b class="nc">&nbsp;		return val[M30] * val[M21] * val[M12] * val[M03] - val[M20] * val[M31] * val[M12] * val[M03]</b>
+&nbsp;			- val[M30] * val[M11] * val[M22] * val[M03] + val[M10] * val[M31] * val[M22] * val[M03]
+&nbsp;			+ val[M20] * val[M11] * val[M32] * val[M03] - val[M10] * val[M21] * val[M32] * val[M03]
+&nbsp;			- val[M30] * val[M21] * val[M02] * val[M13] + val[M20] * val[M31] * val[M02] * val[M13]
+&nbsp;			+ val[M30] * val[M01] * val[M22] * val[M13] - val[M00] * val[M31] * val[M22] * val[M13]
+&nbsp;			- val[M20] * val[M01] * val[M32] * val[M13] + val[M00] * val[M21] * val[M32] * val[M13]
+&nbsp;			+ val[M30] * val[M11] * val[M02] * val[M23] - val[M10] * val[M31] * val[M02] * val[M23]
+&nbsp;			- val[M30] * val[M01] * val[M12] * val[M23] + val[M00] * val[M31] * val[M12] * val[M23]
+&nbsp;			+ val[M10] * val[M01] * val[M32] * val[M23] - val[M00] * val[M11] * val[M32] * val[M23]
+&nbsp;			- val[M20] * val[M11] * val[M02] * val[M33] + val[M10] * val[M21] * val[M02] * val[M33]
+&nbsp;			+ val[M20] * val[M01] * val[M12] * val[M33] - val[M00] * val[M21] * val[M12] * val[M33]
+&nbsp;			- val[M10] * val[M01] * val[M22] * val[M33] + val[M00] * val[M11] * val[M22] * val[M33];
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The determinant of the 3x3 upper left matrix */
+&nbsp;	public float det3x3 () {
+<b class="nc">&nbsp;		return val[M00] * val[M11] * val[M22] + val[M01] * val[M12] * val[M20] + val[M02] * val[M10] * val[M21]</b>
+&nbsp;			- val[M00] * val[M12] * val[M21] - val[M01] * val[M10] * val[M22] - val[M02] * val[M11] * val[M20];
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a projection matrix with a near- and far plane, a field of view in degrees and an aspect ratio. Note
+&nbsp;	 * that the field of view specified is the angle in degrees for the height, the field of view for the width will be calculated
+&nbsp;	 * according to the aspect ratio.
+&nbsp;	 * @param near The near plane
+&nbsp;	 * @param far The far plane
+&nbsp;	 * @param fovy The field of view of the height in degrees
+&nbsp;	 * @param aspectRatio The &quot;width over height&quot; aspect ratio
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToProjection (float near, float far, float fovy, float aspectRatio) {
+<b class="nc">&nbsp;		idt();</b>
+<b class="nc">&nbsp;		float l_fd = (float)(1.0 / Math.tan((fovy * (Math.PI / 180)) / 2.0));</b>
+<b class="nc">&nbsp;		float l_a1 = (far + near) / (near - far);</b>
+<b class="nc">&nbsp;		float l_a2 = (2 * far * near) / (near - far);</b>
+<b class="nc">&nbsp;		val[M00] = l_fd / aspectRatio;</b>
+<b class="nc">&nbsp;		val[M10] = 0;</b>
+<b class="nc">&nbsp;		val[M20] = 0;</b>
+<b class="nc">&nbsp;		val[M30] = 0;</b>
+<b class="nc">&nbsp;		val[M01] = 0;</b>
+<b class="nc">&nbsp;		val[M11] = l_fd;</b>
+<b class="nc">&nbsp;		val[M21] = 0;</b>
+<b class="nc">&nbsp;		val[M31] = 0;</b>
+<b class="nc">&nbsp;		val[M02] = 0;</b>
+<b class="nc">&nbsp;		val[M12] = 0;</b>
+<b class="nc">&nbsp;		val[M22] = l_a1;</b>
+<b class="nc">&nbsp;		val[M32] = -1;</b>
+<b class="nc">&nbsp;		val[M03] = 0;</b>
+<b class="nc">&nbsp;		val[M13] = 0;</b>
+<b class="nc">&nbsp;		val[M23] = l_a2;</b>
+<b class="nc">&nbsp;		val[M33] = 0;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a projection matrix with a near/far plane, and left, bottom, right and top specifying the points on the
+&nbsp;	 * near plane that are mapped to the lower left and upper right corners of the viewport. This allows to create projection
+&nbsp;	 * matrix with off-center vanishing point.
+&nbsp;	 * @param left
+&nbsp;	 * @param right
+&nbsp;	 * @param bottom
+&nbsp;	 * @param top
+&nbsp;	 * @param near The near plane
+&nbsp;	 * @param far The far plane
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToProjection (float left, float right, float bottom, float top, float near, float far) {
+<b class="nc">&nbsp;		float x = 2.0f * near / (right - left);</b>
+<b class="nc">&nbsp;		float y = 2.0f * near / (top - bottom);</b>
+<b class="nc">&nbsp;		float a = (right + left) / (right - left);</b>
+<b class="nc">&nbsp;		float b = (top + bottom) / (top - bottom);</b>
+<b class="nc">&nbsp;		float l_a1 = (far + near) / (near - far);</b>
+<b class="nc">&nbsp;		float l_a2 = (2 * far * near) / (near - far);</b>
+<b class="nc">&nbsp;		val[M00] = x;</b>
+<b class="nc">&nbsp;		val[M10] = 0;</b>
+<b class="nc">&nbsp;		val[M20] = 0;</b>
+<b class="nc">&nbsp;		val[M30] = 0;</b>
+<b class="nc">&nbsp;		val[M01] = 0;</b>
+<b class="nc">&nbsp;		val[M11] = y;</b>
+<b class="nc">&nbsp;		val[M21] = 0;</b>
+<b class="nc">&nbsp;		val[M31] = 0;</b>
+<b class="nc">&nbsp;		val[M02] = a;</b>
+<b class="nc">&nbsp;		val[M12] = b;</b>
+<b class="nc">&nbsp;		val[M22] = l_a1;</b>
+<b class="nc">&nbsp;		val[M32] = -1;</b>
+<b class="nc">&nbsp;		val[M03] = 0;</b>
+<b class="nc">&nbsp;		val[M13] = 0;</b>
+<b class="nc">&nbsp;		val[M23] = l_a2;</b>
+<b class="nc">&nbsp;		val[M33] = 0;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to an orthographic projection matrix with the origin at (x,y) extending by width and height. The near
+&nbsp;	 * plane is set to 0, the far plane is set to 1.
+&nbsp;	 * @param x The x-coordinate of the origin
+&nbsp;	 * @param y The y-coordinate of the origin
+&nbsp;	 * @param width The width
+&nbsp;	 * @param height The height
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToOrtho2D (float x, float y, float width, float height) {
+<b class="nc">&nbsp;		setToOrtho(x, x + width, y, y + height, 0, 1);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to an orthographic projection matrix with the origin at (x,y) extending by width and height, having a near
+&nbsp;	 * and far plane.
+&nbsp;	 * @param x The x-coordinate of the origin
+&nbsp;	 * @param y The y-coordinate of the origin
+&nbsp;	 * @param width The width
+&nbsp;	 * @param height The height
+&nbsp;	 * @param near The near plane
+&nbsp;	 * @param far The far plane
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToOrtho2D (float x, float y, float width, float height, float near, float far) {
+<b class="nc">&nbsp;		setToOrtho(x, x + width, y, y + height, near, far);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to an orthographic projection like glOrtho (http://www.opengl.org/sdk/docs/man/xhtml/glOrtho.xml) following
+&nbsp;	 * the OpenGL equivalent
+&nbsp;	 * @param left The left clipping plane
+&nbsp;	 * @param right The right clipping plane
+&nbsp;	 * @param bottom The bottom clipping plane
+&nbsp;	 * @param top The top clipping plane
+&nbsp;	 * @param near The near clipping plane
+&nbsp;	 * @param far The far clipping plane
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToOrtho (float left, float right, float bottom, float top, float near, float far) {
+<b class="fc">&nbsp;		float x_orth = 2 / (right - left);</b>
+<b class="fc">&nbsp;		float y_orth = 2 / (top - bottom);</b>
+<b class="fc">&nbsp;		float z_orth = -2 / (far - near);</b>
+&nbsp;
+<b class="fc">&nbsp;		float tx = -(right + left) / (right - left);</b>
+<b class="fc">&nbsp;		float ty = -(top + bottom) / (top - bottom);</b>
+<b class="fc">&nbsp;		float tz = -(far + near) / (far - near);</b>
+&nbsp;
+<b class="fc">&nbsp;		val[M00] = x_orth;</b>
+<b class="fc">&nbsp;		val[M10] = 0;</b>
+<b class="fc">&nbsp;		val[M20] = 0;</b>
+<b class="fc">&nbsp;		val[M30] = 0;</b>
+<b class="fc">&nbsp;		val[M01] = 0;</b>
+<b class="fc">&nbsp;		val[M11] = y_orth;</b>
+<b class="fc">&nbsp;		val[M21] = 0;</b>
+<b class="fc">&nbsp;		val[M31] = 0;</b>
+<b class="fc">&nbsp;		val[M02] = 0;</b>
+<b class="fc">&nbsp;		val[M12] = 0;</b>
+<b class="fc">&nbsp;		val[M22] = z_orth;</b>
+<b class="fc">&nbsp;		val[M32] = 0;</b>
+<b class="fc">&nbsp;		val[M03] = tx;</b>
+<b class="fc">&nbsp;		val[M13] = ty;</b>
+<b class="fc">&nbsp;		val[M23] = tz;</b>
+<b class="fc">&nbsp;		val[M33] = 1;</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the 4th column to the translation vector.
+&nbsp;	 * @param vector The translation vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setTranslation (Vector3 vector) {
+<b class="nc">&nbsp;		val[M03] = vector.x;</b>
+<b class="nc">&nbsp;		val[M13] = vector.y;</b>
+<b class="nc">&nbsp;		val[M23] = vector.z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the 4th column to the translation vector.
+&nbsp;	 * @param x The X coordinate of the translation vector
+&nbsp;	 * @param y The Y coordinate of the translation vector
+&nbsp;	 * @param z The Z coordinate of the translation vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setTranslation (float x, float y, float z) {
+<b class="nc">&nbsp;		val[M03] = x;</b>
+<b class="nc">&nbsp;		val[M13] = y;</b>
+<b class="nc">&nbsp;		val[M23] = z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a translation matrix, overwriting it first by an identity matrix and then setting the 4th column to the
+&nbsp;	 * translation vector.
+&nbsp;	 * @param vector The translation vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToTranslation (Vector3 vector) {
+<b class="nc">&nbsp;		idt();</b>
+<b class="nc">&nbsp;		val[M03] = vector.x;</b>
+<b class="nc">&nbsp;		val[M13] = vector.y;</b>
+<b class="nc">&nbsp;		val[M23] = vector.z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a translation matrix, overwriting it first by an identity matrix and then setting the 4th column to the
+&nbsp;	 * translation vector.
+&nbsp;	 * @param x The x-component of the translation vector.
+&nbsp;	 * @param y The y-component of the translation vector.
+&nbsp;	 * @param z The z-component of the translation vector.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToTranslation (float x, float y, float z) {
+<b class="fc">&nbsp;		idt();</b>
+<b class="fc">&nbsp;		val[M03] = x;</b>
+<b class="fc">&nbsp;		val[M13] = y;</b>
+<b class="fc">&nbsp;		val[M23] = z;</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a translation and scaling matrix by first overwriting it with an identity and then setting the
+&nbsp;	 * translation vector in the 4th column and the scaling vector in the diagonal.
+&nbsp;	 * @param translation The translation vector
+&nbsp;	 * @param scaling The scaling vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToTranslationAndScaling (Vector3 translation, Vector3 scaling) {
+<b class="nc">&nbsp;		idt();</b>
+<b class="nc">&nbsp;		val[M03] = translation.x;</b>
+<b class="nc">&nbsp;		val[M13] = translation.y;</b>
+<b class="nc">&nbsp;		val[M23] = translation.z;</b>
+<b class="nc">&nbsp;		val[M00] = scaling.x;</b>
+<b class="nc">&nbsp;		val[M11] = scaling.y;</b>
+<b class="nc">&nbsp;		val[M22] = scaling.z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a translation and scaling matrix by first overwriting it with an identity and then setting the
+&nbsp;	 * translation vector in the 4th column and the scaling vector in the diagonal.
+&nbsp;	 * @param translationX The x-component of the translation vector
+&nbsp;	 * @param translationY The y-component of the translation vector
+&nbsp;	 * @param translationZ The z-component of the translation vector
+&nbsp;	 * @param scalingX The x-component of the scaling vector
+&nbsp;	 * @param scalingY The x-component of the scaling vector
+&nbsp;	 * @param scalingZ The x-component of the scaling vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToTranslationAndScaling (float translationX, float translationY, float translationZ, float scalingX,
+&nbsp;		float scalingY, float scalingZ) {
+<b class="nc">&nbsp;		idt();</b>
+<b class="nc">&nbsp;		val[M03] = translationX;</b>
+<b class="nc">&nbsp;		val[M13] = translationY;</b>
+<b class="nc">&nbsp;		val[M23] = translationZ;</b>
+<b class="nc">&nbsp;		val[M00] = scalingX;</b>
+<b class="nc">&nbsp;		val[M11] = scalingY;</b>
+<b class="nc">&nbsp;		val[M22] = scalingZ;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix around the given axis.
+&nbsp;	 * @param axis The axis
+&nbsp;	 * @param degrees The angle in degrees
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToRotation (Vector3 axis, float degrees) {
+<b class="nc">&nbsp;		if (degrees == 0) {</b>
+<b class="nc">&nbsp;			idt();</b>
+<b class="nc">&nbsp;			return this;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return set(quat.set(axis, degrees));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix around the given axis.
+&nbsp;	 * @param axis The axis
+&nbsp;	 * @param radians The angle in radians
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToRotationRad (Vector3 axis, float radians) {
+<b class="nc">&nbsp;		if (radians == 0) {</b>
+<b class="nc">&nbsp;			idt();</b>
+<b class="nc">&nbsp;			return this;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return set(quat.setFromAxisRad(axis, radians));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix around the given axis.
+&nbsp;	 * @param axisX The x-component of the axis
+&nbsp;	 * @param axisY The y-component of the axis
+&nbsp;	 * @param axisZ The z-component of the axis
+&nbsp;	 * @param degrees The angle in degrees
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToRotation (float axisX, float axisY, float axisZ, float degrees) {
+<b class="nc">&nbsp;		if (degrees == 0) {</b>
+<b class="nc">&nbsp;			idt();</b>
+<b class="nc">&nbsp;			return this;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return set(quat.setFromAxis(axisX, axisY, axisZ, degrees));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a rotation matrix around the given axis.
+&nbsp;	 * @param axisX The x-component of the axis
+&nbsp;	 * @param axisY The y-component of the axis
+&nbsp;	 * @param axisZ The z-component of the axis
+&nbsp;	 * @param radians The angle in radians
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToRotationRad (float axisX, float axisY, float axisZ, float radians) {
+<b class="nc">&nbsp;		if (radians == 0) {</b>
+<b class="nc">&nbsp;			idt();</b>
+<b class="nc">&nbsp;			return this;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return set(quat.setFromAxisRad(axisX, axisY, axisZ, radians));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Set the matrix to a rotation matrix between two vectors.
+&nbsp;	 * @param v1 The base vector
+&nbsp;	 * @param v2 The target vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together */
+&nbsp;	public Matrix4 setToRotation (final Vector3 v1, final Vector3 v2) {
+<b class="nc">&nbsp;		return set(quat.setFromCross(v1, v2));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Set the matrix to a rotation matrix between two vectors.
+&nbsp;	 * @param x1 The base vectors x value
+&nbsp;	 * @param y1 The base vectors y value
+&nbsp;	 * @param z1 The base vectors z value
+&nbsp;	 * @param x2 The target vector x value
+&nbsp;	 * @param y2 The target vector y value
+&nbsp;	 * @param z2 The target vector z value
+&nbsp;	 * @return This matrix for the purpose of chaining methods together */
+&nbsp;	public Matrix4 setToRotation (final float x1, final float y1, final float z1, final float x2, final float y2, final float z2) {
+<b class="nc">&nbsp;		return set(quat.setFromCross(x1, y1, z1, x2, y2, z2));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a rotation matrix from the given euler angles.
+&nbsp;	 * @param yaw the yaw in degrees
+&nbsp;	 * @param pitch the pitch in degrees
+&nbsp;	 * @param roll the roll in degrees
+&nbsp;	 * @return This matrix */
+&nbsp;	public Matrix4 setFromEulerAngles (float yaw, float pitch, float roll) {
+<b class="nc">&nbsp;		quat.setEulerAngles(yaw, pitch, roll);</b>
+<b class="nc">&nbsp;		return set(quat);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a rotation matrix from the given euler angles.
+&nbsp;	 * @param yaw the yaw in radians
+&nbsp;	 * @param pitch the pitch in radians
+&nbsp;	 * @param roll the roll in radians
+&nbsp;	 * @return This matrix */
+&nbsp;	public Matrix4 setFromEulerAnglesRad (float yaw, float pitch, float roll) {
+<b class="nc">&nbsp;		quat.setEulerAnglesRad(yaw, pitch, roll);</b>
+<b class="nc">&nbsp;		return set(quat);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a scaling matrix
+&nbsp;	 * @param vector The scaling vector
+&nbsp;	 * @return This matrix for chaining. */
+&nbsp;	public Matrix4 setToScaling (Vector3 vector) {
+<b class="nc">&nbsp;		idt();</b>
+<b class="nc">&nbsp;		val[M00] = vector.x;</b>
+<b class="nc">&nbsp;		val[M11] = vector.y;</b>
+<b class="nc">&nbsp;		val[M22] = vector.z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a scaling matrix
+&nbsp;	 * @param x The x-component of the scaling vector
+&nbsp;	 * @param y The y-component of the scaling vector
+&nbsp;	 * @param z The z-component of the scaling vector
+&nbsp;	 * @return This matrix for chaining. */
+&nbsp;	public Matrix4 setToScaling (float x, float y, float z) {
+<b class="nc">&nbsp;		idt();</b>
+<b class="nc">&nbsp;		val[M00] = x;</b>
+<b class="nc">&nbsp;		val[M11] = y;</b>
+<b class="nc">&nbsp;		val[M22] = z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the matrix to a look at matrix with a direction and an up vector. Multiply with a translation matrix to get a camera
+&nbsp;	 * model view matrix.
+&nbsp;	 * @param direction The direction vector
+&nbsp;	 * @param up The up vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 setToLookAt (Vector3 direction, Vector3 up) {
+<b class="fc">&nbsp;		l_vez.set(direction).nor();</b>
+<b class="fc">&nbsp;		l_vex.set(direction).crs(up).nor();</b>
+<b class="fc">&nbsp;		l_vey.set(l_vex).crs(l_vez).nor();</b>
+<b class="fc">&nbsp;		idt();</b>
+<b class="fc">&nbsp;		val[M00] = l_vex.x;</b>
+<b class="fc">&nbsp;		val[M01] = l_vex.y;</b>
+<b class="fc">&nbsp;		val[M02] = l_vex.z;</b>
+<b class="fc">&nbsp;		val[M10] = l_vey.x;</b>
+<b class="fc">&nbsp;		val[M11] = l_vey.y;</b>
+<b class="fc">&nbsp;		val[M12] = l_vey.z;</b>
+<b class="fc">&nbsp;		val[M20] = -l_vez.x;</b>
+<b class="fc">&nbsp;		val[M21] = -l_vez.y;</b>
+<b class="fc">&nbsp;		val[M22] = -l_vez.z;</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to a look at matrix with the given position, target and up vector.
+&nbsp;	 * @param position the position
+&nbsp;	 * @param target the target
+&nbsp;	 * @param up the up vector
+&nbsp;	 * @return This matrix */
+&nbsp;	public Matrix4 setToLookAt (Vector3 position, Vector3 target, Vector3 up) {
+<b class="fc">&nbsp;		tmpVec.set(target).sub(position);</b>
+<b class="fc">&nbsp;		setToLookAt(tmpVec, up);</b>
+<b class="fc">&nbsp;		mul(tmpMat.setToTranslation(-position.x, -position.y, -position.z));</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Matrix4 setToWorld (Vector3 position, Vector3 forward, Vector3 up) {
+<b class="nc">&nbsp;		tmpForward.set(forward).nor();</b>
+<b class="nc">&nbsp;		right.set(tmpForward).crs(up).nor();</b>
+<b class="nc">&nbsp;		tmpUp.set(right).crs(tmpForward).nor();</b>
+<b class="nc">&nbsp;		set(right, tmpUp, tmpForward.scl(-1), position);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Linearly interpolates between this matrix and the given matrix mixing by alpha
+&nbsp;	 * @param matrix the matrix
+&nbsp;	 * @param alpha the alpha value in the range [0,1]
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 lerp (Matrix4 matrix, float alpha) {
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 16; i++)</b>
+<b class="nc">&nbsp;			val[i] = val[i] * (1 - alpha) + matrix.val[i] * alpha;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Averages the given transform with this one and stores the result in this matrix. Translations and scales are lerped while
+&nbsp;	 * rotations are slerped.
+&nbsp;	 * @param other The other transform
+&nbsp;	 * @param w Weight of this transform; weight of the other transform is (1 - w)
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 avg (Matrix4 other, float w) {
+<b class="nc">&nbsp;		getScale(tmpVec);</b>
+<b class="nc">&nbsp;		other.getScale(tmpForward);</b>
+&nbsp;
+<b class="nc">&nbsp;		getRotation(quat);</b>
+<b class="nc">&nbsp;		other.getRotation(quat2);</b>
+&nbsp;
+<b class="nc">&nbsp;		getTranslation(tmpUp);</b>
+<b class="nc">&nbsp;		other.getTranslation(right);</b>
+&nbsp;
+<b class="nc">&nbsp;		setToScaling(tmpVec.scl(w).add(tmpForward.scl(1 - w)));</b>
+<b class="nc">&nbsp;		rotate(quat.slerp(quat2, 1 - w));</b>
+<b class="nc">&nbsp;		setTranslation(tmpUp.scl(w).add(right.scl(1 - w)));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Averages the given transforms and stores the result in this matrix. Translations and scales are lerped while rotations are
+&nbsp;	 * slerped. Does not destroy the data contained in t.
+&nbsp;	 * @param t List of transforms
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 avg (Matrix4[] t) {
+<b class="nc">&nbsp;		final float w = 1.0f / t.length;</b>
+&nbsp;
+<b class="nc">&nbsp;		tmpVec.set(t[0].getScale(tmpUp).scl(w));</b>
+<b class="nc">&nbsp;		quat.set(t[0].getRotation(quat2).exp(w));</b>
+<b class="nc">&nbsp;		tmpForward.set(t[0].getTranslation(tmpUp).scl(w));</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 1; i &lt; t.length; i++) {</b>
+<b class="nc">&nbsp;			tmpVec.add(t[i].getScale(tmpUp).scl(w));</b>
+<b class="nc">&nbsp;			quat.mul(t[i].getRotation(quat2).exp(w));</b>
+<b class="nc">&nbsp;			tmpForward.add(t[i].getTranslation(tmpUp).scl(w));</b>
+&nbsp;		}
+<b class="nc">&nbsp;		quat.nor();</b>
+&nbsp;
+<b class="nc">&nbsp;		setToScaling(tmpVec);</b>
+<b class="nc">&nbsp;		rotate(quat);</b>
+<b class="nc">&nbsp;		setTranslation(tmpForward);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Averages the given transforms with the given weights and stores the result in this matrix. Translations and scales are
+&nbsp;	 * lerped while rotations are slerped. Does not destroy the data contained in t or w; Sum of w_i must be equal to 1, or
+&nbsp;	 * unexpected results will occur.
+&nbsp;	 * @param t List of transforms
+&nbsp;	 * @param w List of weights
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 avg (Matrix4[] t, float[] w) {
+<b class="nc">&nbsp;		tmpVec.set(t[0].getScale(tmpUp).scl(w[0]));</b>
+<b class="nc">&nbsp;		quat.set(t[0].getRotation(quat2).exp(w[0]));</b>
+<b class="nc">&nbsp;		tmpForward.set(t[0].getTranslation(tmpUp).scl(w[0]));</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 1; i &lt; t.length; i++) {</b>
+<b class="nc">&nbsp;			tmpVec.add(t[i].getScale(tmpUp).scl(w[i]));</b>
+<b class="nc">&nbsp;			quat.mul(t[i].getRotation(quat2).exp(w[i]));</b>
+<b class="nc">&nbsp;			tmpForward.add(t[i].getTranslation(tmpUp).scl(w[i]));</b>
+&nbsp;		}
+<b class="nc">&nbsp;		quat.nor();</b>
+&nbsp;
+<b class="nc">&nbsp;		setToScaling(tmpVec);</b>
+<b class="nc">&nbsp;		rotate(quat);</b>
+<b class="nc">&nbsp;		setTranslation(tmpForward);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to the given 3x3 matrix. The third column of this matrix is set to (0,0,1,0).
+&nbsp;	 * @param mat the matrix */
+&nbsp;	public Matrix4 set (Matrix3 mat) {
+<b class="nc">&nbsp;		val[0] = mat.val[0];</b>
+<b class="nc">&nbsp;		val[1] = mat.val[1];</b>
+<b class="nc">&nbsp;		val[2] = mat.val[2];</b>
+<b class="nc">&nbsp;		val[3] = 0;</b>
+<b class="nc">&nbsp;		val[4] = mat.val[3];</b>
+<b class="nc">&nbsp;		val[5] = mat.val[4];</b>
+<b class="nc">&nbsp;		val[6] = mat.val[5];</b>
+<b class="nc">&nbsp;		val[7] = 0;</b>
+<b class="nc">&nbsp;		val[8] = 0;</b>
+<b class="nc">&nbsp;		val[9] = 0;</b>
+<b class="nc">&nbsp;		val[10] = 1;</b>
+<b class="nc">&nbsp;		val[11] = 0;</b>
+<b class="nc">&nbsp;		val[12] = mat.val[6];</b>
+<b class="nc">&nbsp;		val[13] = mat.val[7];</b>
+<b class="nc">&nbsp;		val[14] = 0;</b>
+<b class="nc">&nbsp;		val[15] = mat.val[8];</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this matrix to the given affine matrix. The values are mapped as follows:
+&nbsp;	 *
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 *      [  M00  M01   0   M02  ]
+&nbsp;	 *      [  M10  M11   0   M12  ]
+&nbsp;	 *      [   0    0    1    0   ]
+&nbsp;	 *      [   0    0    0    1   ]
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 * 
+&nbsp;	 * @param affine the affine matrix
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 set (Affine2 affine) {
+<b class="nc">&nbsp;		val[M00] = affine.m00;</b>
+<b class="nc">&nbsp;		val[M10] = affine.m10;</b>
+<b class="nc">&nbsp;		val[M20] = 0;</b>
+<b class="nc">&nbsp;		val[M30] = 0;</b>
+<b class="nc">&nbsp;		val[M01] = affine.m01;</b>
+<b class="nc">&nbsp;		val[M11] = affine.m11;</b>
+<b class="nc">&nbsp;		val[M21] = 0;</b>
+<b class="nc">&nbsp;		val[M31] = 0;</b>
+<b class="nc">&nbsp;		val[M02] = 0;</b>
+<b class="nc">&nbsp;		val[M12] = 0;</b>
+<b class="nc">&nbsp;		val[M22] = 1;</b>
+<b class="nc">&nbsp;		val[M32] = 0;</b>
+<b class="nc">&nbsp;		val[M03] = affine.m02;</b>
+<b class="nc">&nbsp;		val[M13] = affine.m12;</b>
+<b class="nc">&nbsp;		val[M23] = 0;</b>
+<b class="nc">&nbsp;		val[M33] = 1;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Assumes that this matrix is a 2D affine transformation, copying only the relevant components. The values are mapped as
+&nbsp;	 * follows:
+&nbsp;	 *
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 *      [  M00  M01   _   M02  ]
+&nbsp;	 *      [  M10  M11   _   M12  ]
+&nbsp;	 *      [   _    _    _    _   ]
+&nbsp;	 *      [   _    _    _    _   ]
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 * 
+&nbsp;	 * @param affine the source matrix
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 setAsAffine (Affine2 affine) {
+<b class="nc">&nbsp;		val[M00] = affine.m00;</b>
+<b class="nc">&nbsp;		val[M10] = affine.m10;</b>
+<b class="nc">&nbsp;		val[M01] = affine.m01;</b>
+<b class="nc">&nbsp;		val[M11] = affine.m11;</b>
+<b class="nc">&nbsp;		val[M03] = affine.m02;</b>
+<b class="nc">&nbsp;		val[M13] = affine.m12;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Assumes that both matrices are 2D affine transformations, copying only the relevant components. The copied values are:
+&nbsp;	 *
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 *      [  M00  M01   _   M03  ]
+&nbsp;	 *      [  M10  M11   _   M13  ]
+&nbsp;	 *      [   _    _    _    _   ]
+&nbsp;	 *      [   _    _    _    _   ]
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 * 
+&nbsp;	 * @param mat the source matrix
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 setAsAffine (Matrix4 mat) {
+<b class="nc">&nbsp;		val[M00] = mat.val[M00];</b>
+<b class="nc">&nbsp;		val[M10] = mat.val[M10];</b>
+<b class="nc">&nbsp;		val[M01] = mat.val[M01];</b>
+<b class="nc">&nbsp;		val[M11] = mat.val[M11];</b>
+<b class="nc">&nbsp;		val[M03] = mat.val[M03];</b>
+<b class="nc">&nbsp;		val[M13] = mat.val[M13];</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Matrix4 scl (Vector3 scale) {
+<b class="nc">&nbsp;		val[M00] *= scale.x;</b>
+<b class="nc">&nbsp;		val[M11] *= scale.y;</b>
+<b class="nc">&nbsp;		val[M22] *= scale.z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Matrix4 scl (float x, float y, float z) {
+<b class="nc">&nbsp;		val[M00] *= x;</b>
+<b class="nc">&nbsp;		val[M11] *= y;</b>
+<b class="nc">&nbsp;		val[M22] *= z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Matrix4 scl (float scale) {
+<b class="nc">&nbsp;		val[M00] *= scale;</b>
+<b class="nc">&nbsp;		val[M11] *= scale;</b>
+<b class="nc">&nbsp;		val[M22] *= scale;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Vector3 getTranslation (Vector3 position) {
+<b class="nc">&nbsp;		position.x = val[M03];</b>
+<b class="nc">&nbsp;		position.y = val[M13];</b>
+<b class="nc">&nbsp;		position.z = val[M23];</b>
+<b class="nc">&nbsp;		return position;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Gets the rotation of this matrix.
+&nbsp;	 * @param rotation The {@link Quaternion} to receive the rotation
+&nbsp;	 * @param normalizeAxes True to normalize the axes, necessary when the matrix might also include scaling.
+&nbsp;	 * @return The provided {@link Quaternion} for chaining. */
+&nbsp;	public Quaternion getRotation (Quaternion rotation, boolean normalizeAxes) {
+<b class="nc">&nbsp;		return rotation.setFromMatrix(normalizeAxes, this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Gets the rotation of this matrix.
+&nbsp;	 * @param rotation The {@link Quaternion} to receive the rotation
+&nbsp;	 * @return The provided {@link Quaternion} for chaining. */
+&nbsp;	public Quaternion getRotation (Quaternion rotation) {
+<b class="nc">&nbsp;		return rotation.setFromMatrix(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the squared scale factor on the X axis */
+&nbsp;	public float getScaleXSquared () {
+<b class="nc">&nbsp;		return val[M00] * val[M00] + val[M01] * val[M01] + val[M02] * val[M02];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the squared scale factor on the Y axis */
+&nbsp;	public float getScaleYSquared () {
+<b class="nc">&nbsp;		return val[M10] * val[M10] + val[M11] * val[M11] + val[M12] * val[M12];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the squared scale factor on the Z axis */
+&nbsp;	public float getScaleZSquared () {
+<b class="nc">&nbsp;		return val[M20] * val[M20] + val[M21] * val[M21] + val[M22] * val[M22];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the scale factor on the X axis (non-negative) */
+&nbsp;	public float getScaleX () {
+<b class="nc">&nbsp;		return (MathUtils.isZero(val[M01]) &amp;&amp; MathUtils.isZero(val[M02])) ? Math.abs(val[M00])</b>
+<b class="nc">&nbsp;			: (float)Math.sqrt(getScaleXSquared());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the scale factor on the Y axis (non-negative) */
+&nbsp;	public float getScaleY () {
+<b class="nc">&nbsp;		return (MathUtils.isZero(val[M10]) &amp;&amp; MathUtils.isZero(val[M12])) ? Math.abs(val[M11])</b>
+<b class="nc">&nbsp;			: (float)Math.sqrt(getScaleYSquared());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the scale factor on the X axis (non-negative) */
+&nbsp;	public float getScaleZ () {
+<b class="nc">&nbsp;		return (MathUtils.isZero(val[M20]) &amp;&amp; MathUtils.isZero(val[M21])) ? Math.abs(val[M22])</b>
+<b class="nc">&nbsp;			: (float)Math.sqrt(getScaleZSquared());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param scale The vector which will receive the (non-negative) scale components on each axis.
+&nbsp;	 * @return The provided vector for chaining. */
+&nbsp;	public Vector3 getScale (Vector3 scale) {
+<b class="nc">&nbsp;		return scale.set(getScaleX(), getScaleY(), getScaleZ());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** removes the translational part and transposes the matrix. */
+&nbsp;	public Matrix4 toNormalMatrix () {
+<b class="nc">&nbsp;		val[M03] = 0;</b>
+<b class="nc">&nbsp;		val[M13] = 0;</b>
+<b class="nc">&nbsp;		val[M23] = 0;</b>
+<b class="nc">&nbsp;		return inv().tra();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return &quot;[&quot; + val[M00] + &quot;|&quot; + val[M01] + &quot;|&quot; + val[M02] + &quot;|&quot; + val[M03] + &quot;]\n&quot; //</b>
+&nbsp;			+ &quot;[&quot; + val[M10] + &quot;|&quot; + val[M11] + &quot;|&quot; + val[M12] + &quot;|&quot; + val[M13] + &quot;]\n&quot; //
+&nbsp;			+ &quot;[&quot; + val[M20] + &quot;|&quot; + val[M21] + &quot;|&quot; + val[M22] + &quot;|&quot; + val[M23] + &quot;]\n&quot; //
+&nbsp;			+ &quot;[&quot; + val[M30] + &quot;|&quot; + val[M31] + &quot;|&quot; + val[M32] + &quot;|&quot; + val[M33] + &quot;]\n&quot;;
+&nbsp;	}
+&nbsp;
+&nbsp;	// @off
+&nbsp;	/*JNI
+&nbsp;	#include &lt;memory.h&gt;
+&nbsp;	#include &lt;stdio.h&gt;
+&nbsp;	#include &lt;string.h&gt;
+&nbsp;	
+&nbsp;	#define M00 0
+&nbsp;	#define M01 4
+&nbsp;	#define M02 8
+&nbsp;	#define M03 12
+&nbsp;	#define M10 1
+&nbsp;	#define M11 5
+&nbsp;	#define M12 9
+&nbsp;	#define M13 13
+&nbsp;	#define M20 2
+&nbsp;	#define M21 6
+&nbsp;	#define M22 10
+&nbsp;	#define M23 14
+&nbsp;	#define M30 3
+&nbsp;	#define M31 7
+&nbsp;	#define M32 11
+&nbsp;	#define M33 15
+&nbsp;	
+&nbsp;	static inline void matrix4_mul(float* mata, float* matb) {
+&nbsp;		float tmp[16];
+&nbsp;		tmp[M00] = mata[M00] * matb[M00] + mata[M01] * matb[M10] + mata[M02] * matb[M20] + mata[M03] * matb[M30];
+&nbsp;		tmp[M01] = mata[M00] * matb[M01] + mata[M01] * matb[M11] + mata[M02] * matb[M21] + mata[M03] * matb[M31];
+&nbsp;		tmp[M02] = mata[M00] * matb[M02] + mata[M01] * matb[M12] + mata[M02] * matb[M22] + mata[M03] * matb[M32];
+&nbsp;		tmp[M03] = mata[M00] * matb[M03] + mata[M01] * matb[M13] + mata[M02] * matb[M23] + mata[M03] * matb[M33];
+&nbsp;		tmp[M10] = mata[M10] * matb[M00] + mata[M11] * matb[M10] + mata[M12] * matb[M20] + mata[M13] * matb[M30];
+&nbsp;		tmp[M11] = mata[M10] * matb[M01] + mata[M11] * matb[M11] + mata[M12] * matb[M21] + mata[M13] * matb[M31];
+&nbsp;		tmp[M12] = mata[M10] * matb[M02] + mata[M11] * matb[M12] + mata[M12] * matb[M22] + mata[M13] * matb[M32];
+&nbsp;		tmp[M13] = mata[M10] * matb[M03] + mata[M11] * matb[M13] + mata[M12] * matb[M23] + mata[M13] * matb[M33];
+&nbsp;		tmp[M20] = mata[M20] * matb[M00] + mata[M21] * matb[M10] + mata[M22] * matb[M20] + mata[M23] * matb[M30];
+&nbsp;		tmp[M21] = mata[M20] * matb[M01] + mata[M21] * matb[M11] + mata[M22] * matb[M21] + mata[M23] * matb[M31];
+&nbsp;		tmp[M22] = mata[M20] * matb[M02] + mata[M21] * matb[M12] + mata[M22] * matb[M22] + mata[M23] * matb[M32];
+&nbsp;		tmp[M23] = mata[M20] * matb[M03] + mata[M21] * matb[M13] + mata[M22] * matb[M23] + mata[M23] * matb[M33];
+&nbsp;		tmp[M30] = mata[M30] * matb[M00] + mata[M31] * matb[M10] + mata[M32] * matb[M20] + mata[M33] * matb[M30];
+&nbsp;		tmp[M31] = mata[M30] * matb[M01] + mata[M31] * matb[M11] + mata[M32] * matb[M21] + mata[M33] * matb[M31];
+&nbsp;		tmp[M32] = mata[M30] * matb[M02] + mata[M31] * matb[M12] + mata[M32] * matb[M22] + mata[M33] * matb[M32];
+&nbsp;		tmp[M33] = mata[M30] * matb[M03] + mata[M31] * matb[M13] + mata[M32] * matb[M23] + mata[M33] * matb[M33];
+&nbsp;		memcpy(mata, tmp, sizeof(float) *  16);
+&nbsp;	}
+&nbsp;	
+&nbsp;	static inline void matrix4_mulVec(float* mat, float* vec) {
+&nbsp;		float x = vec[0] * mat[M00] + vec[1] * mat[M01] + vec[2] * mat[M02] + mat[M03];
+&nbsp;		float y = vec[0] * mat[M10] + vec[1] * mat[M11] + vec[2] * mat[M12] + mat[M13];
+&nbsp;		float z = vec[0] * mat[M20] + vec[1] * mat[M21] + vec[2] * mat[M22] + mat[M23];
+&nbsp;		vec[0] = x;
+&nbsp;		vec[1] = y;
+&nbsp;		vec[2] = z;
+&nbsp;	}
+&nbsp;	
+&nbsp;	static inline void matrix4_proj(float* mat, float* vec) {
+&nbsp;		float inv_w = 1.0f / (vec[0] * mat[M30] + vec[1] * mat[M31] + vec[2] * mat[M32] + mat[M33]);
+&nbsp;		float x = (vec[0] * mat[M00] + vec[1] * mat[M01] + vec[2] * mat[M02] + mat[M03]) * inv_w;
+&nbsp;		float y = (vec[0] * mat[M10] + vec[1] * mat[M11] + vec[2] * mat[M12] + mat[M13]) * inv_w; 
+&nbsp;		float z = (vec[0] * mat[M20] + vec[1] * mat[M21] + vec[2] * mat[M22] + mat[M23]) * inv_w;
+&nbsp;		vec[0] = x;
+&nbsp;		vec[1] = y;
+&nbsp;		vec[2] = z;
+&nbsp;	}
+&nbsp;	
+&nbsp;	static inline void matrix4_rot(float* mat, float* vec) {
+&nbsp;		float x = vec[0] * mat[M00] + vec[1] * mat[M01] + vec[2] * mat[M02];
+&nbsp;		float y = vec[0] * mat[M10] + vec[1] * mat[M11] + vec[2] * mat[M12];
+&nbsp;		float z = vec[0] * mat[M20] + vec[1] * mat[M21] + vec[2] * mat[M22];
+&nbsp;		vec[0] = x;
+&nbsp;		vec[1] = y;
+&nbsp;		vec[2] = z;
+&nbsp;	}
+&nbsp;	 */
+&nbsp;
+&nbsp;	/** Multiplies the vectors with the given matrix. The matrix array is assumed to hold a 4x4 column major matrix as you can get
+&nbsp;	 * from {@link Matrix4#val}. The vectors array is assumed to hold 3-component vectors. Offset specifies the offset into the
+&nbsp;	 * array where the x-component of the first vector is located. The numVecs parameter specifies the number of vectors stored in
+&nbsp;	 * the vectors array. The stride parameter specifies the number of floats between subsequent vectors and must be &gt;= 3. This is
+&nbsp;	 * the same as {@link Vector3#mul(Matrix4)} applied to multiple vectors.
+&nbsp;	 * @param mat the matrix
+&nbsp;	 * @param vecs the vectors
+&nbsp;	 * @param offset the offset into the vectors array
+&nbsp;	 * @param numVecs the number of vectors
+&nbsp;	 * @param stride the stride between vectors in floats */
+&nbsp;	public static native void mulVec (float[] mat, float[] vecs, int offset, int numVecs, int stride) /*-{ }-*/; /*
+&nbsp;		float* vecPtr = vecs + offset;
+&nbsp;		for(int i = 0; i &lt; numVecs; i++) {
+&nbsp;			matrix4_mulVec(mat, vecPtr);
+&nbsp;			vecPtr += stride;
+&nbsp;		}
+&nbsp;	*/
+&nbsp;
+&nbsp;	/** Multiplies the vectors with the given matrix, , performing a division by w. The matrix array is assumed to hold a 4x4 column
+&nbsp;	 * major matrix as you can get from {@link Matrix4#val}. The vectors array is assumed to hold 3-component vectors. Offset
+&nbsp;	 * specifies the offset into the array where the x-component of the first vector is located. The numVecs parameter specifies
+&nbsp;	 * the number of vectors stored in the vectors array. The stride parameter specifies the number of floats between subsequent
+&nbsp;	 * vectors and must be &gt;= 3. This is the same as {@link Vector3#prj(Matrix4)} applied to multiple vectors.
+&nbsp;	 * @param mat the matrix
+&nbsp;	 * @param vecs the vectors
+&nbsp;	 * @param offset the offset into the vectors array
+&nbsp;	 * @param numVecs the number of vectors
+&nbsp;	 * @param stride the stride between vectors in floats */
+&nbsp;	public static native void prj (float[] mat, float[] vecs, int offset, int numVecs, int stride) /*-{ }-*/; /*
+&nbsp;		float* vecPtr = vecs + offset;
+&nbsp;		for(int i = 0; i &lt; numVecs; i++) {
+&nbsp;			matrix4_proj(mat, vecPtr);
+&nbsp;			vecPtr += stride;
+&nbsp;		}
+&nbsp;	*/
+&nbsp;
+&nbsp;	/** Multiplies the vectors with the top most 3x3 sub-matrix of the given matrix. The matrix array is assumed to hold a 4x4
+&nbsp;	 * column major matrix as you can get from {@link Matrix4#val}. The vectors array is assumed to hold 3-component vectors.
+&nbsp;	 * Offset specifies the offset into the array where the x-component of the first vector is located. The numVecs parameter
+&nbsp;	 * specifies the number of vectors stored in the vectors array. The stride parameter specifies the number of floats between
+&nbsp;	 * subsequent vectors and must be &gt;= 3. This is the same as {@link Vector3#rot(Matrix4)} applied to multiple vectors.
+&nbsp;	 * @param mat the matrix
+&nbsp;	 * @param vecs the vectors
+&nbsp;	 * @param offset the offset into the vectors array
+&nbsp;	 * @param numVecs the number of vectors
+&nbsp;	 * @param stride the stride between vectors in floats */
+&nbsp;	public static native void rot (float[] mat, float[] vecs, int offset, int numVecs, int stride) /*-{ }-*/; /*
+&nbsp;		float* vecPtr = vecs + offset;
+&nbsp;		for(int i = 0; i &lt; numVecs; i++) {
+&nbsp;			matrix4_rot(mat, vecPtr);
+&nbsp;			vecPtr += stride;
+&nbsp;		}
+&nbsp;	*/
+&nbsp;	// @on
+&nbsp;
+&nbsp;	/** Multiplies the matrix mata with matrix matb, storing the result in mata. The arrays are assumed to hold 4x4 column major
+&nbsp;	 * matrices as you can get from {@link Matrix4#val}. This is the same as {@link Matrix4#mul(Matrix4)}.
+&nbsp;	 *
+&nbsp;	 * @param mata the first matrix.
+&nbsp;	 * @param matb the second matrix. */
+&nbsp;	public static void mul (float[] mata, float[] matb) {
+<b class="fc">&nbsp;		float m00 = mata[M00] * matb[M00] + mata[M01] * matb[M10] + mata[M02] * matb[M20] + mata[M03] * matb[M30];</b>
+<b class="fc">&nbsp;		float m01 = mata[M00] * matb[M01] + mata[M01] * matb[M11] + mata[M02] * matb[M21] + mata[M03] * matb[M31];</b>
+<b class="fc">&nbsp;		float m02 = mata[M00] * matb[M02] + mata[M01] * matb[M12] + mata[M02] * matb[M22] + mata[M03] * matb[M32];</b>
+<b class="fc">&nbsp;		float m03 = mata[M00] * matb[M03] + mata[M01] * matb[M13] + mata[M02] * matb[M23] + mata[M03] * matb[M33];</b>
+<b class="fc">&nbsp;		float m10 = mata[M10] * matb[M00] + mata[M11] * matb[M10] + mata[M12] * matb[M20] + mata[M13] * matb[M30];</b>
+<b class="fc">&nbsp;		float m11 = mata[M10] * matb[M01] + mata[M11] * matb[M11] + mata[M12] * matb[M21] + mata[M13] * matb[M31];</b>
+<b class="fc">&nbsp;		float m12 = mata[M10] * matb[M02] + mata[M11] * matb[M12] + mata[M12] * matb[M22] + mata[M13] * matb[M32];</b>
+<b class="fc">&nbsp;		float m13 = mata[M10] * matb[M03] + mata[M11] * matb[M13] + mata[M12] * matb[M23] + mata[M13] * matb[M33];</b>
+<b class="fc">&nbsp;		float m20 = mata[M20] * matb[M00] + mata[M21] * matb[M10] + mata[M22] * matb[M20] + mata[M23] * matb[M30];</b>
+<b class="fc">&nbsp;		float m21 = mata[M20] * matb[M01] + mata[M21] * matb[M11] + mata[M22] * matb[M21] + mata[M23] * matb[M31];</b>
+<b class="fc">&nbsp;		float m22 = mata[M20] * matb[M02] + mata[M21] * matb[M12] + mata[M22] * matb[M22] + mata[M23] * matb[M32];</b>
+<b class="fc">&nbsp;		float m23 = mata[M20] * matb[M03] + mata[M21] * matb[M13] + mata[M22] * matb[M23] + mata[M23] * matb[M33];</b>
+<b class="fc">&nbsp;		float m30 = mata[M30] * matb[M00] + mata[M31] * matb[M10] + mata[M32] * matb[M20] + mata[M33] * matb[M30];</b>
+<b class="fc">&nbsp;		float m31 = mata[M30] * matb[M01] + mata[M31] * matb[M11] + mata[M32] * matb[M21] + mata[M33] * matb[M31];</b>
+<b class="fc">&nbsp;		float m32 = mata[M30] * matb[M02] + mata[M31] * matb[M12] + mata[M32] * matb[M22] + mata[M33] * matb[M32];</b>
+<b class="fc">&nbsp;		float m33 = mata[M30] * matb[M03] + mata[M31] * matb[M13] + mata[M32] * matb[M23] + mata[M33] * matb[M33];</b>
+<b class="fc">&nbsp;		mata[M00] = m00;</b>
+<b class="fc">&nbsp;		mata[M10] = m10;</b>
+<b class="fc">&nbsp;		mata[M20] = m20;</b>
+<b class="fc">&nbsp;		mata[M30] = m30;</b>
+<b class="fc">&nbsp;		mata[M01] = m01;</b>
+<b class="fc">&nbsp;		mata[M11] = m11;</b>
+<b class="fc">&nbsp;		mata[M21] = m21;</b>
+<b class="fc">&nbsp;		mata[M31] = m31;</b>
+<b class="fc">&nbsp;		mata[M02] = m02;</b>
+<b class="fc">&nbsp;		mata[M12] = m12;</b>
+<b class="fc">&nbsp;		mata[M22] = m22;</b>
+<b class="fc">&nbsp;		mata[M32] = m32;</b>
+<b class="fc">&nbsp;		mata[M03] = m03;</b>
+<b class="fc">&nbsp;		mata[M13] = m13;</b>
+<b class="fc">&nbsp;		mata[M23] = m23;</b>
+<b class="fc">&nbsp;		mata[M33] = m33;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Multiplies the vector with the given matrix. The matrix array is assumed to hold a 4x4 column major matrix as you can get
+&nbsp;	 * from {@link Matrix4#val}. The vector array is assumed to hold a 3-component vector, with x being the first element, y being
+&nbsp;	 * the second and z being the last component. The result is stored in the vector array. This is the same as
+&nbsp;	 * {@link Vector3#mul(Matrix4)}.
+&nbsp;	 * @param mat the matrix
+&nbsp;	 * @param vec the vector. */
+&nbsp;	public static void mulVec (float[] mat, float[] vec) {
+<b class="nc">&nbsp;		float x = vec[0] * mat[M00] + vec[1] * mat[M01] + vec[2] * mat[M02] + mat[M03];</b>
+<b class="nc">&nbsp;		float y = vec[0] * mat[M10] + vec[1] * mat[M11] + vec[2] * mat[M12] + mat[M13];</b>
+<b class="nc">&nbsp;		float z = vec[0] * mat[M20] + vec[1] * mat[M21] + vec[2] * mat[M22] + mat[M23];</b>
+<b class="nc">&nbsp;		vec[0] = x;</b>
+<b class="nc">&nbsp;		vec[1] = y;</b>
+<b class="nc">&nbsp;		vec[2] = z;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Multiplies the vector with the given matrix, performing a division by w. The matrix array is assumed to hold a 4x4 column
+&nbsp;	 * major matrix as you can get from {@link Matrix4#val}. The vector array is assumed to hold a 3-component vector, with x being
+&nbsp;	 * the first element, y being the second and z being the last component. The result is stored in the vector array. This is the
+&nbsp;	 * same as {@link Vector3#prj(Matrix4)}.
+&nbsp;	 * @param mat the matrix
+&nbsp;	 * @param vec the vector. */
+&nbsp;	public static void prj (float[] mat, float[] vec) {
+<b class="nc">&nbsp;		float inv_w = 1.0f / (vec[0] * mat[M30] + vec[1] * mat[M31] + vec[2] * mat[M32] + mat[M33]);</b>
+<b class="nc">&nbsp;		float x = (vec[0] * mat[M00] + vec[1] * mat[M01] + vec[2] * mat[M02] + mat[M03]) * inv_w;</b>
+<b class="nc">&nbsp;		float y = (vec[0] * mat[M10] + vec[1] * mat[M11] + vec[2] * mat[M12] + mat[M13]) * inv_w;</b>
+<b class="nc">&nbsp;		float z = (vec[0] * mat[M20] + vec[1] * mat[M21] + vec[2] * mat[M22] + mat[M23]) * inv_w;</b>
+<b class="nc">&nbsp;		vec[0] = x;</b>
+<b class="nc">&nbsp;		vec[1] = y;</b>
+<b class="nc">&nbsp;		vec[2] = z;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Multiplies the vector with the top most 3x3 sub-matrix of the given matrix. The matrix array is assumed to hold a 4x4
+&nbsp;	 * column major matrix as you can get from {@link Matrix4#val}. The vector array is assumed to hold a 3-component vector, with
+&nbsp;	 * x being the first element, y being the second and z being the last component. The result is stored in the vector array. This
+&nbsp;	 * is the same as {@link Vector3#rot(Matrix4)}.
+&nbsp;	 * @param mat the matrix
+&nbsp;	 * @param vec the vector. */
+&nbsp;	public static void rot (float[] mat, float[] vec) {
+<b class="nc">&nbsp;		float x = vec[0] * mat[M00] + vec[1] * mat[M01] + vec[2] * mat[M02];</b>
+<b class="nc">&nbsp;		float y = vec[0] * mat[M10] + vec[1] * mat[M11] + vec[2] * mat[M12];</b>
+<b class="nc">&nbsp;		float z = vec[0] * mat[M20] + vec[1] * mat[M21] + vec[2] * mat[M22];</b>
+<b class="nc">&nbsp;		vec[0] = x;</b>
+<b class="nc">&nbsp;		vec[1] = y;</b>
+<b class="nc">&nbsp;		vec[2] = z;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Computes the inverse of the given matrix. The matrix array is assumed to hold a 4x4 column major matrix as you can get from
+&nbsp;	 * {@link Matrix4#val}.
+&nbsp;	 * @param values the matrix values.
+&nbsp;	 * @return false in case the inverse could not be calculated, true otherwise. */
+&nbsp;	public static boolean inv (float[] values) {
+<b class="fc">&nbsp;		float l_det = det(values);</b>
+<b class="pc">&nbsp;		if (l_det == 0) return false;</b>
+<b class="fc">&nbsp;		float m00 = values[M12] * values[M23] * values[M31] - values[M13] * values[M22] * values[M31]</b>
+&nbsp;			+ values[M13] * values[M21] * values[M32] - values[M11] * values[M23] * values[M32]
+&nbsp;			- values[M12] * values[M21] * values[M33] + values[M11] * values[M22] * values[M33];
+<b class="fc">&nbsp;		float m01 = values[M03] * values[M22] * values[M31] - values[M02] * values[M23] * values[M31]</b>
+&nbsp;			- values[M03] * values[M21] * values[M32] + values[M01] * values[M23] * values[M32]
+&nbsp;			+ values[M02] * values[M21] * values[M33] - values[M01] * values[M22] * values[M33];
+<b class="fc">&nbsp;		float m02 = values[M02] * values[M13] * values[M31] - values[M03] * values[M12] * values[M31]</b>
+&nbsp;			+ values[M03] * values[M11] * values[M32] - values[M01] * values[M13] * values[M32]
+&nbsp;			- values[M02] * values[M11] * values[M33] + values[M01] * values[M12] * values[M33];
+<b class="fc">&nbsp;		float m03 = values[M03] * values[M12] * values[M21] - values[M02] * values[M13] * values[M21]</b>
+&nbsp;			- values[M03] * values[M11] * values[M22] + values[M01] * values[M13] * values[M22]
+&nbsp;			+ values[M02] * values[M11] * values[M23] - values[M01] * values[M12] * values[M23];
+<b class="fc">&nbsp;		float m10 = values[M13] * values[M22] * values[M30] - values[M12] * values[M23] * values[M30]</b>
+&nbsp;			- values[M13] * values[M20] * values[M32] + values[M10] * values[M23] * values[M32]
+&nbsp;			+ values[M12] * values[M20] * values[M33] - values[M10] * values[M22] * values[M33];
+<b class="fc">&nbsp;		float m11 = values[M02] * values[M23] * values[M30] - values[M03] * values[M22] * values[M30]</b>
+&nbsp;			+ values[M03] * values[M20] * values[M32] - values[M00] * values[M23] * values[M32]
+&nbsp;			- values[M02] * values[M20] * values[M33] + values[M00] * values[M22] * values[M33];
+<b class="fc">&nbsp;		float m12 = values[M03] * values[M12] * values[M30] - values[M02] * values[M13] * values[M30]</b>
+&nbsp;			- values[M03] * values[M10] * values[M32] + values[M00] * values[M13] * values[M32]
+&nbsp;			+ values[M02] * values[M10] * values[M33] - values[M00] * values[M12] * values[M33];
+<b class="fc">&nbsp;		float m13 = values[M02] * values[M13] * values[M20] - values[M03] * values[M12] * values[M20]</b>
+&nbsp;			+ values[M03] * values[M10] * values[M22] - values[M00] * values[M13] * values[M22]
+&nbsp;			- values[M02] * values[M10] * values[M23] + values[M00] * values[M12] * values[M23];
+<b class="fc">&nbsp;		float m20 = values[M11] * values[M23] * values[M30] - values[M13] * values[M21] * values[M30]</b>
+&nbsp;			+ values[M13] * values[M20] * values[M31] - values[M10] * values[M23] * values[M31]
+&nbsp;			- values[M11] * values[M20] * values[M33] + values[M10] * values[M21] * values[M33];
+<b class="fc">&nbsp;		float m21 = values[M03] * values[M21] * values[M30] - values[M01] * values[M23] * values[M30]</b>
+&nbsp;			- values[M03] * values[M20] * values[M31] + values[M00] * values[M23] * values[M31]
+&nbsp;			+ values[M01] * values[M20] * values[M33] - values[M00] * values[M21] * values[M33];
+<b class="fc">&nbsp;		float m22 = values[M01] * values[M13] * values[M30] - values[M03] * values[M11] * values[M30]</b>
+&nbsp;			+ values[M03] * values[M10] * values[M31] - values[M00] * values[M13] * values[M31]
+&nbsp;			- values[M01] * values[M10] * values[M33] + values[M00] * values[M11] * values[M33];
+<b class="fc">&nbsp;		float m23 = values[M03] * values[M11] * values[M20] - values[M01] * values[M13] * values[M20]</b>
+&nbsp;			- values[M03] * values[M10] * values[M21] + values[M00] * values[M13] * values[M21]
+&nbsp;			+ values[M01] * values[M10] * values[M23] - values[M00] * values[M11] * values[M23];
+<b class="fc">&nbsp;		float m30 = values[M12] * values[M21] * values[M30] - values[M11] * values[M22] * values[M30]</b>
+&nbsp;			- values[M12] * values[M20] * values[M31] + values[M10] * values[M22] * values[M31]
+&nbsp;			+ values[M11] * values[M20] * values[M32] - values[M10] * values[M21] * values[M32];
+<b class="fc">&nbsp;		float m31 = values[M01] * values[M22] * values[M30] - values[M02] * values[M21] * values[M30]</b>
+&nbsp;			+ values[M02] * values[M20] * values[M31] - values[M00] * values[M22] * values[M31]
+&nbsp;			- values[M01] * values[M20] * values[M32] + values[M00] * values[M21] * values[M32];
+<b class="fc">&nbsp;		float m32 = values[M02] * values[M11] * values[M30] - values[M01] * values[M12] * values[M30]</b>
+&nbsp;			- values[M02] * values[M10] * values[M31] + values[M00] * values[M12] * values[M31]
+&nbsp;			+ values[M01] * values[M10] * values[M32] - values[M00] * values[M11] * values[M32];
+<b class="fc">&nbsp;		float m33 = values[M01] * values[M12] * values[M20] - values[M02] * values[M11] * values[M20]</b>
+&nbsp;			+ values[M02] * values[M10] * values[M21] - values[M00] * values[M12] * values[M21]
+&nbsp;			- values[M01] * values[M10] * values[M22] + values[M00] * values[M11] * values[M22];
+<b class="fc">&nbsp;		float inv_det = 1.0f / l_det;</b>
+<b class="fc">&nbsp;		values[M00] = m00 * inv_det;</b>
+<b class="fc">&nbsp;		values[M10] = m10 * inv_det;</b>
+<b class="fc">&nbsp;		values[M20] = m20 * inv_det;</b>
+<b class="fc">&nbsp;		values[M30] = m30 * inv_det;</b>
+<b class="fc">&nbsp;		values[M01] = m01 * inv_det;</b>
+<b class="fc">&nbsp;		values[M11] = m11 * inv_det;</b>
+<b class="fc">&nbsp;		values[M21] = m21 * inv_det;</b>
+<b class="fc">&nbsp;		values[M31] = m31 * inv_det;</b>
+<b class="fc">&nbsp;		values[M02] = m02 * inv_det;</b>
+<b class="fc">&nbsp;		values[M12] = m12 * inv_det;</b>
+<b class="fc">&nbsp;		values[M22] = m22 * inv_det;</b>
+<b class="fc">&nbsp;		values[M32] = m32 * inv_det;</b>
+<b class="fc">&nbsp;		values[M03] = m03 * inv_det;</b>
+<b class="fc">&nbsp;		values[M13] = m13 * inv_det;</b>
+<b class="fc">&nbsp;		values[M23] = m23 * inv_det;</b>
+<b class="fc">&nbsp;		values[M33] = m33 * inv_det;</b>
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Computes the determinante of the given matrix. The matrix array is assumed to hold a 4x4 column major matrix as you can get
+&nbsp;	 * from {@link Matrix4#val}.
+&nbsp;	 * @param values the matrix values.
+&nbsp;	 * @return the determinante. */
+&nbsp;	public static float det (float[] values) {
+<b class="fc">&nbsp;		return values[M30] * values[M21] * values[M12] * values[M03] - values[M20] * values[M31] * values[M12] * values[M03]</b>
+&nbsp;			- values[M30] * values[M11] * values[M22] * values[M03] + values[M10] * values[M31] * values[M22] * values[M03]
+&nbsp;			+ values[M20] * values[M11] * values[M32] * values[M03] - values[M10] * values[M21] * values[M32] * values[M03]
+&nbsp;			- values[M30] * values[M21] * values[M02] * values[M13] + values[M20] * values[M31] * values[M02] * values[M13]
+&nbsp;			+ values[M30] * values[M01] * values[M22] * values[M13] - values[M00] * values[M31] * values[M22] * values[M13]
+&nbsp;			- values[M20] * values[M01] * values[M32] * values[M13] + values[M00] * values[M21] * values[M32] * values[M13]
+&nbsp;			+ values[M30] * values[M11] * values[M02] * values[M23] - values[M10] * values[M31] * values[M02] * values[M23]
+&nbsp;			- values[M30] * values[M01] * values[M12] * values[M23] + values[M00] * values[M31] * values[M12] * values[M23]
+&nbsp;			+ values[M10] * values[M01] * values[M32] * values[M23] - values[M00] * values[M11] * values[M32] * values[M23]
+&nbsp;			- values[M20] * values[M11] * values[M02] * values[M33] + values[M10] * values[M21] * values[M02] * values[M33]
+&nbsp;			+ values[M20] * values[M01] * values[M12] * values[M33] - values[M00] * values[M21] * values[M12] * values[M33]
+&nbsp;			- values[M10] * values[M01] * values[M22] * values[M33] + values[M00] * values[M11] * values[M22] * values[M33];
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES&#39;
+&nbsp;	 * glTranslate/glRotate/glScale
+&nbsp;	 * @param translation
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 translate (Vector3 translation) {
+<b class="nc">&nbsp;		return translate(translation.x, translation.y, translation.z);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES&#39; 1.x
+&nbsp;	 * glTranslate/glRotate/glScale.
+&nbsp;	 * @param x Translation in the x-axis.
+&nbsp;	 * @param y Translation in the y-axis.
+&nbsp;	 * @param z Translation in the z-axis.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 translate (float x, float y, float z) {
+<b class="nc">&nbsp;		val[M03] += val[M00] * x + val[M01] * y + val[M02] * z;</b>
+<b class="nc">&nbsp;		val[M13] += val[M10] * x + val[M11] * y + val[M12] * z;</b>
+<b class="nc">&nbsp;		val[M23] += val[M20] * x + val[M21] * y + val[M22] * z;</b>
+<b class="nc">&nbsp;		val[M33] += val[M30] * x + val[M31] * y + val[M32] * z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES&#39; 1.x
+&nbsp;	 * glTranslate/glRotate/glScale.
+&nbsp;	 * @param axis The vector axis to rotate around.
+&nbsp;	 * @param degrees The angle in degrees.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 rotate (Vector3 axis, float degrees) {
+<b class="nc">&nbsp;		if (degrees == 0) return this;</b>
+<b class="nc">&nbsp;		quat.set(axis, degrees);</b>
+<b class="nc">&nbsp;		return rotate(quat);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES&#39; 1.x
+&nbsp;	 * glTranslate/glRotate/glScale.
+&nbsp;	 * @param axis The vector axis to rotate around.
+&nbsp;	 * @param radians The angle in radians.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 rotateRad (Vector3 axis, float radians) {
+<b class="nc">&nbsp;		if (radians == 0) return this;</b>
+<b class="nc">&nbsp;		quat.setFromAxisRad(axis, radians);</b>
+<b class="nc">&nbsp;		return rotate(quat);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES&#39; 1.x
+&nbsp;	 * glTranslate/glRotate/glScale
+&nbsp;	 * @param axisX The x-axis component of the vector to rotate around.
+&nbsp;	 * @param axisY The y-axis component of the vector to rotate around.
+&nbsp;	 * @param axisZ The z-axis component of the vector to rotate around.
+&nbsp;	 * @param degrees The angle in degrees
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 rotate (float axisX, float axisY, float axisZ, float degrees) {
+<b class="nc">&nbsp;		if (degrees == 0) return this;</b>
+<b class="nc">&nbsp;		quat.setFromAxis(axisX, axisY, axisZ, degrees);</b>
+<b class="nc">&nbsp;		return rotate(quat);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES&#39; 1.x
+&nbsp;	 * glTranslate/glRotate/glScale
+&nbsp;	 * @param axisX The x-axis component of the vector to rotate around.
+&nbsp;	 * @param axisY The y-axis component of the vector to rotate around.
+&nbsp;	 * @param axisZ The z-axis component of the vector to rotate around.
+&nbsp;	 * @param radians The angle in radians
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 rotateRad (float axisX, float axisY, float axisZ, float radians) {
+<b class="nc">&nbsp;		if (radians == 0) return this;</b>
+<b class="nc">&nbsp;		quat.setFromAxisRad(axisX, axisY, axisZ, radians);</b>
+<b class="nc">&nbsp;		return rotate(quat);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES&#39; 1.x
+&nbsp;	 * glTranslate/glRotate/glScale.
+&nbsp;	 * @param rotation
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 rotate (Quaternion rotation) {
+<b class="nc">&nbsp;		float x = rotation.x, y = rotation.y, z = rotation.z, w = rotation.w;</b>
+<b class="nc">&nbsp;		float xx = x * x;</b>
+<b class="nc">&nbsp;		float xy = x * y;</b>
+<b class="nc">&nbsp;		float xz = x * z;</b>
+<b class="nc">&nbsp;		float xw = x * w;</b>
+<b class="nc">&nbsp;		float yy = y * y;</b>
+<b class="nc">&nbsp;		float yz = y * z;</b>
+<b class="nc">&nbsp;		float yw = y * w;</b>
+<b class="nc">&nbsp;		float zz = z * z;</b>
+<b class="nc">&nbsp;		float zw = z * w;</b>
+&nbsp;		// Set matrix from quaternion
+<b class="nc">&nbsp;		float r00 = 1 - 2 * (yy + zz);</b>
+<b class="nc">&nbsp;		float r01 = 2 * (xy - zw);</b>
+<b class="nc">&nbsp;		float r02 = 2 * (xz + yw);</b>
+<b class="nc">&nbsp;		float r10 = 2 * (xy + zw);</b>
+<b class="nc">&nbsp;		float r11 = 1 - 2 * (xx + zz);</b>
+<b class="nc">&nbsp;		float r12 = 2 * (yz - xw);</b>
+<b class="nc">&nbsp;		float r20 = 2 * (xz - yw);</b>
+<b class="nc">&nbsp;		float r21 = 2 * (yz + xw);</b>
+<b class="nc">&nbsp;		float r22 = 1 - 2 * (xx + yy);</b>
+<b class="nc">&nbsp;		float m00 = val[M00] * r00 + val[M01] * r10 + val[M02] * r20;</b>
+<b class="nc">&nbsp;		float m01 = val[M00] * r01 + val[M01] * r11 + val[M02] * r21;</b>
+<b class="nc">&nbsp;		float m02 = val[M00] * r02 + val[M01] * r12 + val[M02] * r22;</b>
+<b class="nc">&nbsp;		float m10 = val[M10] * r00 + val[M11] * r10 + val[M12] * r20;</b>
+<b class="nc">&nbsp;		float m11 = val[M10] * r01 + val[M11] * r11 + val[M12] * r21;</b>
+<b class="nc">&nbsp;		float m12 = val[M10] * r02 + val[M11] * r12 + val[M12] * r22;</b>
+<b class="nc">&nbsp;		float m20 = val[M20] * r00 + val[M21] * r10 + val[M22] * r20;</b>
+<b class="nc">&nbsp;		float m21 = val[M20] * r01 + val[M21] * r11 + val[M22] * r21;</b>
+<b class="nc">&nbsp;		float m22 = val[M20] * r02 + val[M21] * r12 + val[M22] * r22;</b>
+<b class="nc">&nbsp;		float m30 = val[M30] * r00 + val[M31] * r10 + val[M32] * r20;</b>
+<b class="nc">&nbsp;		float m31 = val[M30] * r01 + val[M31] * r11 + val[M32] * r21;</b>
+<b class="nc">&nbsp;		float m32 = val[M30] * r02 + val[M31] * r12 + val[M32] * r22;</b>
+<b class="nc">&nbsp;		val[M00] = m00;</b>
+<b class="nc">&nbsp;		val[M10] = m10;</b>
+<b class="nc">&nbsp;		val[M20] = m20;</b>
+<b class="nc">&nbsp;		val[M30] = m30;</b>
+<b class="nc">&nbsp;		val[M01] = m01;</b>
+<b class="nc">&nbsp;		val[M11] = m11;</b>
+<b class="nc">&nbsp;		val[M21] = m21;</b>
+<b class="nc">&nbsp;		val[M31] = m31;</b>
+<b class="nc">&nbsp;		val[M02] = m02;</b>
+<b class="nc">&nbsp;		val[M12] = m12;</b>
+<b class="nc">&nbsp;		val[M22] = m22;</b>
+<b class="nc">&nbsp;		val[M32] = m32;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix by the rotation between two vectors.
+&nbsp;	 * @param v1 The base vector
+&nbsp;	 * @param v2 The target vector
+&nbsp;	 * @return This matrix for the purpose of chaining methods together */
+&nbsp;	public Matrix4 rotate (final Vector3 v1, final Vector3 v2) {
+<b class="nc">&nbsp;		return rotate(quat.setFromCross(v1, v2));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Post-multiplies this matrix by a rotation toward a direction.
+&nbsp;	 * @param direction direction to rotate toward
+&nbsp;	 * @param up up vector
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 rotateTowardDirection (final Vector3 direction, final Vector3 up) {
+<b class="nc">&nbsp;		l_vez.set(direction).nor();</b>
+<b class="nc">&nbsp;		l_vex.set(direction).crs(up).nor();</b>
+<b class="nc">&nbsp;		l_vey.set(l_vex).crs(l_vez).nor();</b>
+<b class="nc">&nbsp;		float m00 = val[M00] * l_vex.x + val[M01] * l_vex.y + val[M02] * l_vex.z;</b>
+<b class="nc">&nbsp;		float m01 = val[M00] * l_vey.x + val[M01] * l_vey.y + val[M02] * l_vey.z;</b>
+<b class="nc">&nbsp;		float m02 = val[M00] * -l_vez.x + val[M01] * -l_vez.y + val[M02] * -l_vez.z;</b>
+<b class="nc">&nbsp;		float m10 = val[M10] * l_vex.x + val[M11] * l_vex.y + val[M12] * l_vex.z;</b>
+<b class="nc">&nbsp;		float m11 = val[M10] * l_vey.x + val[M11] * l_vey.y + val[M12] * l_vey.z;</b>
+<b class="nc">&nbsp;		float m12 = val[M10] * -l_vez.x + val[M11] * -l_vez.y + val[M12] * -l_vez.z;</b>
+<b class="nc">&nbsp;		float m20 = val[M20] * l_vex.x + val[M21] * l_vex.y + val[M22] * l_vex.z;</b>
+<b class="nc">&nbsp;		float m21 = val[M20] * l_vey.x + val[M21] * l_vey.y + val[M22] * l_vey.z;</b>
+<b class="nc">&nbsp;		float m22 = val[M20] * -l_vez.x + val[M21] * -l_vez.y + val[M22] * -l_vez.z;</b>
+<b class="nc">&nbsp;		float m30 = val[M30] * l_vex.x + val[M31] * l_vex.y + val[M32] * l_vex.z;</b>
+<b class="nc">&nbsp;		float m31 = val[M30] * l_vey.x + val[M31] * l_vey.y + val[M32] * l_vey.z;</b>
+<b class="nc">&nbsp;		float m32 = val[M30] * -l_vez.x + val[M31] * -l_vez.y + val[M32] * -l_vez.z;</b>
+<b class="nc">&nbsp;		val[M00] = m00;</b>
+<b class="nc">&nbsp;		val[M10] = m10;</b>
+<b class="nc">&nbsp;		val[M20] = m20;</b>
+<b class="nc">&nbsp;		val[M30] = m30;</b>
+<b class="nc">&nbsp;		val[M01] = m01;</b>
+<b class="nc">&nbsp;		val[M11] = m11;</b>
+<b class="nc">&nbsp;		val[M21] = m21;</b>
+<b class="nc">&nbsp;		val[M31] = m31;</b>
+<b class="nc">&nbsp;		val[M02] = m02;</b>
+<b class="nc">&nbsp;		val[M12] = m12;</b>
+<b class="nc">&nbsp;		val[M22] = m22;</b>
+<b class="nc">&nbsp;		val[M32] = m32;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Post-multiplies this matrix by a rotation toward a target.
+&nbsp;	 * @param target the target to rotate to
+&nbsp;	 * @param up the up vector
+&nbsp;	 * @return This matrix for chaining */
+&nbsp;	public Matrix4 rotateTowardTarget (final Vector3 target, final Vector3 up) {
+<b class="nc">&nbsp;		tmpVec.set(target.x - val[M03], target.y - val[M13], target.z - val[M23]);</b>
+<b class="nc">&nbsp;		return rotateTowardDirection(tmpVec, up);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Postmultiplies this matrix with a scale matrix. Postmultiplication is also used by OpenGL ES&#39; 1.x
+&nbsp;	 * glTranslate/glRotate/glScale.
+&nbsp;	 * @param scaleX The scale in the x-axis.
+&nbsp;	 * @param scaleY The scale in the y-axis.
+&nbsp;	 * @param scaleZ The scale in the z-axis.
+&nbsp;	 * @return This matrix for the purpose of chaining methods together. */
+&nbsp;	public Matrix4 scale (float scaleX, float scaleY, float scaleZ) {
+<b class="nc">&nbsp;		val[M00] *= scaleX;</b>
+<b class="nc">&nbsp;		val[M01] *= scaleY;</b>
+<b class="nc">&nbsp;		val[M02] *= scaleZ;</b>
+<b class="nc">&nbsp;		val[M10] *= scaleX;</b>
+<b class="nc">&nbsp;		val[M11] *= scaleY;</b>
+<b class="nc">&nbsp;		val[M12] *= scaleZ;</b>
+<b class="nc">&nbsp;		val[M20] *= scaleX;</b>
+<b class="nc">&nbsp;		val[M21] *= scaleY;</b>
+<b class="nc">&nbsp;		val[M22] *= scaleZ;</b>
+<b class="nc">&nbsp;		val[M30] *= scaleX;</b>
+<b class="nc">&nbsp;		val[M31] *= scaleY;</b>
+<b class="nc">&nbsp;		val[M32] *= scaleZ;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Copies the 4x3 upper-left sub-matrix into float array. The destination array is supposed to be a column major matrix.
+&nbsp;	 * @param dst the destination matrix */
+&nbsp;	public void extract4x3Matrix (float[] dst) {
+<b class="nc">&nbsp;		dst[0] = val[M00];</b>
+<b class="nc">&nbsp;		dst[1] = val[M10];</b>
+<b class="nc">&nbsp;		dst[2] = val[M20];</b>
+<b class="nc">&nbsp;		dst[3] = val[M01];</b>
+<b class="nc">&nbsp;		dst[4] = val[M11];</b>
+<b class="nc">&nbsp;		dst[5] = val[M21];</b>
+<b class="nc">&nbsp;		dst[6] = val[M02];</b>
+<b class="nc">&nbsp;		dst[7] = val[M12];</b>
+<b class="nc">&nbsp;		dst[8] = val[M22];</b>
+<b class="nc">&nbsp;		dst[9] = val[M03];</b>
+<b class="nc">&nbsp;		dst[10] = val[M13];</b>
+<b class="nc">&nbsp;		dst[11] = val[M23];</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return True if this matrix has any rotation or scaling, false otherwise */
+&nbsp;	public boolean hasRotationOrScaling () {
+<b class="nc">&nbsp;		return !(MathUtils.isEqual(val[M00], 1) &amp;&amp; MathUtils.isEqual(val[M11], 1) &amp;&amp; MathUtils.isEqual(val[M22], 1)</b>
+<b class="nc">&nbsp;			&amp;&amp; MathUtils.isZero(val[M01]) &amp;&amp; MathUtils.isZero(val[M02]) &amp;&amp; MathUtils.isZero(val[M10]) &amp;&amp; MathUtils.isZero(val[M12])</b>
+<b class="nc">&nbsp;			&amp;&amp; MathUtils.isZero(val[M20]) &amp;&amp; MathUtils.isZero(val[M21]));</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

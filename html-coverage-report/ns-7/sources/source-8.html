@@ -1,0 +1,152 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Preferences</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx</a>
+</div>
+
+<h1>Coverage Summary for Class: Preferences (com.badlogic.gdx)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Preferences</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * A Preference instance is a hash map holding different values. It is stored alongside your application (SharedPreferences on
+&nbsp; * Android, LocalStorage on GWT, on the desktop a Java Preferences file in a &quot;.prefs&quot; directory will be created, and on iOS an
+&nbsp; * NSMutableDictionary will be written to the given file). CAUTION: On the desktop platform, all libGDX applications share the
+&nbsp; * same &quot;.prefs&quot; directory. To avoid collisions use specific names like &quot;com.myname.game1.settings&quot; instead of &quot;settings&quot;.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * To persist changes made to a preferences instance {@link #flush()} has to be invoked. With the exception of Android, changes
+&nbsp; * are cached in memory prior to flushing. On iOS changes are not synchronized between different preferences instances.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Use {@link Application#getPreferences(String)} to look up a specific preferences instance. Note that on several backends the
+&nbsp; * preferences name will be used as the filename, so make sure the name is valid for a filename.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * @author mzechner */
+&nbsp;public interface Preferences {
+&nbsp;	public Preferences putBoolean (String key, boolean val);
+&nbsp;
+&nbsp;	public Preferences putInteger (String key, int val);
+&nbsp;
+&nbsp;	public Preferences putLong (String key, long val);
+&nbsp;
+&nbsp;	public Preferences putFloat (String key, float val);
+&nbsp;
+&nbsp;	public Preferences putString (String key, String val);
+&nbsp;
+&nbsp;	public Preferences put (Map&lt;String, ?&gt; vals);
+&nbsp;
+&nbsp;	public boolean getBoolean (String key);
+&nbsp;
+&nbsp;	public int getInteger (String key);
+&nbsp;
+&nbsp;	public long getLong (String key);
+&nbsp;
+&nbsp;	public float getFloat (String key);
+&nbsp;
+&nbsp;	public String getString (String key);
+&nbsp;
+&nbsp;	public boolean getBoolean (String key, boolean defValue);
+&nbsp;
+&nbsp;	public int getInteger (String key, int defValue);
+&nbsp;
+&nbsp;	public long getLong (String key, long defValue);
+&nbsp;
+&nbsp;	public float getFloat (String key, float defValue);
+&nbsp;
+&nbsp;	public String getString (String key, String defValue);
+&nbsp;
+&nbsp;	/** Returns a read only Map&lt;String, Object&gt; with all the key, objects of the preferences. */
+&nbsp;	public Map&lt;String, ?&gt; get ();
+&nbsp;
+&nbsp;	public boolean contains (String key);
+&nbsp;
+&nbsp;	public void clear ();
+&nbsp;
+&nbsp;	public void remove (String key);
+&nbsp;
+&nbsp;	/** Makes sure the preferences are persisted. */
+&nbsp;	public void flush ();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

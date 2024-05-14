@@ -1,0 +1,462 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MockitoCore</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.mockito.internal</a>
+</div>
+
+<h1>Coverage Summary for Class: MockitoCore (org.mockito.internal)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MockitoCore</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    19.2%
+  </span>
+  <span class="absValue">
+    (5/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.8%
+  </span>
+  <span class="absValue">
+    (8/58)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.5%
+  </span>
+  <span class="absValue">
+    (24/155)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package org.mockito.internal;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Iterator;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.function.Function;
+&nbsp;import org.mockito.InOrder;
+&nbsp;import org.mockito.MockSettings;
+&nbsp;import org.mockito.MockedConstruction;
+&nbsp;import org.mockito.MockedStatic;
+&nbsp;import org.mockito.MockingDetails;
+&nbsp;import org.mockito.exceptions.misusing.DoNotMockException;
+&nbsp;import org.mockito.exceptions.misusing.NotAMockException;
+&nbsp;import org.mockito.internal.configuration.plugins.Plugins;
+&nbsp;import org.mockito.internal.creation.MockSettingsImpl;
+&nbsp;import org.mockito.internal.exceptions.Reporter;
+&nbsp;import org.mockito.internal.invocation.InvocationMatcher;
+&nbsp;import org.mockito.internal.invocation.finder.VerifiableInvocationsFinder;
+&nbsp;import org.mockito.internal.listeners.VerificationStartedNotifier;
+&nbsp;import org.mockito.internal.progress.MockingProgress;
+&nbsp;import org.mockito.internal.progress.ThreadSafeMockingProgress;
+&nbsp;import org.mockito.internal.stubbing.DefaultLenientStubber;
+&nbsp;import org.mockito.internal.stubbing.InvocationContainerImpl;
+&nbsp;import org.mockito.internal.stubbing.OngoingStubbingImpl;
+&nbsp;import org.mockito.internal.stubbing.StubberImpl;
+&nbsp;import org.mockito.internal.util.DefaultMockingDetails;
+&nbsp;import org.mockito.internal.util.MockUtil;
+&nbsp;import org.mockito.internal.verification.MockAwareVerificationMode;
+&nbsp;import org.mockito.internal.verification.VerificationDataImpl;
+&nbsp;import org.mockito.internal.verification.VerificationModeFactory;
+&nbsp;import org.mockito.internal.verification.api.InOrderContext;
+&nbsp;import org.mockito.internal.verification.api.VerificationDataInOrder;
+&nbsp;import org.mockito.internal.verification.api.VerificationDataInOrderImpl;
+&nbsp;import org.mockito.invocation.Invocation;
+&nbsp;import org.mockito.invocation.MatchableInvocation;
+&nbsp;import org.mockito.invocation.MockHandler;
+&nbsp;import org.mockito.mock.MockCreationSettings;
+&nbsp;import org.mockito.plugins.DoNotMockEnforcer;
+&nbsp;import org.mockito.plugins.MockMaker;
+&nbsp;import org.mockito.quality.Strictness;
+&nbsp;import org.mockito.stubbing.LenientStubber;
+&nbsp;import org.mockito.stubbing.OngoingStubbing;
+&nbsp;import org.mockito.stubbing.Stubber;
+&nbsp;import org.mockito.verification.VerificationMode;
+&nbsp;
+&nbsp;public class MockitoCore {
+&nbsp;    private static final DoNotMockEnforcer DO_NOT_MOCK_ENFORCER = Plugins.getDoNotMockEnforcer();
+&nbsp;    private static final Set&lt;Class&lt;?&gt;&gt; MOCKABLE_CLASSES = Collections.synchronizedSet(new HashSet());
+&nbsp;
+&nbsp;    public MockitoCore() {
+&nbsp;    }
+&nbsp;
+&nbsp;    public &lt;T&gt; T mock(Class&lt;T&gt; typeToMock, MockSettings settings) {
+&nbsp;        if (!(settings instanceof MockSettingsImpl)) {
+&nbsp;            throw new IllegalArgumentException(&quot;Unexpected implementation of &#39;&quot; + settings.getClass().getCanonicalName() + &quot;&#39;\nAt the moment, you cannot provide your own implementations of that class.&quot;);
+&nbsp;        } else {
+&nbsp;            MockSettingsImpl impl = (MockSettingsImpl)settings;
+&nbsp;            MockCreationSettings&lt;T&gt; creationSettings = impl.build(typeToMock);
+&nbsp;            this.checkDoNotMockAnnotation(creationSettings.getTypeToMock(), creationSettings);
+&nbsp;            T mock = MockUtil.createMock(creationSettings);
+&nbsp;            ThreadSafeMockingProgress.mockingProgress().mockingStarted(mock, creationSettings);
+&nbsp;            return mock;
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    private void checkDoNotMockAnnotation(Class&lt;?&gt; typeToMock, MockCreationSettings&lt;?&gt; creationSettings) {</b>
+<b class="fc">&nbsp;        checkDoNotMockAnnotationForType(typeToMock);</b>
+&nbsp;        Iterator var3 = creationSettings.getExtraInterfaces().iterator();
+&nbsp;
+<b class="pc">&nbsp;        while(var3.hasNext()) {</b>
+<b class="nc">&nbsp;            Class&lt;?&gt; aClass = (Class)var3.next();</b>
+&nbsp;            checkDoNotMockAnnotationForType(aClass);
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    private static void checkDoNotMockAnnotationForType(Class&lt;?&gt; type) {</b>
+<b class="fc">&nbsp;        if (type != null) {</b>
+<b class="fc">&nbsp;            if (!MOCKABLE_CLASSES.contains(type)) {</b>
+<b class="fc">&nbsp;                String warning = DO_NOT_MOCK_ENFORCER.checkTypeForDoNotMockViolation(type);</b>
+<b class="fc">&nbsp;                if (warning != null) {</b>
+<b class="fc">&nbsp;                    throw new DoNotMockException(warning);</b>
+&nbsp;                } else {
+&nbsp;                    checkDoNotMockAnnotationForType(type.getSuperclass());
+&nbsp;                    Class[] var2 = type.getInterfaces();
+&nbsp;                    int var3 = var2.length;
+<b class="fc">&nbsp;</b>
+<b class="pc">&nbsp;                    for(int var4 = 0; var4 &lt; var3; ++var4) {</b>
+<b class="nc">&nbsp;                        Class&lt;?&gt; aClass = var2[var4];</b>
+<b class="nc">&nbsp;                        checkDoNotMockAnnotationForType(aClass);</b>
+<b class="fc">&nbsp;                    }</b>
+&nbsp;
+&nbsp;                    MOCKABLE_CLASSES.add(type);
+&nbsp;                }
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public &lt;T&gt; MockedStatic&lt;T&gt; mockStatic(Class&lt;T&gt; classToMock, MockSettings settings) {</b>
+<b class="fc">&nbsp;        if (!MockSettingsImpl.class.isInstance(settings)) {</b>
+&nbsp;            throw new IllegalArgumentException(&quot;Unexpected implementation of &#39;&quot; + settings.getClass().getCanonicalName() + &quot;&#39;\nAt the moment, you cannot provide your own implementations of that class.&quot;);
+&nbsp;        } else {
+<b class="fc">&nbsp;            MockSettingsImpl impl = (MockSettingsImpl)MockSettingsImpl.class.cast(settings);</b>
+<b class="pc">&nbsp;            MockCreationSettings&lt;T&gt; creationSettings = impl.buildStatic(classToMock);</b>
+<b class="nc">&nbsp;            MockMaker.StaticMockControl&lt;T&gt; control = MockUtil.createStaticMock(classToMock, creationSettings);</b>
+&nbsp;            control.enable();
+&nbsp;            ThreadSafeMockingProgress.mockingProgress().mockingStarted(classToMock, creationSettings);
+<b class="fc">&nbsp;            return new MockedStaticImpl(control);</b>
+<b class="pc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public &lt;T&gt; MockedConstruction&lt;T&gt; mockConstruction(Class&lt;T&gt; typeToMock, Function&lt;MockedConstruction.Context, ? extends MockSettings&gt; settingsFactory, MockedConstruction.MockInitializer&lt;T&gt; mockInitializer) {
+<b class="fc">&nbsp;        Function&lt;MockedConstruction.Context, MockCreationSettings&lt;T&gt;&gt; creationSettings = (context) -&gt; {</b>
+<b class="fc">&nbsp;            MockSettings value = (MockSettings)settingsFactory.apply(context);</b>
+&nbsp;            if (!MockSettingsImpl.class.isInstance(value)) {
+&nbsp;                throw new IllegalArgumentException(&quot;Unexpected implementation of &#39;&quot; + value.getClass().getCanonicalName() + &quot;&#39;\nAt the moment, you cannot provide your own implementations of that class.&quot;);
+<b class="nc">&nbsp;            } else {</b>
+<b class="nc">&nbsp;                MockSettingsImpl impl = (MockSettingsImpl)MockSettingsImpl.class.cast(value);</b>
+&nbsp;                String mockMaker = impl.getMockMaker();
+<b class="nc">&nbsp;                if (mockMaker != null) {</b>
+&nbsp;                    throw new IllegalArgumentException(&quot;Unexpected MockMaker &#39;&quot; + mockMaker + &quot;&#39;\nAt the moment, you cannot override the MockMaker for construction mocks.&quot;);
+&nbsp;                } else {
+&nbsp;                    return impl.build(typeToMock);
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        };</b>
+<b class="nc">&nbsp;        MockMaker.ConstructionMockControl&lt;T&gt; control = MockUtil.createConstructionMock(typeToMock, creationSettings, mockInitializer);</b>
+<b class="nc">&nbsp;        control.enable();</b>
+<b class="nc">&nbsp;        return new MockedConstructionImpl(control);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public &lt;T&gt; OngoingStubbing&lt;T&gt; when(T methodCall) {
+&nbsp;        MockingProgress mockingProgress = ThreadSafeMockingProgress.mockingProgress();
+&nbsp;        mockingProgress.stubbingStarted();
+&nbsp;        OngoingStubbing&lt;T&gt; stubbing = mockingProgress.pullOngoingStubbing();
+<b class="nc">&nbsp;        if (stubbing == null) {</b>
+&nbsp;            mockingProgress.reset();
+<b class="nc">&nbsp;            throw Reporter.missingMethodInvocation();</b>
+<b class="nc">&nbsp;        } else {</b>
+<b class="nc">&nbsp;            return stubbing;</b>
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public &lt;T&gt; T verify(T mock, VerificationMode mode) {
+&nbsp;        if (mock == null) {
+<b class="nc">&nbsp;            throw Reporter.nullPassedToVerify();</b>
+<b class="nc">&nbsp;        } else {</b>
+<b class="nc">&nbsp;            MockingDetails mockingDetails = this.mockingDetails(mock);</b>
+<b class="nc">&nbsp;            if (!mockingDetails.isMock()) {</b>
+&nbsp;                throw Reporter.notAMockPassedToVerify(mock.getClass());
+&nbsp;            } else {
+&nbsp;                this.assertNotStubOnlyMock(mock);
+&nbsp;                MockHandler handler = mockingDetails.getMockHandler();
+&nbsp;                mock = VerificationStartedNotifier.notifyVerificationStarted(handler.getMockSettings().getVerificationStartedListeners(), mockingDetails);
+<b class="nc">&nbsp;                MockingProgress mockingProgress = ThreadSafeMockingProgress.mockingProgress();</b>
+&nbsp;                VerificationMode actualMode = mockingProgress.maybeVerifyLazily(mode);
+<b class="nc">&nbsp;                mockingProgress.verificationStarted(new MockAwareVerificationMode(mock, actualMode, mockingProgress.verificationListeners()));</b>
+<b class="nc">&nbsp;                return mock;</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public &lt;T&gt; void reset(T... mocks) {
+<b class="nc">&nbsp;        MockingProgress mockingProgress = ThreadSafeMockingProgress.mockingProgress();</b>
+<b class="nc">&nbsp;        mockingProgress.validateState();</b>
+&nbsp;        mockingProgress.reset();
+<b class="nc">&nbsp;        mockingProgress.resetOngoingStubbing();</b>
+<b class="nc">&nbsp;        Object[] var3 = mocks;</b>
+<b class="nc">&nbsp;        int var4 = mocks.length;</b>
+<b class="nc">&nbsp;</b>
+&nbsp;        for(int var5 = 0; var5 &lt; var4; ++var5) {
+<b class="nc">&nbsp;            T m = var3[var5];</b>
+&nbsp;            MockUtil.resetMock(m);
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public &lt;T&gt; void clearInvocations(T... mocks) {
+<b class="nc">&nbsp;        MockingProgress mockingProgress = ThreadSafeMockingProgress.mockingProgress();</b>
+<b class="nc">&nbsp;        mockingProgress.validateState();</b>
+<b class="nc">&nbsp;        mockingProgress.reset();</b>
+&nbsp;        mockingProgress.resetOngoingStubbing();
+<b class="nc">&nbsp;        Object[] var3 = mocks;</b>
+<b class="nc">&nbsp;        int var4 = mocks.length;</b>
+<b class="nc">&nbsp;</b>
+&nbsp;        for(int var5 = 0; var5 &lt; var4; ++var5) {
+<b class="nc">&nbsp;            T m = var3[var5];</b>
+<b class="nc">&nbsp;            MockUtil.getInvocationContainer(m).clearInvocations();</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public void verifyNoMoreInteractions(Object... mocks) {</b>
+&nbsp;        this.assertMocksNotEmpty(mocks);
+<b class="nc">&nbsp;        ThreadSafeMockingProgress.mockingProgress().validateState();</b>
+<b class="nc">&nbsp;        Object[] var2 = mocks;</b>
+&nbsp;        int var3 = mocks.length;
+&nbsp;
+&nbsp;        for(int var4 = 0; var4 &lt; var3; ++var4) {
+<b class="nc">&nbsp;            Object mock = var2[var4];</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            try {</b>
+<b class="nc">&nbsp;                if (mock == null) {</b>
+&nbsp;                    throw Reporter.nullPassedToVerifyNoMoreInteractions();
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;                InvocationContainerImpl invocations = MockUtil.getInvocationContainer(mock);
+<b class="nc">&nbsp;                this.assertNotStubOnlyMock(mock);</b>
+&nbsp;                VerificationDataImpl data = new VerificationDataImpl(invocations, (InvocationMatcher)null);
+&nbsp;                VerificationModeFactory.noMoreInteractions().verify(data);
+<b class="nc">&nbsp;            } catch (NotAMockException var8) {</b>
+<b class="nc">&nbsp;                throw Reporter.notAMockPassedToVerifyNoMoreInteractions();</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public void verifyNoInteractions(Object... mocks) {
+<b class="nc">&nbsp;        this.assertMocksNotEmpty(mocks);</b>
+&nbsp;        ThreadSafeMockingProgress.mockingProgress().validateState();
+&nbsp;        Object[] var2 = mocks;
+<b class="nc">&nbsp;        int var3 = mocks.length;</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        for(int var4 = 0; var4 &lt; var3; ++var4) {</b>
+&nbsp;            Object mock = var2[var4];
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            try {</b>
+&nbsp;                if (mock == null) {
+<b class="nc">&nbsp;                    throw Reporter.nullPassedToVerifyNoMoreInteractions();</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;                InvocationContainerImpl invocations = MockUtil.getInvocationContainer(mock);</b>
+<b class="nc">&nbsp;                this.assertNotStubOnlyMock(mock);</b>
+<b class="nc">&nbsp;                VerificationDataImpl data = new VerificationDataImpl(invocations, (InvocationMatcher)null);</b>
+&nbsp;                VerificationModeFactory.noInteractions().verify(data);
+&nbsp;            } catch (NotAMockException var8) {
+<b class="nc">&nbsp;                throw Reporter.notAMockPassedToVerifyNoMoreInteractions();</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public void verifyNoMoreInteractionsInOrder(List&lt;Object&gt; mocks, InOrderContext inOrderContext) {
+<b class="nc">&nbsp;        ThreadSafeMockingProgress.mockingProgress().validateState();</b>
+<b class="nc">&nbsp;        VerificationDataInOrder data = new VerificationDataInOrderImpl(inOrderContext, VerifiableInvocationsFinder.find(mocks), (MatchableInvocation)null);</b>
+&nbsp;        VerificationModeFactory.noMoreInteractions().verifyInOrder(data);
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    private void assertMocksNotEmpty(Object[] mocks) {</b>
+<b class="nc">&nbsp;        if (mocks == null || mocks.length == 0) {</b>
+<b class="nc">&nbsp;            throw Reporter.mocksHaveToBePassedToVerifyNoMoreInteractions();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    private void assertNotStubOnlyMock(Object mock) {</b>
+&nbsp;        if (MockUtil.getMockHandler(mock).getMockSettings().isStubOnly()) {
+&nbsp;            throw Reporter.stubPassedToVerify(mock);
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+<b class="nc">&nbsp;    public InOrder inOrder(Object... mocks) {</b>
+<b class="nc">&nbsp;        if (mocks != null &amp;&amp; mocks.length != 0) {</b>
+<b class="nc">&nbsp;            Object[] var2 = mocks;</b>
+&nbsp;            int var3 = mocks.length;
+&nbsp;
+<b class="nc">&nbsp;            for(int var4 = 0; var4 &lt; var3; ++var4) {</b>
+<b class="nc">&nbsp;                Object mock = var2[var4];</b>
+&nbsp;                if (mock == null) {
+<b class="nc">&nbsp;                    throw Reporter.nullPassedWhenCreatingInOrder();</b>
+&nbsp;                }
+&nbsp;
+<b class="nc">&nbsp;                if (!MockUtil.isMock(mock)) {</b>
+<b class="nc">&nbsp;                    throw Reporter.notAMockPassedWhenCreatingInOrder();</b>
+&nbsp;                }
+<b class="nc">&nbsp;</b>
+&nbsp;                this.assertNotStubOnlyMock(mock);
+&nbsp;            }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            return new InOrderImpl(Arrays.asList(mocks));</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            throw Reporter.mocksHaveToBePassedWhenCreatingInOrder();</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+<b class="nc">&nbsp;    public Stubber stubber() {</b>
+<b class="nc">&nbsp;        return this.stubber((Strictness)null);</b>
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public Stubber stubber(Strictness strictness) {
+<b class="nc">&nbsp;        MockingProgress mockingProgress = ThreadSafeMockingProgress.mockingProgress();</b>
+&nbsp;        mockingProgress.stubbingStarted();
+&nbsp;        mockingProgress.resetOngoingStubbing();
+&nbsp;        return new StubberImpl(strictness);
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void validateMockitoUsage() {
+&nbsp;        ThreadSafeMockingProgress.mockingProgress().validateState();
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public Invocation getLastInvocation() {</b>
+<b class="nc">&nbsp;        OngoingStubbingImpl ongoingStubbing = (OngoingStubbingImpl)ThreadSafeMockingProgress.mockingProgress().pullOngoingStubbing();</b>
+&nbsp;        List&lt;Invocation&gt; allInvocations = ongoingStubbing.getRegisteredInvocations();
+&nbsp;        return (Invocation)allInvocations.get(allInvocations.size() - 1);
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public Object[] ignoreStubs(Object... mocks) {</b>
+&nbsp;        Object[] var2 = mocks;
+&nbsp;        int var3 = mocks.length;
+&nbsp;
+&nbsp;        for(int var4 = 0; var4 &lt; var3; ++var4) {
+&nbsp;            Object m = var2[var4];
+&nbsp;            InvocationContainerImpl container = MockUtil.getInvocationContainer(m);
+&nbsp;            List&lt;Invocation&gt; ins = container.getInvocations();
+&nbsp;            Iterator var8 = ins.iterator();
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            while(var8.hasNext()) {</b>
+<b class="nc">&nbsp;                Invocation in = (Invocation)var8.next();</b>
+&nbsp;                if (in.stubInfo() != null) {
+&nbsp;                    in.ignoreForVerification();
+&nbsp;                }
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        return mocks;</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public MockingDetails mockingDetails(Object toInspect) {
+<b class="nc">&nbsp;        return new DefaultMockingDetails(toInspect);</b>
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public LenientStubber lenient() {
+&nbsp;        return new DefaultLenientStubber();
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public void clearAllCaches() {
+&nbsp;        MockUtil.clearAllCaches();
+&nbsp;    }
+<b class="nc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

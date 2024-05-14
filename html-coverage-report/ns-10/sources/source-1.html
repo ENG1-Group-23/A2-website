@@ -1,0 +1,383 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Camera</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics</a>
+</div>
+
+<h1>Coverage Summary for Class: Camera (com.badlogic.gdx.graphics)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Camera</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.6%
+  </span>
+  <span class="absValue">
+    (1/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    19.7%
+  </span>
+  <span class="absValue">
+    (15/76)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.Graphics;
+&nbsp;import com.badlogic.gdx.Input;
+&nbsp;import com.badlogic.gdx.graphics.g2d.Batch;
+&nbsp;import com.badlogic.gdx.math.Frustum;
+&nbsp;import com.badlogic.gdx.math.Matrix4;
+&nbsp;import com.badlogic.gdx.math.Quaternion;
+&nbsp;import com.badlogic.gdx.math.Vector3;
+&nbsp;import com.badlogic.gdx.math.collision.Ray;
+&nbsp;
+&nbsp;/** Base class for {@link OrthographicCamera} and {@link PerspectiveCamera}.
+&nbsp; * @author mzechner */
+<b class="fc">&nbsp;public abstract class Camera {</b>
+&nbsp;	/** the position of the camera **/
+<b class="fc">&nbsp;	public final Vector3 position = new Vector3();</b>
+&nbsp;	/** the unit length direction vector of the camera **/
+<b class="fc">&nbsp;	public final Vector3 direction = new Vector3(0, 0, -1);</b>
+&nbsp;	/** the unit length up vector of the camera **/
+<b class="fc">&nbsp;	public final Vector3 up = new Vector3(0, 1, 0);</b>
+&nbsp;
+&nbsp;	/** the projection matrix **/
+<b class="fc">&nbsp;	public final Matrix4 projection = new Matrix4();</b>
+&nbsp;	/** the view matrix **/
+<b class="fc">&nbsp;	public final Matrix4 view = new Matrix4();</b>
+&nbsp;	/** the combined projection and view matrix **/
+<b class="fc">&nbsp;	public final Matrix4 combined = new Matrix4();</b>
+&nbsp;	/** the inverse combined projection and view matrix **/
+<b class="fc">&nbsp;	public final Matrix4 invProjectionView = new Matrix4();</b>
+&nbsp;
+&nbsp;	/** the near clipping plane distance, has to be positive **/
+<b class="fc">&nbsp;	public float near = 1;</b>
+&nbsp;	/** the far clipping plane distance, has to be positive **/
+<b class="fc">&nbsp;	public float far = 100;</b>
+&nbsp;
+&nbsp;	/** the viewport width **/
+<b class="fc">&nbsp;	public float viewportWidth = 0;</b>
+&nbsp;	/** the viewport height **/
+<b class="fc">&nbsp;	public float viewportHeight = 0;</b>
+&nbsp;
+&nbsp;	/** the frustum **/
+<b class="fc">&nbsp;	public final Frustum frustum = new Frustum();</b>
+&nbsp;
+<b class="fc">&nbsp;	private final Vector3 tmpVec = new Vector3();</b>
+<b class="fc">&nbsp;	private final Ray ray = new Ray(new Vector3(), new Vector3());</b>
+&nbsp;
+&nbsp;	/** Recalculates the projection and view matrix of this camera and the {@link Frustum} planes. Use this after you&#39;ve
+&nbsp;	 * manipulated any of the attributes of the camera. */
+&nbsp;	public abstract void update ();
+&nbsp;
+&nbsp;	/** Recalculates the projection and view matrix of this camera and the {@link Frustum} planes if &lt;code&gt;updateFrustum&lt;/code&gt; is
+&nbsp;	 * true. Use this after you&#39;ve manipulated any of the attributes of the camera. */
+&nbsp;	public abstract void update (boolean updateFrustum);
+&nbsp;
+&nbsp;	/** Recalculates the direction of the camera to look at the point (x, y, z). This function assumes the up vector is normalized.
+&nbsp;	 * @param x the x-coordinate of the point to look at
+&nbsp;	 * @param y the y-coordinate of the point to look at
+&nbsp;	 * @param z the z-coordinate of the point to look at */
+&nbsp;	public void lookAt (float x, float y, float z) {
+<b class="nc">&nbsp;		tmpVec.set(x, y, z).sub(position).nor();</b>
+<b class="nc">&nbsp;		if (!tmpVec.isZero()) {</b>
+<b class="nc">&nbsp;			float dot = tmpVec.dot(up); // up and direction must ALWAYS be orthonormal vectors</b>
+<b class="nc">&nbsp;			if (Math.abs(dot - 1) &lt; 0.000000001f) {</b>
+&nbsp;				// Collinear
+<b class="nc">&nbsp;				up.set(direction).scl(-1);</b>
+<b class="nc">&nbsp;			} else if (Math.abs(dot + 1) &lt; 0.000000001f) {</b>
+&nbsp;				// Collinear opposite
+<b class="nc">&nbsp;				up.set(direction);</b>
+&nbsp;			}
+<b class="nc">&nbsp;			direction.set(tmpVec);</b>
+<b class="nc">&nbsp;			normalizeUp();</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Recalculates the direction of the camera to look at the point (x, y, z).
+&nbsp;	 * @param target the point to look at */
+&nbsp;	public void lookAt (Vector3 target) {
+<b class="nc">&nbsp;		lookAt(target.x, target.y, target.z);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Normalizes the up vector by first calculating the right vector via a cross product between direction and up, and then
+&nbsp;	 * recalculating the up vector via a cross product between right and direction. */
+&nbsp;	public void normalizeUp () {
+<b class="nc">&nbsp;		tmpVec.set(direction).crs(up);</b>
+<b class="nc">&nbsp;		up.set(tmpVec).crs(direction).nor();</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Rotates the direction and up vector of this camera by the given angle around the given axis. The direction and up vector
+&nbsp;	 * will not be orthogonalized.
+&nbsp;	 * 
+&nbsp;	 * @param angle the angle
+&nbsp;	 * @param axisX the x-component of the axis
+&nbsp;	 * @param axisY the y-component of the axis
+&nbsp;	 * @param axisZ the z-component of the axis */
+&nbsp;	public void rotate (float angle, float axisX, float axisY, float axisZ) {
+<b class="nc">&nbsp;		direction.rotate(angle, axisX, axisY, axisZ);</b>
+<b class="nc">&nbsp;		up.rotate(angle, axisX, axisY, axisZ);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Rotates the direction and up vector of this camera by the given angle around the given axis. The direction and up vector
+&nbsp;	 * will not be orthogonalized.
+&nbsp;	 * 
+&nbsp;	 * @param axis the axis to rotate around
+&nbsp;	 * @param angle the angle, in degrees */
+&nbsp;	public void rotate (Vector3 axis, float angle) {
+<b class="nc">&nbsp;		direction.rotate(axis, angle);</b>
+<b class="nc">&nbsp;		up.rotate(axis, angle);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Rotates the direction and up vector of this camera by the given rotation matrix. The direction and up vector will not be
+&nbsp;	 * orthogonalized.
+&nbsp;	 * 
+&nbsp;	 * @param transform The rotation matrix */
+&nbsp;	public void rotate (final Matrix4 transform) {
+<b class="nc">&nbsp;		direction.rot(transform);</b>
+<b class="nc">&nbsp;		up.rot(transform);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Rotates the direction and up vector of this camera by the given {@link Quaternion}. The direction and up vector will not be
+&nbsp;	 * orthogonalized.
+&nbsp;	 * 
+&nbsp;	 * @param quat The quaternion */
+&nbsp;	public void rotate (final Quaternion quat) {
+<b class="nc">&nbsp;		quat.transform(direction);</b>
+<b class="nc">&nbsp;		quat.transform(up);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Rotates the direction and up vector of this camera by the given angle around the given axis, with the axis attached to
+&nbsp;	 * given point. The direction and up vector will not be orthogonalized.
+&nbsp;	 * 
+&nbsp;	 * @param point the point to attach the axis to
+&nbsp;	 * @param axis the axis to rotate around
+&nbsp;	 * @param angle the angle, in degrees */
+&nbsp;	public void rotateAround (Vector3 point, Vector3 axis, float angle) {
+<b class="nc">&nbsp;		tmpVec.set(point);</b>
+<b class="nc">&nbsp;		tmpVec.sub(position);</b>
+<b class="nc">&nbsp;		translate(tmpVec);</b>
+<b class="nc">&nbsp;		rotate(axis, angle);</b>
+<b class="nc">&nbsp;		tmpVec.rotate(axis, angle);</b>
+<b class="nc">&nbsp;		translate(-tmpVec.x, -tmpVec.y, -tmpVec.z);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Transform the position, direction and up vector by the given matrix
+&nbsp;	 * 
+&nbsp;	 * @param transform The transform matrix */
+&nbsp;	public void transform (final Matrix4 transform) {
+<b class="nc">&nbsp;		position.mul(transform);</b>
+<b class="nc">&nbsp;		rotate(transform);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Moves the camera by the given amount on each axis.
+&nbsp;	 * @param x the displacement on the x-axis
+&nbsp;	 * @param y the displacement on the y-axis
+&nbsp;	 * @param z the displacement on the z-axis */
+&nbsp;	public void translate (float x, float y, float z) {
+<b class="nc">&nbsp;		position.add(x, y, z);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Moves the camera by the given vector.
+&nbsp;	 * @param vec the displacement vector */
+&nbsp;	public void translate (Vector3 vec) {
+<b class="nc">&nbsp;		position.add(vec);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Function to translate a point given in screen coordinates to world space. It&#39;s the same as GLU gluUnProject, but does not
+&nbsp;	 * rely on OpenGL. The x- and y-coordinate of vec are assumed to be in screen coordinates (origin is the top left corner, y
+&nbsp;	 * pointing down, x pointing to the right) as reported by the touch methods in {@link Input}. A z-coordinate of 0 will return a
+&nbsp;	 * point on the near plane, a z-coordinate of 1 will return a point on the far plane. This method allows you to specify the
+&nbsp;	 * viewport position and dimensions in the coordinate system expected by {@link GL20#glViewport(int, int, int, int)}, with the
+&nbsp;	 * origin in the bottom left corner of the screen.
+&nbsp;	 * @param screenCoords the point in screen coordinates (origin top left)
+&nbsp;	 * @param viewportX the coordinate of the bottom left corner of the viewport in glViewport coordinates.
+&nbsp;	 * @param viewportY the coordinate of the bottom left corner of the viewport in glViewport coordinates.
+&nbsp;	 * @param viewportWidth the width of the viewport in pixels
+&nbsp;	 * @param viewportHeight the height of the viewport in pixels
+&nbsp;	 * @return the mutated and unprojected screenCoords {@link Vector3} */
+&nbsp;	public Vector3 unproject (Vector3 screenCoords, float viewportX, float viewportY, float viewportWidth, float viewportHeight) {
+<b class="nc">&nbsp;		float x = screenCoords.x - viewportX, y = Gdx.graphics.getHeight() - screenCoords.y - viewportY;</b>
+<b class="nc">&nbsp;		screenCoords.x = (2 * x) / viewportWidth - 1;</b>
+<b class="nc">&nbsp;		screenCoords.y = (2 * y) / viewportHeight - 1;</b>
+<b class="nc">&nbsp;		screenCoords.z = 2 * screenCoords.z - 1;</b>
+<b class="nc">&nbsp;		screenCoords.prj(invProjectionView);</b>
+<b class="nc">&nbsp;		return screenCoords;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Function to translate a point given in screen coordinates to world space. It&#39;s the same as GLU gluUnProject but does not
+&nbsp;	 * rely on OpenGL. The viewport is assumed to span the whole screen and is fetched from {@link Graphics#getWidth()} and
+&nbsp;	 * {@link Graphics#getHeight()}. The x- and y-coordinate of vec are assumed to be in screen coordinates (origin is the top left
+&nbsp;	 * corner, y pointing down, x pointing to the right) as reported by the touch methods in {@link Input}. A z-coordinate of 0
+&nbsp;	 * will return a point on the near plane, a z-coordinate of 1 will return a point on the far plane.
+&nbsp;	 * @param screenCoords the point in screen coordinates
+&nbsp;	 * @return the mutated and unprojected screenCoords {@link Vector3} */
+&nbsp;	public Vector3 unproject (Vector3 screenCoords) {
+<b class="nc">&nbsp;		unproject(screenCoords, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</b>
+<b class="nc">&nbsp;		return screenCoords;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Projects the {@link Vector3} given in world space to screen coordinates. It&#39;s the same as GLU gluProject with one small
+&nbsp;	 * deviation: The viewport is assumed to span the whole screen. The screen coordinate system has its origin in the
+&nbsp;	 * &lt;b&gt;bottom&lt;/b&gt; left, with the y-axis pointing &lt;b&gt;upwards&lt;/b&gt; and the x-axis pointing to the right. This makes it easily
+&nbsp;	 * useable in conjunction with {@link Batch} and similar classes.
+&nbsp;	 * @return the mutated and projected worldCoords {@link Vector3} */
+&nbsp;	public Vector3 project (Vector3 worldCoords) {
+<b class="nc">&nbsp;		project(worldCoords, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</b>
+<b class="nc">&nbsp;		return worldCoords;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Projects the {@link Vector3} given in world space to screen coordinates. It&#39;s the same as GLU gluProject with one small
+&nbsp;	 * deviation: The viewport is assumed to span the whole screen. The screen coordinate system has its origin in the
+&nbsp;	 * &lt;b&gt;bottom&lt;/b&gt; left, with the y-axis pointing &lt;b&gt;upwards&lt;/b&gt; and the x-axis pointing to the right. This makes it easily
+&nbsp;	 * useable in conjunction with {@link Batch} and similar classes. This method allows you to specify the viewport position and
+&nbsp;	 * dimensions in the coordinate system expected by {@link GL20#glViewport(int, int, int, int)}, with the origin in the bottom
+&nbsp;	 * left corner of the screen.
+&nbsp;	 * @param viewportX the coordinate of the bottom left corner of the viewport in glViewport coordinates.
+&nbsp;	 * @param viewportY the coordinate of the bottom left corner of the viewport in glViewport coordinates.
+&nbsp;	 * @param viewportWidth the width of the viewport in pixels
+&nbsp;	 * @param viewportHeight the height of the viewport in pixels
+&nbsp;	 * @return the mutated and projected worldCoords {@link Vector3} */
+&nbsp;	public Vector3 project (Vector3 worldCoords, float viewportX, float viewportY, float viewportWidth, float viewportHeight) {
+<b class="nc">&nbsp;		worldCoords.prj(combined);</b>
+<b class="nc">&nbsp;		worldCoords.x = viewportWidth * (worldCoords.x + 1) / 2 + viewportX;</b>
+<b class="nc">&nbsp;		worldCoords.y = viewportHeight * (worldCoords.y + 1) / 2 + viewportY;</b>
+<b class="nc">&nbsp;		worldCoords.z = (worldCoords.z + 1) / 2;</b>
+<b class="nc">&nbsp;		return worldCoords;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates a picking {@link Ray} from the coordinates given in screen coordinates. It is assumed that the viewport spans the
+&nbsp;	 * whole screen. The screen coordinates origin is assumed to be in the top left corner, its y-axis pointing down, the x-axis
+&nbsp;	 * pointing to the right. The returned instance is not a new instance but an internal member only accessible via this function.
+&nbsp;	 * @param viewportX the coordinate of the bottom left corner of the viewport in glViewport coordinates.
+&nbsp;	 * @param viewportY the coordinate of the bottom left corner of the viewport in glViewport coordinates.
+&nbsp;	 * @param viewportWidth the width of the viewport in pixels
+&nbsp;	 * @param viewportHeight the height of the viewport in pixels
+&nbsp;	 * @return the picking Ray. */
+&nbsp;	public Ray getPickRay (float screenX, float screenY, float viewportX, float viewportY, float viewportWidth,
+&nbsp;		float viewportHeight) {
+<b class="nc">&nbsp;		unproject(ray.origin.set(screenX, screenY, 0), viewportX, viewportY, viewportWidth, viewportHeight);</b>
+<b class="nc">&nbsp;		unproject(ray.direction.set(screenX, screenY, 1), viewportX, viewportY, viewportWidth, viewportHeight);</b>
+<b class="nc">&nbsp;		ray.direction.sub(ray.origin).nor();</b>
+<b class="nc">&nbsp;		return ray;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates a picking {@link Ray} from the coordinates given in screen coordinates. It is assumed that the viewport spans the
+&nbsp;	 * whole screen. The screen coordinates origin is assumed to be in the top left corner, its y-axis pointing down, the x-axis
+&nbsp;	 * pointing to the right. The returned instance is not a new instance but an internal member only accessible via this function.
+&nbsp;	 * @return the picking Ray. */
+&nbsp;	public Ray getPickRay (float screenX, float screenY) {
+<b class="nc">&nbsp;		return getPickRay(screenX, screenY, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,263 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Vector</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: Vector (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Vector</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; *
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;/** Encapsulates a general vector. Allows chaining operations by returning a reference to itself in all modification methods. See
+&nbsp; * {@link Vector2} and {@link Vector3} for specific implementations.
+&nbsp; * @author Xoppa */
+&nbsp;public interface Vector&lt;T extends Vector&lt;T&gt;&gt; {
+&nbsp;	/** @return a copy of this vector */
+&nbsp;	T cpy ();
+&nbsp;
+&nbsp;	/** @return The Euclidean length */
+&nbsp;	float len ();
+&nbsp;
+&nbsp;	/** This method is faster than {@link Vector#len()} because it avoids calculating a square root. It is useful for comparisons,
+&nbsp;	 * but not for getting exact lengths, as the return value is the square of the actual length.
+&nbsp;	 * @return The squared Euclidean length */
+&nbsp;	float len2 ();
+&nbsp;
+&nbsp;	/** Limits the length of this vector, based on the desired maximum length.
+&nbsp;	 * @param limit desired maximum length for this vector
+&nbsp;	 * @return this vector for chaining */
+&nbsp;	T limit (float limit);
+&nbsp;
+&nbsp;	/** Limits the length of this vector, based on the desired maximum length squared.
+&nbsp;	 * &lt;p /&gt;
+&nbsp;	 * This method is slightly faster than limit().
+&nbsp;	 * @param limit2 squared desired maximum length for this vector
+&nbsp;	 * @return this vector for chaining
+&nbsp;	 * @see #len2() */
+&nbsp;	T limit2 (float limit2);
+&nbsp;
+&nbsp;	/** Sets the length of this vector. Does nothing if this vector is zero.
+&nbsp;	 * @param len desired length for this vector
+&nbsp;	 * @return this vector for chaining */
+&nbsp;	T setLength (float len);
+&nbsp;
+&nbsp;	/** Sets the length of this vector, based on the square of the desired length. Does nothing if this vector is zero.
+&nbsp;	 * &lt;p /&gt;
+&nbsp;	 * This method is slightly faster than setLength().
+&nbsp;	 * @param len2 desired square of the length for this vector
+&nbsp;	 * @return this vector for chaining
+&nbsp;	 * @see #len2() */
+&nbsp;	T setLength2 (float len2);
+&nbsp;
+&nbsp;	/** Clamps this vector&#39;s length to given min and max values
+&nbsp;	 * @param min Min length
+&nbsp;	 * @param max Max length
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T clamp (float min, float max);
+&nbsp;
+&nbsp;	/** Sets this vector from the given vector
+&nbsp;	 * @param v The vector
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T set (T v);
+&nbsp;
+&nbsp;	/** Subtracts the given vector from this vector.
+&nbsp;	 * @param v The vector
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T sub (T v);
+&nbsp;
+&nbsp;	/** Normalizes this vector. Does nothing if it is zero.
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T nor ();
+&nbsp;
+&nbsp;	/** Adds the given vector to this vector
+&nbsp;	 * @param v The vector
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T add (T v);
+&nbsp;
+&nbsp;	/** @param v The other vector
+&nbsp;	 * @return The dot product between this and the other vector */
+&nbsp;	float dot (T v);
+&nbsp;
+&nbsp;	/** Scales this vector by a scalar
+&nbsp;	 * @param scalar The scalar
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T scl (float scalar);
+&nbsp;
+&nbsp;	/** Scales this vector by another vector
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T scl (T v);
+&nbsp;
+&nbsp;	/** @param v The other vector
+&nbsp;	 * @return the distance between this and the other vector */
+&nbsp;	float dst (T v);
+&nbsp;
+&nbsp;	/** This method is faster than {@link Vector#dst(Vector)} because it avoids calculating a square root. It is useful for
+&nbsp;	 * comparisons, but not for getting accurate distances, as the return value is the square of the actual distance.
+&nbsp;	 * @param v The other vector
+&nbsp;	 * @return the squared distance between this and the other vector */
+&nbsp;	float dst2 (T v);
+&nbsp;
+&nbsp;	/** Linearly interpolates between this vector and the target vector by alpha which is in the range [0,1]. The result is stored
+&nbsp;	 * in this vector.
+&nbsp;	 * @param target The target vector
+&nbsp;	 * @param alpha The interpolation coefficient
+&nbsp;	 * @return This vector for chaining. */
+&nbsp;	T lerp (T target, float alpha);
+&nbsp;
+&nbsp;	/** Interpolates between this vector and the given target vector by alpha (within range [0,1]) using the given Interpolation
+&nbsp;	 * method. the result is stored in this vector.
+&nbsp;	 * @param target The target vector
+&nbsp;	 * @param alpha The interpolation coefficient
+&nbsp;	 * @param interpolator An Interpolation object describing the used interpolation method
+&nbsp;	 * @return This vector for chaining. */
+&nbsp;	T interpolate (T target, float alpha, Interpolation interpolator);
+&nbsp;
+&nbsp;	/** Sets this vector to the unit vector with a random direction
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T setToRandomDirection ();
+&nbsp;
+&nbsp;	/** @return Whether this vector is a unit length vector */
+&nbsp;	boolean isUnit ();
+&nbsp;
+&nbsp;	/** @return Whether this vector is a unit length vector within the given margin. */
+&nbsp;	boolean isUnit (final float margin);
+&nbsp;
+&nbsp;	/** @return Whether this vector is a zero vector */
+&nbsp;	boolean isZero ();
+&nbsp;
+&nbsp;	/** @return Whether the length of this vector is smaller than the given margin */
+&nbsp;	boolean isZero (final float margin);
+&nbsp;
+&nbsp;	/** @return true if this vector is in line with the other vector (either in the same or the opposite direction) */
+&nbsp;	boolean isOnLine (T other, float epsilon);
+&nbsp;
+&nbsp;	/** @return true if this vector is in line with the other vector (either in the same or the opposite direction) */
+&nbsp;	boolean isOnLine (T other);
+&nbsp;
+&nbsp;	/** @return true if this vector is collinear with the other vector ({@link #isOnLine(Vector, float)} &amp;&amp;
+&nbsp;	 *         {@link #hasSameDirection(Vector)}). */
+&nbsp;	boolean isCollinear (T other, float epsilon);
+&nbsp;
+&nbsp;	/** @return true if this vector is collinear with the other vector ({@link #isOnLine(Vector)} &amp;&amp;
+&nbsp;	 *         {@link #hasSameDirection(Vector)}). */
+&nbsp;	boolean isCollinear (T other);
+&nbsp;
+&nbsp;	/** @return true if this vector is opposite collinear with the other vector ({@link #isOnLine(Vector, float)} &amp;&amp;
+&nbsp;	 *         {@link #hasOppositeDirection(Vector)}). */
+&nbsp;	boolean isCollinearOpposite (T other, float epsilon);
+&nbsp;
+&nbsp;	/** @return true if this vector is opposite collinear with the other vector ({@link #isOnLine(Vector)} &amp;&amp;
+&nbsp;	 *         {@link #hasOppositeDirection(Vector)}). */
+&nbsp;	boolean isCollinearOpposite (T other);
+&nbsp;
+&nbsp;	/** @return Whether this vector is perpendicular with the other vector. True if the dot product is 0. */
+&nbsp;	boolean isPerpendicular (T other);
+&nbsp;
+&nbsp;	/** @return Whether this vector is perpendicular with the other vector. True if the dot product is 0.
+&nbsp;	 * @param epsilon a positive small number close to zero */
+&nbsp;	boolean isPerpendicular (T other, float epsilon);
+&nbsp;
+&nbsp;	/** @return Whether this vector has similar direction compared to the other vector. True if the normalized dot product is &gt;
+&nbsp;	 *         0. */
+&nbsp;	boolean hasSameDirection (T other);
+&nbsp;
+&nbsp;	/** @return Whether this vector has opposite direction compared to the other vector. True if the normalized dot product is &lt;
+&nbsp;	 *         0. */
+&nbsp;	boolean hasOppositeDirection (T other);
+&nbsp;
+&nbsp;	/** Compares this vector with the other vector, using the supplied epsilon for fuzzy equality testing.
+&nbsp;	 * @param other
+&nbsp;	 * @param epsilon
+&nbsp;	 * @return whether the vectors have fuzzy equality. */
+&nbsp;	boolean epsilonEquals (T other, float epsilon);
+&nbsp;
+&nbsp;	/** First scale a supplied vector, then add it to this vector.
+&nbsp;	 * @param v addition vector
+&nbsp;	 * @param scalar for scaling the addition vector */
+&nbsp;	T mulAdd (T v, float scalar);
+&nbsp;
+&nbsp;	/** First scale a supplied vector, then add it to this vector.
+&nbsp;	 * @param v addition vector
+&nbsp;	 * @param mulVec vector by whose values the addition vector will be scaled */
+&nbsp;	T mulAdd (T v, T mulVec);
+&nbsp;
+&nbsp;	/** Sets the components of this vector to 0
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	T setZero ();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

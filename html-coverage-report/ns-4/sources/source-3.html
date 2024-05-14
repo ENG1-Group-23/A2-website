@@ -1,0 +1,419 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MainControlScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.screens</a>
+</div>
+
+<h1>Coverage Summary for Class: MainControlScreen (bytemusketeers.heslingtonhustle.screens)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainControlScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/62)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.screens;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.HeslingtonHustle;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.ScreenType;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.ScreenAdapter;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.g2d.BitmapFont;
+&nbsp;import com.badlogic.gdx.utils.Align;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;
+&nbsp;/**
+&nbsp; * The {@link MainControlScreen} provides a visual representation of control instructions for the game, alongside a back
+&nbsp; * button to navigate back to the {@link MainMenuScreen}.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class MainControlScreen extends ScreenAdapter implements Screen, InputProcessor {
+&nbsp;    /**
+&nbsp;     * The human-readable objective text of {@link HeslingtonHustle}, outlining the responsibility of the
+&nbsp;     * {@link bytemusketeers.heslingtonhustle.entity.Player}
+&nbsp;     */
+&nbsp;    private static final String OBJECTIVE = &quot;Welcome to Heslington Hustle! You are a second-year Computer Science &quot;
+&nbsp;            + &quot;student with exams in only 7 days. Explore the map, \n and interact with buildings to eat, study, sleep &quot;
+&nbsp;            + &quot;and have fun. To get a good grade, you need to balance hours of studying with \n self-care and &quot;
+&nbsp;            + &quot;recreation. Good luck!&quot;;
+&nbsp;    /**
+&nbsp;     * The LibGDX-managed {@link Texture} of the &#39;back&#39; button
+&nbsp;     */
+&nbsp;    private final Texture backButton;
+&nbsp;    /**
+&nbsp;     * The LibGDX-managed {@link Texture} of the &#39;control&#39; label
+&nbsp;     */
+&nbsp;    private final Texture controlLabel;
+&nbsp;    /**
+&nbsp;     * The LibGDX-managed {@link Texture} of the &#39;controls&#39; button
+&nbsp;     */
+&nbsp;    private final Texture controls;
+&nbsp;    private final Texture backgroundImage;
+&nbsp;    /**
+&nbsp;     * The parental {@link com.badlogic.gdx.Game}/{@link HeslingtonHustle} reference
+&nbsp;     */
+&nbsp;    HeslingtonHustle game;
+&nbsp;    /**
+&nbsp;     * The LibGDX-managed {@link BitmapFont} used to render on-screen text
+&nbsp;     */
+&nbsp;    BitmapFont font;
+&nbsp;    /**
+&nbsp;     * The X co-ordinate of the &#39;back&#39; button
+&nbsp;     */
+&nbsp;    private float backButtonX;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The Y co-ordinate of the &#39;back&#39; button
+&nbsp;     */
+&nbsp;    private float backButtonY;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The X co-ordinate of the &#39;control&#39; label
+&nbsp;     */
+&nbsp;    private float controlLabelX;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The Y co-ordinate of the &#39;control&#39; label
+&nbsp;     */
+&nbsp;    private float controlLabelY;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The X co-ordinate of the &#39;controls&#39; button
+&nbsp;     */
+&nbsp;    private float controlsX;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The Y co-ordinate of the &#39;controls&#39; button
+&nbsp;     */
+&nbsp;    private float controlsY;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The Y co-ordinate of the &#39;objective&#39; text
+&nbsp;     */
+&nbsp;    private float objectiveY;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The X co-ordinate of the &#39;playing instructions&#39; label
+&nbsp;     */
+&nbsp;    private float instructionX;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The Y co-ordinate of the &#39;playing instructions&#39; label
+&nbsp;     */
+&nbsp;    private float instructionY;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The width of the &#39;back&#39; button
+&nbsp;     */
+&nbsp;    private float backButtonWidth;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The height of the &#39;back&#39; button
+&nbsp;     */
+&nbsp;    private float backButtonHeight;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The width of the &#39;control&#39; label
+&nbsp;     */
+&nbsp;    private float controlLabelWidth;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The height of the &#39;control&#39; label
+&nbsp;     */
+&nbsp;    private float controlLabelHeight;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The height of the &#39;controls&#39; button
+&nbsp;     */
+&nbsp;    private float controlsHeight;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The width of the &#39;controls&#39; button
+&nbsp;     */
+&nbsp;    private float controlsWidth;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The padding around the &#39;playing instructions&#39; label
+&nbsp;     */
+&nbsp;    private float instructionGap;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialises the screen with game controls instructions, sets up textures for display elements, and configures
+&nbsp;     * input processing.
+&nbsp;     *
+&nbsp;     * @param game The parental {@link com.badlogic.gdx.Game} reference
+&nbsp;     */
+<b class="nc">&nbsp;    public MainControlScreen(HeslingtonHustle game) {</b>
+<b class="nc">&nbsp;        this.game = game;</b>
+<b class="nc">&nbsp;        font = new BitmapFont(Gdx.files.internal(&quot;font/WhitePeaberry.fnt&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        backButton = new Texture(&quot;settings_gui/back_button.png&quot;);</b>
+<b class="nc">&nbsp;        controlLabel = new Texture(&quot;controls_gui/controls_label.png&quot;);</b>
+<b class="nc">&nbsp;        controls = new Texture(&quot;controls_gui/controls_new.png&quot;);</b>
+<b class="nc">&nbsp;        backgroundImage = new Texture(&quot;menu_gui/new_background_dark.png&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        calculateDimensions();</b>
+<b class="nc">&nbsp;        calculatePositions();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Computes and updates the dimensions of the on-screen elements, according to the scale factor required by the
+&nbsp;     * parental {@link HeslingtonHustle} instance.
+&nbsp;     *
+&nbsp;     * @see HeslingtonHustle#scaleFactorX
+&nbsp;     * @see HeslingtonHustle#scaleFactorY
+&nbsp;     */
+&nbsp;    private void calculateDimensions() {
+<b class="nc">&nbsp;        font.getData().setScale(1.5f * game.scaleFactorX, 1.5f * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        backButtonWidth = 200 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        backButtonHeight = 100 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        controlLabelWidth = 500 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        controlLabelHeight = 130 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        controlsWidth = 500 / 3.5151f * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        controlsHeight = 500 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        instructionGap = 74f * game.scaleFactorY;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Computes and updates the positions of the on-screen elements, according to the scale factor required by the
+&nbsp;     * parental {@link HeslingtonHustle} instance.
+&nbsp;     *
+&nbsp;     * @see HeslingtonHustle#scaleFactorX
+&nbsp;     * @see HeslingtonHustle#scaleFactorY
+&nbsp;     */
+&nbsp;    private void calculatePositions() {
+<b class="nc">&nbsp;        backButtonX = (game.screenWidth - backButtonWidth) / 2f;</b>
+<b class="nc">&nbsp;        backButtonY = game.screenHeight / 6f - 120 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        controlLabelX = (game.screenWidth - controlLabelWidth) / 2f;</b>
+<b class="nc">&nbsp;        controlLabelY = game.screenHeight - (controlLabelHeight * 1.2f);</b>
+<b class="nc">&nbsp;        controlsX = game.screenWidth / 3.2f;</b>
+<b class="nc">&nbsp;        controlsY = (game.screenHeight / 3.5f) - (controlsHeight / 5f);</b>
+<b class="nc">&nbsp;        objectiveY = game.screenHeight - 160 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        instructionY = game.screenHeight / 1.435f;</b>
+<b class="nc">&nbsp;        instructionX = game.screenWidth / 2f - 90 * game.scaleFactorX;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The main render method for the screen. Called every frame and responsible for drawing the screen&#39;s contents.
+&nbsp;     *
+&nbsp;     * @param delta The time in seconds since the last render.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void render(float delta) {
+<b class="nc">&nbsp;        ScreenUtils.clear(0f, 0f, 0f, 1);</b>
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+<b class="nc">&nbsp;        game.batch.begin();</b>
+<b class="nc">&nbsp;        game.batch.draw(backgroundImage, 0, 0, game.screenWidth, game.screenHeight);</b>
+<b class="nc">&nbsp;        font.draw(game.batch, OBJECTIVE, 0, objectiveY, game.screenWidth, Align.center, false);</b>
+<b class="nc">&nbsp;        float instructionY = this.instructionY;</b>
+<b class="nc">&nbsp;        String[] instructions = {</b>
+&nbsp;                &quot;Up - Move forward&quot;,
+&nbsp;                &quot;Left - Turn left&quot;,
+&nbsp;                &quot;Right - Turn right&quot;,
+&nbsp;                &quot;Down - Move backward&quot;,
+&nbsp;                &quot;Shift - Sprint&quot;,
+&nbsp;                &quot;Esc - Pause&quot;,
+&nbsp;                &quot;Click - Interact&quot;
+&nbsp;        };
+&nbsp;
+<b class="nc">&nbsp;        for (String instruction : instructions) {</b>
+<b class="nc">&nbsp;            font.draw(game.batch, instruction, instructionX, instructionY);</b>
+<b class="nc">&nbsp;            instructionY -= instructionGap; // Spacing between instructions</b>
+&nbsp;        }
+<b class="nc">&nbsp;        game.batch.draw(controlLabel, controlLabelX, controlLabelY, controlLabelWidth, controlLabelHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(controls, controlsX, controlsY, controlsWidth, controlsHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(backButton, backButtonX, backButtonY, backButtonWidth, backButtonHeight);</b>
+&nbsp;
+<b class="nc">&nbsp;        game.batch.end();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles touch down input events. Specifically, checks if the back button is pressed
+&nbsp;     * and navigates back to the main menu screen.
+&nbsp;     *
+&nbsp;     * @param touchX  The x-coordinate of the touch, in screen coordinates.
+&nbsp;     * @param touchY  The y-coordinate of the touch, in screen coordinates.
+&nbsp;     * @param pointer The pointer for the event.
+&nbsp;     * @param button  The button pressed.
+&nbsp;     * @return true if the event was handled, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean touchDown(int touchX, int touchY, int pointer, int button) {
+<b class="nc">&nbsp;        touchY = (game.screenHeight - touchY);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (touchX &gt;= backButtonX &amp;&amp; touchX &lt;= backButtonX + backButtonWidth</b>
+&nbsp;                &amp;&amp; touchY &gt;= backButtonY &amp;&amp; touchY &lt;= backButtonY + backButtonHeight) {
+<b class="nc">&nbsp;            game.screenManager.setScreen(ScreenType.MAIN_MENU);</b>
+<b class="nc">&nbsp;            game.gameData.buttonClickedSoundActivate();</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void show() {
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(this);</b>
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyDown(int i) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyUp(int i) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyTyped(char c) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchUp(int i, int i1, int i2, int i3) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchCancelled(int i, int i1, int i2, int i3) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchDragged(int i, int i1, int i2) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean mouseMoved(int i, int i1) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean scrolled(float amountX, float amountY) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        calculateDimensions();</b>
+<b class="nc">&nbsp;        calculatePositions();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        backButton.dispose();</b>
+<b class="nc">&nbsp;        controlLabel.dispose();</b>
+<b class="nc">&nbsp;        controls.dispose();</b>
+<b class="nc">&nbsp;        font.dispose();</b>
+<b class="nc">&nbsp;        backgroundImage.dispose();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,401 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Java9PlusLocationImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.mockito.internal.debugging</a>
+</div>
+
+<h1>Coverage Summary for Class: Java9PlusLocationImpl (org.mockito.internal.debugging)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Java9PlusLocationImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    61.1%
+  </span>
+  <span class="absValue">
+    (11/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10%
+  </span>
+  <span class="absValue">
+    (1/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.8%
+  </span>
+  <span class="absValue">
+    (35/65)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Java9PlusLocationImpl$MetadataShim</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (6/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    48%
+  </span>
+  <span class="absValue">
+    (12/25)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    56.7%
+  </span>
+  <span class="absValue">
+    (17/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10%
+  </span>
+  <span class="absValue">
+    (1/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    52.2%
+  </span>
+  <span class="absValue">
+    (47/90)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package org.mockito.internal.debugging;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;import java.lang.reflect.InvocationTargetException;
+&nbsp;import java.lang.reflect.Method;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.function.Function;
+&nbsp;import java.util.function.Predicate;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;import java.util.stream.Stream;
+&nbsp;import org.mockito.exceptions.base.MockitoException;
+&nbsp;import org.mockito.exceptions.stacktrace.StackTraceCleaner;
+&nbsp;import org.mockito.internal.configuration.plugins.Plugins;
+&nbsp;import org.mockito.internal.exceptions.stacktrace.DefaultStackTraceCleaner;
+&nbsp;import org.mockito.invocation.Location;
+&nbsp;
+&nbsp;class Java9PlusLocationImpl implements Location, Serializable {
+&nbsp;    private static final long serialVersionUID = 2954388321980069195L;
+&nbsp;    private static final String UNEXPECTED_ERROR_SUFFIX = &quot;\nThis is unexpected and is likely due to a change in either Java&#39;s StackWalker or Reflection APIs.\nIt&#39;s worth trying to upgrade to a newer version of Mockito, or otherwise to file a bug report.&quot;;
+&nbsp;    private static final String STACK_WALKER = &quot;java.lang.StackWalker&quot;;
+&nbsp;    private static final String STACK_FRAME = &quot;java.lang.StackWalker$StackFrame&quot;;
+&nbsp;    private static final String OPTION = &quot;java.lang.StackWalker$Option&quot;;
+&nbsp;    private static final String SHOW_REFLECT_FRAMES = &quot;SHOW_REFLECT_FRAMES&quot;;
+&nbsp;    private static final int BUFFER_SIZE = 16;
+&nbsp;    private static final Class&lt;?&gt; stackWalkerClazz = clazz(&quot;java.lang.StackWalker&quot;);
+&nbsp;    private static final Class&lt;?&gt; stackFrameClazz = clazz(&quot;java.lang.StackWalker$StackFrame&quot;);
+&nbsp;    private static final Class&lt;?&gt; optionClazz = clazz(&quot;java.lang.StackWalker$Option&quot;);
+&nbsp;    private static final Object stackWalker = stackWalker();
+&nbsp;    private static final Method walk = walk();
+&nbsp;    private static final String PREFIX = &quot;-&gt; at &quot;;
+&nbsp;    private static final StackTraceCleaner CLEANER = Plugins.getStackTraceCleanerProvider().getStackTraceCleaner(new DefaultStackTraceCleaner());
+&nbsp;    private static final Function&lt;Object, StackTraceCleaner.StackFrameMetadata&gt; toStackFrameMetadata = (x$0) -&gt; {
+&nbsp;        return new MetadataShim(x$0);
+&nbsp;    };
+&nbsp;    private static final Predicate&lt;StackTraceCleaner.StackFrameMetadata&gt; cleanerIsIn;
+&nbsp;    private static final int FRAMES_TO_SKIP;
+&nbsp;    private final StackTraceCleaner.StackFrameMetadata sfm;
+<b class="fc">&nbsp;    private volatile String stackTraceLine;</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    Java9PlusLocationImpl(boolean isInline) {</b>
+&nbsp;        this.sfm = getStackFrame(isInline);
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    public String getSourceFile() {
+&nbsp;        return this.sfm.getFileName();
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public String toString() {</b>
+<b class="fc">&nbsp;        return this.stackTraceLine();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String stackTraceLine() {
+&nbsp;        if (this.stackTraceLine == null) {
+&nbsp;            synchronized(this) {
+&nbsp;                if (this.stackTraceLine == null) {
+&nbsp;                    this.stackTraceLine = &quot;-&gt; at &quot; + this.sfm.toString();
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+<b class="fc">&nbsp;</b>
+&nbsp;        return this.stackTraceLine;
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private static StackTraceCleaner.StackFrameMetadata getStackFrame(boolean isInline) {
+&nbsp;        return (StackTraceCleaner.StackFrameMetadata)stackWalk((stream) -&gt; {
+&nbsp;            return (StackTraceCleaner.StackFrameMetadata)stream.map(toStackFrameMetadata).skip((long)FRAMES_TO_SKIP).filter(cleanerIsIn).skip(isInline ? 1L : 0L).findFirst().orElseThrow(() -&gt; {
+<b class="fc">&nbsp;                return new MockitoException(noStackTraceFailureMessage());</b>
+<b class="fc">&nbsp;            });</b>
+<b class="fc">&nbsp;        });</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static boolean usingDefaultStackTraceCleaner() {
+<b class="nc">&nbsp;        return CLEANER instanceof DefaultStackTraceCleaner;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static String noStackTraceFailureMessage() {
+&nbsp;        if (usingDefaultStackTraceCleaner()) {
+<b class="nc">&nbsp;            return &quot;Mockito could not find the first non-Mockito stack frame.\nThis is unexpected and is likely due to a change in either Java&#39;s StackWalker or Reflection APIs.\nIt&#39;s worth trying to upgrade to a newer version of Mockito, or otherwise to file a bug report.&quot;;</b>
+&nbsp;        } else {
+&nbsp;            String cleanerType = CLEANER.getClass().getName();
+&nbsp;            String fmt = &quot;Mockito could not find the first non-Mockito stack frame. A custom stack frame cleaner \n(type %s) is in use and this has mostly likely filtered out all the relevant stack frames.&quot;;
+<b class="nc">&nbsp;            return String.format(fmt, cleanerType);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    private static int framesToSkip() {
+<b class="nc">&nbsp;        return (Integer)stackWalk((stream) -&gt; {</b>
+&nbsp;            List&lt;String&gt; metadata = (List)stream.map(toStackFrameMetadata).map(StackTraceCleaner.StackFrameMetadata::getClassName).collect(Collectors.toList());
+<b class="nc">&nbsp;            return metadata.indexOf(Java9PlusLocationImpl.class.getName());</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    private static &lt;T&gt; T stackWalk(Function&lt;Stream&lt;Object&gt;, T&gt; function) {</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            return walk.invoke(stackWalker, function);</b>
+<b class="fc">&nbsp;        } catch (IllegalAccessException var2) {</b>
+<b class="fc">&nbsp;            IllegalAccessException e = var2;</b>
+<b class="pc">&nbsp;            throw new MockitoException(&quot;Unexpected access exception while stack walking.\nThis is unexpected and is likely due to a change in either Java&#39;s StackWalker or Reflection APIs.\nIt&#39;s worth trying to upgrade to a newer version of Mockito, or otherwise to file a bug report.&quot;, e);</b>
+<b class="fc">&nbsp;        } catch (InvocationTargetException var3) {</b>
+<b class="fc">&nbsp;            throw new MockitoException(stackWalkFailureMessage());</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static String stackWalkFailureMessage() {
+<b class="nc">&nbsp;        if (usingDefaultStackTraceCleaner()) {</b>
+&nbsp;            return &quot;Caught an unexpected exception while stack walking.\nThis is unexpected and is likely due to a change in either Java&#39;s StackWalker or Reflection APIs.\nIt&#39;s worth trying to upgrade to a newer version of Mockito, or otherwise to file a bug report.&quot;;
+&nbsp;        } else {
+&nbsp;            String className = CLEANER.getClass().getName();
+<b class="nc">&nbsp;            String fmt = &quot;Caught an unexpected exception while stack walking.\nThis is likely caused by the custom stack trace cleaner in use (class %s).&quot;;</b>
+<b class="nc">&nbsp;            return String.format(fmt, className);</b>
+&nbsp;        }
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    private static Method walk() {</b>
+&nbsp;        try {
+&nbsp;            return stackWalkerClazz.getMethod(&quot;walk&quot;, Function.class);
+<b class="nc">&nbsp;        } catch (NoSuchMethodException var1) {</b>
+&nbsp;            NoSuchMethodException e = var1;
+&nbsp;            throw new RuntimeException(e);
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static Class&lt;?&gt; clazz(String name) {
+&nbsp;        try {
+&nbsp;            return Class.forName(name);
+<b class="fc">&nbsp;        } catch (ClassNotFoundException var2) {</b>
+&nbsp;            ClassNotFoundException e = var2;
+<b class="fc">&nbsp;            throw new RuntimeException(e);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    private static Object stackWalker() {</b>
+&nbsp;        try {
+&nbsp;            Set options = Collections.singleton(Enum.valueOf(optionClazz, &quot;SHOW_REFLECT_FRAMES&quot;));
+&nbsp;            Method getInstance = stackWalkerClazz.getDeclaredMethod(&quot;getInstance&quot;, Set.class, Integer.TYPE);
+&nbsp;            return getInstance.invoke((Object)null, options, 16);
+&nbsp;        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException var2) {
+&nbsp;            throw new MockitoException(&quot;Mockito received an exception while trying to acquire a StackWalker.\nThis is unexpected and is likely due to a change in either Java&#39;s StackWalker or Reflection APIs.\nIt&#39;s worth trying to upgrade to a newer version of Mockito, or otherwise to file a bug report.&quot;);
+<b class="fc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    static {
+&nbsp;        StackTraceCleaner var10000 = CLEANER;
+<b class="nc">&nbsp;        Objects.requireNonNull(var10000);</b>
+<b class="nc">&nbsp;        cleanerIsIn = var10000::isIn;</b>
+&nbsp;        FRAMES_TO_SKIP = framesToSkip();
+&nbsp;    }
+&nbsp;
+&nbsp;    private static final class SerializableShim implements StackTraceCleaner.StackFrameMetadata, Serializable {
+<b class="nc">&nbsp;        private static final long serialVersionUID = 7908320459080898690L;</b>
+<b class="nc">&nbsp;        private final StackTraceElement ste;</b>
+&nbsp;
+<b class="nc">&nbsp;        private SerializableShim(StackTraceElement ste) {</b>
+<b class="nc">&nbsp;            this.ste = ste;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        public String getClassName() {</b>
+&nbsp;            return this.ste.getClassName();
+&nbsp;        }
+&nbsp;
+&nbsp;        public String getMethodName() {
+&nbsp;            return this.ste.getMethodName();
+<b class="fc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;        public String getFileName() {</b>
+&nbsp;            return this.ste.getFileName();
+&nbsp;        }
+&nbsp;
+&nbsp;        public int getLineNumber() {
+&nbsp;            return this.ste.getLineNumber();
+<b class="fc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    private static final class MetadataShim implements StackTraceCleaner.StackFrameMetadata, Serializable {
+&nbsp;        private static final long serialVersionUID = 8491903719411428648L;
+&nbsp;        private static final Method getClassName = getter(&quot;getClassName&quot;);
+&nbsp;        private static final Method getMethodName = getter(&quot;getMethodName&quot;);
+&nbsp;        private static final Method getFileName = getter(&quot;getFileName&quot;);
+&nbsp;        private static final Method getLineNumber = getter(&quot;getLineNumber&quot;);
+<b class="fc">&nbsp;        private static final Method toString = getter(Object.class, &quot;toString&quot;);</b>
+<b class="fc">&nbsp;        private final Object stackFrame;</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        private MetadataShim(Object stackFrame) {</b>
+<b class="fc">&nbsp;            this.stackFrame = stackFrame;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;        public String getClassName() {
+&nbsp;            return (String)this.get(getClassName);
+&nbsp;        }
+&nbsp;
+&nbsp;        public String getMethodName() {
+&nbsp;            return (String)this.get(getMethodName);
+&nbsp;        }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        public String getFileName() {</b>
+<b class="fc">&nbsp;            return (String)this.get(getFileName);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;        public int getLineNumber() {
+&nbsp;            return (Integer)this.get(getLineNumber);
+&nbsp;        }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        public String toString() {</b>
+<b class="fc">&nbsp;            return (String)this.get(toString);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        private Object writeReplace() {
+<b class="fc">&nbsp;            return new SerializableShim(this.toStackTraceElement());</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        private StackTraceElement toStackTraceElement() {
+&nbsp;            try {
+<b class="nc">&nbsp;                Method method = Java9PlusLocationImpl.stackFrameClazz.getMethod(&quot;toStackTraceElement&quot;);</b>
+&nbsp;                return (StackTraceElement)method.invoke(this.stackFrame);
+&nbsp;            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException var2) {
+&nbsp;                ReflectiveOperationException e = var2;
+&nbsp;                throw new RuntimeException(e);
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        private Object get(Method handle) {
+&nbsp;            try {
+<b class="nc">&nbsp;                return handle.invoke(this.stackFrame);</b>
+&nbsp;            } catch (IllegalAccessException | InvocationTargetException var3) {
+&nbsp;                ReflectiveOperationException e = var3;
+&nbsp;                throw new RuntimeException(e);
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        private static Method getter(String name) {
+&nbsp;            return getter(Java9PlusLocationImpl.stackFrameClazz, name);
+&nbsp;        }
+&nbsp;
+&nbsp;        private static Method getter(Class&lt;?&gt; clazz, String name) {
+<b class="nc">&nbsp;            try {</b>
+&nbsp;                return clazz.getDeclaredMethod(name);
+&nbsp;            } catch (Throwable var3) {
+&nbsp;                Throwable t = var3;
+&nbsp;                throw new RuntimeException(t);
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

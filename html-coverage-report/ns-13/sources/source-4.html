@@ -1,0 +1,272 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MapLayer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps</a>
+</div>
+
+<h1>Coverage Summary for Class: MapLayer (com.badlogic.gdx.maps)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MapLayer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    47.8%
+  </span>
+  <span class="absValue">
+    (11/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    55.8%
+  </span>
+  <span class="absValue">
+    (29/52)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; *
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.maps;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;
+&nbsp;/** Map layer containing a set of objects and properties */
+<b class="fc">&nbsp;public class MapLayer {</b>
+<b class="fc">&nbsp;	private String name = &quot;&quot;;</b>
+<b class="fc">&nbsp;	private float opacity = 1.0f;</b>
+<b class="fc">&nbsp;	private boolean visible = true;</b>
+&nbsp;	private float offsetX;
+&nbsp;	private float offsetY;
+&nbsp;	private float renderOffsetX;
+&nbsp;	private float renderOffsetY;
+<b class="fc">&nbsp;	private float parallaxX = 1;</b>
+<b class="fc">&nbsp;	private float parallaxY = 1;</b>
+<b class="fc">&nbsp;	private boolean renderOffsetDirty = true;</b>
+&nbsp;	private MapLayer parent;
+<b class="fc">&nbsp;	private MapObjects objects = new MapObjects();</b>
+<b class="fc">&nbsp;	private MapProperties properties = new MapProperties();</b>
+&nbsp;
+&nbsp;	/** @return layer&#39;s name */
+&nbsp;	public String getName () {
+<b class="fc">&nbsp;		return name;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param name new name for the layer */
+&nbsp;	public void setName (String name) {
+<b class="fc">&nbsp;		this.name = name;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return layer&#39;s opacity */
+&nbsp;	public float getOpacity () {
+<b class="nc">&nbsp;		return opacity;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param opacity new opacity for the layer */
+&nbsp;	public void setOpacity (float opacity) {
+<b class="fc">&nbsp;		this.opacity = opacity;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return layer&#39;s x offset */
+&nbsp;	public float getOffsetX () {
+<b class="nc">&nbsp;		return offsetX;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param offsetX new x offset for the layer */
+&nbsp;	public void setOffsetX (float offsetX) {
+<b class="fc">&nbsp;		this.offsetX = offsetX;</b>
+<b class="fc">&nbsp;		invalidateRenderOffset();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return layer&#39;s y offset */
+&nbsp;	public float getOffsetY () {
+<b class="nc">&nbsp;		return offsetY;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param offsetY new y offset for the layer */
+&nbsp;	public void setOffsetY (float offsetY) {
+<b class="fc">&nbsp;		this.offsetY = offsetY;</b>
+<b class="fc">&nbsp;		invalidateRenderOffset();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return layer&#39;s parallax scrolling factor for x-axis */
+&nbsp;	public float getParallaxX () {
+<b class="nc">&nbsp;		return parallaxX;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setParallaxX (float parallaxX) {
+<b class="fc">&nbsp;		this.parallaxX = parallaxX;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return layer&#39;s parallax scrolling factor for y-axis */
+&nbsp;	public float getParallaxY () {
+<b class="nc">&nbsp;		return parallaxY;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setParallaxY (float parallaxY) {
+<b class="fc">&nbsp;		this.parallaxY = parallaxY;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return the layer&#39;s x render offset, this takes into consideration all parent layers&#39; offsets */
+&nbsp;	public float getRenderOffsetX () {
+<b class="nc">&nbsp;		if (renderOffsetDirty) calculateRenderOffsets();</b>
+<b class="nc">&nbsp;		return renderOffsetX;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the layer&#39;s y render offset, this takes into consideration all parent layers&#39; offsets */
+&nbsp;	public float getRenderOffsetY () {
+<b class="nc">&nbsp;		if (renderOffsetDirty) calculateRenderOffsets();</b>
+<b class="nc">&nbsp;		return renderOffsetY;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** set the renderOffsetDirty state to true, when this layer or any parents&#39; offset has changed **/
+&nbsp;	public void invalidateRenderOffset () {
+<b class="fc">&nbsp;		renderOffsetDirty = true;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return the layer&#39;s parent {@link MapLayer}, or null if the layer does not have a parent **/
+&nbsp;	public MapLayer getParent () {
+<b class="nc">&nbsp;		return parent;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param parent the layer&#39;s new parent {@MapLayer}, internal use only **/
+&nbsp;	public void setParent (MapLayer parent) {
+<b class="nc">&nbsp;		if (parent == this) throw new GdxRuntimeException(&quot;Can&#39;t set self as the parent&quot;);</b>
+<b class="nc">&nbsp;		this.parent = parent;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return collection of objects contained in the layer */
+&nbsp;	public MapObjects getObjects () {
+<b class="nc">&nbsp;		return objects;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return whether the layer is visible or not */
+&nbsp;	public boolean isVisible () {
+<b class="nc">&nbsp;		return visible;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param visible toggles layer&#39;s visibility */
+&nbsp;	public void setVisible (boolean visible) {
+<b class="fc">&nbsp;		this.visible = visible;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return layer&#39;s set of properties */
+&nbsp;	public MapProperties getProperties () {
+<b class="fc">&nbsp;		return properties;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void calculateRenderOffsets () {
+<b class="nc">&nbsp;		if (parent != null) {</b>
+<b class="nc">&nbsp;			parent.calculateRenderOffsets();</b>
+<b class="nc">&nbsp;			renderOffsetX = parent.getRenderOffsetX() + offsetX;</b>
+<b class="nc">&nbsp;			renderOffsetY = parent.getRenderOffsetY() + offsetY;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			renderOffsetX = offsetX;</b>
+<b class="nc">&nbsp;			renderOffsetY = offsetY;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		renderOffsetDirty = false;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

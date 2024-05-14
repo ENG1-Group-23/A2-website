@@ -1,0 +1,298 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameSound</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.sound</a>
+</div>
+
+<h1>Coverage Summary for Class: GameSound (bytemusketeers.heslingtonhustle.sound)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameSound</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (12/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (7/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (34/51)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.sound;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.audio.Music;
+&nbsp;
+&nbsp;/**
+&nbsp; * Manages game sound effects including sound level adjustments and playing specific sounds. It handles sound effects
+&nbsp; * for increasing volume, decreasing volume, and button clicks.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class GameSound {
+&nbsp;    /**
+&nbsp;     * The {@link Music} sound associated with increasing the volume
+&nbsp;     */
+&nbsp;    private final Music upSound;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The {@link Music} sound associated with decreasing the volume
+&nbsp;     */
+&nbsp;    private final Music downSound;
+&nbsp;    /**
+&nbsp;     * The {@link Music} sound associated with clicking of a button
+&nbsp;     */
+&nbsp;    private final Music buttonClickedSound;
+&nbsp;    /**
+&nbsp;     * The {@link Music} sound associated with the {@link bytemusketeers.heslingtonhustle.entity.Player} consuming food
+&nbsp;     */
+&nbsp;    private final Music eatingSound;
+&nbsp;    Music duckSound;
+&nbsp;    /**
+&nbsp;     * The transient volume, in quarters
+&nbsp;     */
+<b class="fc">&nbsp;    private int soundLevel = 4;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes sound effects by loading the audio files.
+&nbsp;     */
+<b class="fc">&nbsp;    public GameSound() {</b>
+<b class="fc">&nbsp;        upSound = Gdx.audio.newMusic(Gdx.files.internal(&quot;sfx/high_note.mp3&quot;));</b>
+<b class="fc">&nbsp;        downSound = Gdx.audio.newMusic(Gdx.files.internal(&quot;sfx/low_note.mp3&quot;));</b>
+<b class="fc">&nbsp;        buttonClickedSound = Gdx.audio.newMusic(Gdx.files.internal(&quot;sfx/button_press.mp3&quot;));</b>
+<b class="fc">&nbsp;        eatingSound = Gdx.audio.newMusic(Gdx.files.internal(&quot;sfx/eating_sound.wav&quot;));</b>
+<b class="fc">&nbsp;        duckSound = Gdx.audio.newMusic(Gdx.files.internal(&quot;sfx/duck_quack.mp3&quot;));</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the current sound level.
+&nbsp;     *
+&nbsp;     * @return The current sound level.
+&nbsp;     */
+&nbsp;    public int getSoundLevel() {
+<b class="fc">&nbsp;        return this.soundLevel;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Plays the sound effect for increasing the volume. Stops the sound if it is already playing before restarting it.
+&nbsp;     */
+&nbsp;    public void upSoundActivate() {
+<b class="pc">&nbsp;        if (upSound.isPlaying())</b>
+<b class="nc">&nbsp;            upSound.stop();</b>
+&nbsp;
+<b class="fc">&nbsp;        upSound.play();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Plays the soudn effect for feeding a duck. Stops the sound if it is already playing before restarting it.
+&nbsp;     */
+&nbsp;    public void duckSoundActivate() {
+<b class="nc">&nbsp;        if (duckSound.isPlaying()) {</b>
+<b class="nc">&nbsp;            duckSound.stop();</b>
+<b class="nc">&nbsp;            duckSound.play();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        duckSound.play();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Plays the sound effect for decreasing the volume. Stops the sound if it is already playing before restarting it.
+&nbsp;     */
+&nbsp;    public void downSoundActivate() {
+<b class="pc">&nbsp;        if (downSound.isPlaying()) {</b>
+<b class="nc">&nbsp;            downSound.stop();</b>
+<b class="nc">&nbsp;            downSound.play();</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        downSound.play();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Plays the sound effect for a button click. Stops the sound if it is already playing before restarting it.
+&nbsp;     */
+&nbsp;    public void buttonClickedSoundActivate() {
+<b class="pc">&nbsp;        if (buttonClickedSound.isPlaying())</b>
+<b class="nc">&nbsp;            buttonClickedSound.stop();</b>
+&nbsp;
+<b class="fc">&nbsp;        buttonClickedSound.play();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Plays the sound effect for increasing the volume. Stops the sound if it is already playing before restarting it.
+&nbsp;     */
+&nbsp;    public void eatingSoundActivate() {
+<b class="pc">&nbsp;        if (eatingSound.isPlaying())</b>
+<b class="nc">&nbsp;            eatingSound.stop();</b>
+&nbsp;
+<b class="fc">&nbsp;        eatingSound.play();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Increments the sound volume level by one step if not already at the maximum. Also adjusts the volume of all
+&nbsp;     * sound effects accordingly.
+&nbsp;     */
+&nbsp;    public void incrementVolume() {
+&nbsp;        // Check if volume is not already at maximum
+<b class="pc">&nbsp;        if (soundLevel &lt;= 3) {</b>
+<b class="nc">&nbsp;            soundLevel = soundLevel + 1;</b>
+<b class="nc">&nbsp;            float floatingMusicLevel = (float) soundLevel;</b>
+<b class="nc">&nbsp;            upSound.setVolume(floatingMusicLevel * 25 / 100);</b>
+<b class="nc">&nbsp;            downSound.setVolume(floatingMusicLevel * 25 / 100);</b>
+<b class="nc">&nbsp;            buttonClickedSound.setVolume(floatingMusicLevel * 25 / 100);</b>
+<b class="nc">&nbsp;            eatingSound.setVolume(floatingMusicLevel * 25 / 100);</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Decrements the music volume level by one, if it is not already at the minimum level. Adjusts the music playback
+&nbsp;     * volume accordingly.
+&nbsp;     */
+&nbsp;    public void decrementVolume() {
+&nbsp;        // Check if volume is not already at minimum
+<b class="fc">&nbsp;        if (this.soundLevel &gt;= 1) {</b>
+<b class="fc">&nbsp;            soundLevel = soundLevel - 1;</b>
+<b class="fc">&nbsp;            float floatingMusicLevel = (float) soundLevel;</b>
+<b class="fc">&nbsp;            upSound.setVolume(floatingMusicLevel * 25 / 100);</b>
+<b class="fc">&nbsp;            downSound.setVolume(floatingMusicLevel * 25 / 100);</b>
+<b class="fc">&nbsp;            buttonClickedSound.setVolume(floatingMusicLevel * 25 / 100);</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves the volume-increasing indicator sound
+&nbsp;     *
+&nbsp;     * @return The {@link #upSound}
+&nbsp;     */
+&nbsp;    public Music getUpSound() {
+<b class="fc">&nbsp;        return upSound;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves the volume-decreasing indicator sound
+&nbsp;     *
+&nbsp;     * @return The {@link #downSound}
+&nbsp;     */
+&nbsp;    public Music getDownSound() {
+<b class="fc">&nbsp;        return downSound;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves the button-actuate indicator sound
+&nbsp;     *
+&nbsp;     * @return The {@link #buttonClickedSound}
+&nbsp;     */
+&nbsp;    public Music getButtonClickedSound() {
+<b class="fc">&nbsp;        return buttonClickedSound;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves the {@link bytemusketeers.heslingtonhustle.entity.Player}-eating indicator sound
+&nbsp;     *
+&nbsp;     * @return The {@link #eatingSound}
+&nbsp;     */
+&nbsp;    public Music getEatingSound() {
+<b class="fc">&nbsp;        return eatingSound;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Music getDuckSound() {
+<b class="nc">&nbsp;        return duckSound;</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

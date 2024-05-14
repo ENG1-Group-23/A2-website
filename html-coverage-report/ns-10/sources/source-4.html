@@ -1,0 +1,229 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OrthographicCamera</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics</a>
+</div>
+
+<h1>Coverage Summary for Class: OrthographicCamera (com.badlogic.gdx.graphics)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrthographicCamera</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    44.4%
+  </span>
+  <span class="absValue">
+    (4/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (24/40)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.math.Matrix4;
+&nbsp;import com.badlogic.gdx.math.Vector2;
+&nbsp;import com.badlogic.gdx.math.Vector3;
+&nbsp;
+&nbsp;/** A camera with orthographic projection.
+&nbsp; * 
+&nbsp; * @author mzechner */
+&nbsp;public class OrthographicCamera extends Camera {
+&nbsp;	/** the zoom of the camera **/
+<b class="fc">&nbsp;	public float zoom = 1;</b>
+&nbsp;
+<b class="fc">&nbsp;	public OrthographicCamera () {</b>
+<b class="fc">&nbsp;		this.near = 0;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new OrthographicCamera, using the given viewport width and height. For pixel perfect 2D rendering just supply
+&nbsp;	 * the screen size, for other unit scales (e.g. meters for box2d) proceed accordingly. The camera will show the region
+&nbsp;	 * [-viewportWidth/2, -(viewportHeight/2-1)] - [(viewportWidth/2-1), viewportHeight/2]
+&nbsp;	 * @param viewportWidth the viewport width
+&nbsp;	 * @param viewportHeight the viewport height */
+<b class="nc">&nbsp;	public OrthographicCamera (float viewportWidth, float viewportHeight) {</b>
+<b class="nc">&nbsp;		this.viewportWidth = viewportWidth;</b>
+<b class="nc">&nbsp;		this.viewportHeight = viewportHeight;</b>
+<b class="nc">&nbsp;		this.near = 0;</b>
+<b class="nc">&nbsp;		update();</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+<b class="fc">&nbsp;	private final Vector3 tmp = new Vector3();</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void update () {
+<b class="fc">&nbsp;		update(true);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void update (boolean updateFrustum) {
+<b class="fc">&nbsp;		projection.setToOrtho(zoom * -viewportWidth / 2, zoom * (viewportWidth / 2), zoom * -(viewportHeight / 2),</b>
+&nbsp;			zoom * viewportHeight / 2, near, far);
+<b class="fc">&nbsp;		view.setToLookAt(position, tmp.set(position).add(direction), up);</b>
+<b class="fc">&nbsp;		combined.set(projection);</b>
+<b class="fc">&nbsp;		Matrix4.mul(combined.val, view.val);</b>
+&nbsp;
+<b class="pc">&nbsp;		if (updateFrustum) {</b>
+<b class="fc">&nbsp;			invProjectionView.set(combined);</b>
+<b class="fc">&nbsp;			Matrix4.inv(invProjectionView.val);</b>
+<b class="fc">&nbsp;			frustum.update(invProjectionView);</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets this camera to an orthographic projection using a viewport fitting the screen resolution, centered at
+&nbsp;	 * (Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2), with the y-axis pointing up or down.
+&nbsp;	 * @param yDown whether y should be pointing down */
+&nbsp;	public void setToOrtho (boolean yDown) {
+<b class="nc">&nbsp;		setToOrtho(yDown, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets this camera to an orthographic projection, centered at (viewportWidth/2, viewportHeight/2), with the y-axis pointing
+&nbsp;	 * up or down.
+&nbsp;	 * @param yDown whether y should be pointing down.
+&nbsp;	 * @param viewportWidth
+&nbsp;	 * @param viewportHeight */
+&nbsp;	public void setToOrtho (boolean yDown, float viewportWidth, float viewportHeight) {
+<b class="pc">&nbsp;		if (yDown) {</b>
+<b class="nc">&nbsp;			up.set(0, -1, 0);</b>
+<b class="nc">&nbsp;			direction.set(0, 0, 1);</b>
+&nbsp;		} else {
+<b class="fc">&nbsp;			up.set(0, 1, 0);</b>
+<b class="fc">&nbsp;			direction.set(0, 0, -1);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		position.set(zoom * viewportWidth / 2.0f, zoom * viewportHeight / 2.0f, 0);</b>
+<b class="fc">&nbsp;		this.viewportWidth = viewportWidth;</b>
+<b class="fc">&nbsp;		this.viewportHeight = viewportHeight;</b>
+<b class="fc">&nbsp;		update();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Rotates the camera by the given angle around the direction vector. The direction and up vector will not be orthogonalized.
+&nbsp;	 * @param angle */
+&nbsp;	public void rotate (float angle) {
+<b class="nc">&nbsp;		rotate(direction, angle);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Moves the camera by the given amount on each axis.
+&nbsp;	 * @param x the displacement on the x-axis
+&nbsp;	 * @param y the displacement on the y-axis */
+&nbsp;	public void translate (float x, float y) {
+<b class="nc">&nbsp;		translate(x, y, 0);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Moves the camera by the given vector.
+&nbsp;	 * @param vec the displacement vector */
+&nbsp;	public void translate (Vector2 vec) {
+<b class="nc">&nbsp;		translate(vec.x, vec.y, 0);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

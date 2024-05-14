@@ -1,0 +1,546 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Rectangle</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: Rectangle (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Rectangle</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.3%
+  </span>
+  <span class="absValue">
+    (3/41)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/72)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.9%
+  </span>
+  <span class="absValue">
+    (10/145)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the
+&nbsp; * License. You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; * http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot;
+&nbsp; * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
+&nbsp; * governing permissions and limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;import com.badlogic.gdx.utils.NumberUtils;
+&nbsp;import com.badlogic.gdx.utils.Scaling;
+&nbsp;
+&nbsp;/** Encapsulates a 2D rectangle defined by its corner point in the bottom left and its extents in x (width) and y (height).
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public class Rectangle implements Serializable, Shape2D {
+&nbsp;	/** Static temporary rectangle. Use with care! Use only when sure other code will not also use this. */
+<b class="fc">&nbsp;	static public final Rectangle tmp = new Rectangle();</b>
+&nbsp;
+&nbsp;	/** Static temporary rectangle. Use with care! Use only when sure other code will not also use this. */
+<b class="fc">&nbsp;	static public final Rectangle tmp2 = new Rectangle();</b>
+&nbsp;
+&nbsp;	private static final long serialVersionUID = 5733252015138115702L;
+&nbsp;	public float x, y;
+&nbsp;	public float width, height;
+&nbsp;
+&nbsp;	/** Constructs a new rectangle with all values set to zero */
+<b class="fc">&nbsp;	public Rectangle () {</b>
+&nbsp;
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new rectangle with the given corner point in the bottom left and dimensions.
+&nbsp;	 * @param x The corner point x-coordinate
+&nbsp;	 * @param y The corner point y-coordinate
+&nbsp;	 * @param width The width
+&nbsp;	 * @param height The height */
+<b class="fc">&nbsp;	public Rectangle (float x, float y, float width, float height) {</b>
+<b class="fc">&nbsp;		this.x = x;</b>
+<b class="fc">&nbsp;		this.y = y;</b>
+<b class="fc">&nbsp;		this.width = width;</b>
+<b class="fc">&nbsp;		this.height = height;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a rectangle based on the given rectangle
+&nbsp;	 * @param rect The rectangle */
+<b class="nc">&nbsp;	public Rectangle (Rectangle rect) {</b>
+<b class="nc">&nbsp;		x = rect.x;</b>
+<b class="nc">&nbsp;		y = rect.y;</b>
+<b class="nc">&nbsp;		width = rect.width;</b>
+<b class="nc">&nbsp;		height = rect.height;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param x bottom-left x coordinate
+&nbsp;	 * @param y bottom-left y coordinate
+&nbsp;	 * @param width width
+&nbsp;	 * @param height height
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle set (float x, float y, float width, float height) {
+<b class="nc">&nbsp;		this.x = x;</b>
+<b class="nc">&nbsp;		this.y = y;</b>
+<b class="nc">&nbsp;		this.width = width;</b>
+<b class="nc">&nbsp;		this.height = height;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the x-coordinate of the bottom left corner */
+&nbsp;	public float getX () {
+<b class="nc">&nbsp;		return x;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the x-coordinate of the bottom left corner
+&nbsp;	 * @param x The x-coordinate
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setX (float x) {
+<b class="nc">&nbsp;		this.x = x;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the y-coordinate of the bottom left corner */
+&nbsp;	public float getY () {
+<b class="nc">&nbsp;		return y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the y-coordinate of the bottom left corner
+&nbsp;	 * @param y The y-coordinate
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setY (float y) {
+<b class="nc">&nbsp;		this.y = y;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the width */
+&nbsp;	public float getWidth () {
+<b class="nc">&nbsp;		return width;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the width of this rectangle
+&nbsp;	 * @param width The width
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setWidth (float width) {
+<b class="nc">&nbsp;		this.width = width;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the height */
+&nbsp;	public float getHeight () {
+<b class="nc">&nbsp;		return height;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the height of this rectangle
+&nbsp;	 * @param height The height
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setHeight (float height) {
+<b class="nc">&nbsp;		this.height = height;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** return the Vector2 with coordinates of this rectangle
+&nbsp;	 * @param position The Vector2 */
+&nbsp;	public Vector2 getPosition (Vector2 position) {
+<b class="nc">&nbsp;		return position.set(x, y);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the x and y-coordinates of the bottom left corner from vector
+&nbsp;	 * @param position The position vector
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setPosition (Vector2 position) {
+<b class="nc">&nbsp;		this.x = position.x;</b>
+<b class="nc">&nbsp;		this.y = position.y;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the x and y-coordinates of the bottom left corner
+&nbsp;	 * @param x The x-coordinate
+&nbsp;	 * @param y The y-coordinate
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setPosition (float x, float y) {
+<b class="nc">&nbsp;		this.x = x;</b>
+<b class="nc">&nbsp;		this.y = y;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the width and height of this rectangle
+&nbsp;	 * @param width The width
+&nbsp;	 * @param height The height
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setSize (float width, float height) {
+<b class="nc">&nbsp;		this.width = width;</b>
+<b class="nc">&nbsp;		this.height = height;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the squared size of this rectangle
+&nbsp;	 * @param sizeXY The size
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle setSize (float sizeXY) {
+<b class="nc">&nbsp;		this.width = sizeXY;</b>
+<b class="nc">&nbsp;		this.height = sizeXY;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the Vector2 with size of this rectangle
+&nbsp;	 * @param size The Vector2 */
+&nbsp;	public Vector2 getSize (Vector2 size) {
+<b class="nc">&nbsp;		return size.set(width, height);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param x point x coordinate
+&nbsp;	 * @param y point y coordinate
+&nbsp;	 * @return whether the point is contained in the rectangle */
+&nbsp;	public boolean contains (float x, float y) {
+<b class="nc">&nbsp;		return this.x &lt;= x &amp;&amp; this.x + this.width &gt;= x &amp;&amp; this.y &lt;= y &amp;&amp; this.y + this.height &gt;= y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param point The coordinates vector
+&nbsp;	 * @return whether the point is contained in the rectangle */
+&nbsp;	public boolean contains (Vector2 point) {
+<b class="nc">&nbsp;		return contains(point.x, point.y);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param circle the circle
+&nbsp;	 * @return whether the circle is contained in the rectangle */
+&nbsp;	public boolean contains (Circle circle) {
+<b class="nc">&nbsp;		return (circle.x - circle.radius &gt;= x) &amp;&amp; (circle.x + circle.radius &lt;= x + width) &amp;&amp; (circle.y - circle.radius &gt;= y)</b>
+&nbsp;			&amp;&amp; (circle.y + circle.radius &lt;= y + height);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param rectangle the other {@link Rectangle}.
+&nbsp;	 * @return whether the other rectangle is contained in this rectangle. */
+&nbsp;	public boolean contains (Rectangle rectangle) {
+<b class="nc">&nbsp;		float xmin = rectangle.x;</b>
+<b class="nc">&nbsp;		float xmax = xmin + rectangle.width;</b>
+&nbsp;
+<b class="nc">&nbsp;		float ymin = rectangle.y;</b>
+<b class="nc">&nbsp;		float ymax = ymin + rectangle.height;</b>
+&nbsp;
+<b class="nc">&nbsp;		return ((xmin &gt; x &amp;&amp; xmin &lt; x + width) &amp;&amp; (xmax &gt; x &amp;&amp; xmax &lt; x + width))</b>
+&nbsp;			&amp;&amp; ((ymin &gt; y &amp;&amp; ymin &lt; y + height) &amp;&amp; (ymax &gt; y &amp;&amp; ymax &lt; y + height));
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param r the other {@link Rectangle}
+&nbsp;	 * @return whether this rectangle overlaps the other rectangle. */
+&nbsp;	public boolean overlaps (Rectangle r) {
+<b class="nc">&nbsp;		return x &lt; r.x + r.width &amp;&amp; x + width &gt; r.x &amp;&amp; y &lt; r.y + r.height &amp;&amp; y + height &gt; r.y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the values of the given rectangle to this rectangle.
+&nbsp;	 * @param rect the other rectangle
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle set (Rectangle rect) {
+<b class="nc">&nbsp;		this.x = rect.x;</b>
+<b class="nc">&nbsp;		this.y = rect.y;</b>
+<b class="nc">&nbsp;		this.width = rect.width;</b>
+<b class="nc">&nbsp;		this.height = rect.height;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Merges this rectangle with the other rectangle. The rectangle should not have negative width or negative height.
+&nbsp;	 * @param rect the other rectangle
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle merge (Rectangle rect) {
+<b class="nc">&nbsp;		float minX = Math.min(x, rect.x);</b>
+<b class="nc">&nbsp;		float maxX = Math.max(x + width, rect.x + rect.width);</b>
+<b class="nc">&nbsp;		this.x = minX;</b>
+<b class="nc">&nbsp;		this.width = maxX - minX;</b>
+&nbsp;
+<b class="nc">&nbsp;		float minY = Math.min(y, rect.y);</b>
+<b class="nc">&nbsp;		float maxY = Math.max(y + height, rect.y + rect.height);</b>
+<b class="nc">&nbsp;		this.y = minY;</b>
+<b class="nc">&nbsp;		this.height = maxY - minY;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Merges this rectangle with a point. The rectangle should not have negative width or negative height.
+&nbsp;	 * @param x the x coordinate of the point
+&nbsp;	 * @param y the y coordinate of the point
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle merge (float x, float y) {
+<b class="nc">&nbsp;		float minX = Math.min(this.x, x);</b>
+<b class="nc">&nbsp;		float maxX = Math.max(this.x + width, x);</b>
+<b class="nc">&nbsp;		this.x = minX;</b>
+<b class="nc">&nbsp;		this.width = maxX - minX;</b>
+&nbsp;
+<b class="nc">&nbsp;		float minY = Math.min(this.y, y);</b>
+<b class="nc">&nbsp;		float maxY = Math.max(this.y + height, y);</b>
+<b class="nc">&nbsp;		this.y = minY;</b>
+<b class="nc">&nbsp;		this.height = maxY - minY;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Merges this rectangle with a point. The rectangle should not have negative width or negative height.
+&nbsp;	 * @param vec the vector describing the point
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle merge (Vector2 vec) {
+<b class="nc">&nbsp;		return merge(vec.x, vec.y);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Merges this rectangle with a list of points. The rectangle should not have negative width or negative height.
+&nbsp;	 * @param vecs the vectors describing the points
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle merge (Vector2[] vecs) {
+<b class="nc">&nbsp;		float minX = x;</b>
+<b class="nc">&nbsp;		float maxX = x + width;</b>
+<b class="nc">&nbsp;		float minY = y;</b>
+<b class="nc">&nbsp;		float maxY = y + height;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; vecs.length; ++i) {</b>
+<b class="nc">&nbsp;			Vector2 v = vecs[i];</b>
+<b class="nc">&nbsp;			minX = Math.min(minX, v.x);</b>
+<b class="nc">&nbsp;			maxX = Math.max(maxX, v.x);</b>
+<b class="nc">&nbsp;			minY = Math.min(minY, v.y);</b>
+<b class="nc">&nbsp;			maxY = Math.max(maxY, v.y);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		x = minX;</b>
+<b class="nc">&nbsp;		width = maxX - minX;</b>
+<b class="nc">&nbsp;		y = minY;</b>
+<b class="nc">&nbsp;		height = maxY - minY;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calculates the aspect ratio ( width / height ) of this rectangle
+&nbsp;	 * @return the aspect ratio of this rectangle. Returns Float.NaN if height is 0 to avoid ArithmeticException */
+&nbsp;	public float getAspectRatio () {
+<b class="nc">&nbsp;		return (height == 0) ? Float.NaN : width / height;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calculates the center of the rectangle. Results are located in the given Vector2
+&nbsp;	 * @param vector the Vector2 to use
+&nbsp;	 * @return the given vector with results stored inside */
+&nbsp;	public Vector2 getCenter (Vector2 vector) {
+<b class="nc">&nbsp;		vector.x = x + width / 2;</b>
+<b class="nc">&nbsp;		vector.y = y + height / 2;</b>
+<b class="nc">&nbsp;		return vector;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Moves this rectangle so that its center point is located at a given position
+&nbsp;	 * @param x the position&#39;s x
+&nbsp;	 * @param y the position&#39;s y
+&nbsp;	 * @return this for chaining */
+&nbsp;	public Rectangle setCenter (float x, float y) {
+<b class="nc">&nbsp;		setPosition(x - width / 2, y - height / 2);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Moves this rectangle so that its center point is located at a given position
+&nbsp;	 * @param position the position
+&nbsp;	 * @return this for chaining */
+&nbsp;	public Rectangle setCenter (Vector2 position) {
+<b class="nc">&nbsp;		setPosition(position.x - width / 2, position.y - height / 2);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Fits this rectangle around another rectangle while maintaining aspect ratio. This scales and centers the rectangle to the
+&nbsp;	 * other rectangle (e.g. Having a camera translate and scale to show a given area)
+&nbsp;	 * @param rect the other rectangle to fit this rectangle around
+&nbsp;	 * @return this rectangle for chaining
+&nbsp;	 * @see Scaling */
+&nbsp;	public Rectangle fitOutside (Rectangle rect) {
+<b class="nc">&nbsp;		float ratio = getAspectRatio();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (ratio &gt; rect.getAspectRatio()) {</b>
+&nbsp;			// Wider than tall
+<b class="nc">&nbsp;			setSize(rect.height * ratio, rect.height);</b>
+&nbsp;		} else {
+&nbsp;			// Taller than wide
+<b class="nc">&nbsp;			setSize(rect.width, rect.width / ratio);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		setPosition((rect.x + rect.width / 2) - width / 2, (rect.y + rect.height / 2) - height / 2);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Fits this rectangle into another rectangle while maintaining aspect ratio. This scales and centers the rectangle to the
+&nbsp;	 * other rectangle (e.g. Scaling a texture within a arbitrary cell without squeezing)
+&nbsp;	 * @param rect the other rectangle to fit this rectangle inside
+&nbsp;	 * @return this rectangle for chaining
+&nbsp;	 * @see Scaling */
+&nbsp;	public Rectangle fitInside (Rectangle rect) {
+<b class="nc">&nbsp;		float ratio = getAspectRatio();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (ratio &lt; rect.getAspectRatio()) {</b>
+&nbsp;			// Taller than wide
+<b class="nc">&nbsp;			setSize(rect.height * ratio, rect.height);</b>
+&nbsp;		} else {
+&nbsp;			// Wider than tall
+<b class="nc">&nbsp;			setSize(rect.width, rect.width / ratio);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		setPosition((rect.x + rect.width / 2) - width / 2, (rect.y + rect.height / 2) - height / 2);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Converts this {@code Rectangle} to a string in the format {@code [x,y,width,height]}.
+&nbsp;	 * @return a string representation of this object. */
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return &quot;[&quot; + x + &quot;,&quot; + y + &quot;,&quot; + width + &quot;,&quot; + height + &quot;]&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this {@code Rectangle} to the value represented by the specified string according to the format of
+&nbsp;	 * {@link #toString()}.
+&nbsp;	 * @param v the string.
+&nbsp;	 * @return this rectangle for chaining */
+&nbsp;	public Rectangle fromString (String v) {
+<b class="nc">&nbsp;		int s0 = v.indexOf(&#39;,&#39;, 1);</b>
+<b class="nc">&nbsp;		int s1 = v.indexOf(&#39;,&#39;, s0 + 1);</b>
+<b class="nc">&nbsp;		int s2 = v.indexOf(&#39;,&#39;, s1 + 1);</b>
+<b class="nc">&nbsp;		if (s0 != -1 &amp;&amp; s1 != -1 &amp;&amp; s2 != -1 &amp;&amp; v.charAt(0) == &#39;[&#39; &amp;&amp; v.charAt(v.length() - 1) == &#39;]&#39;) {</b>
+&nbsp;			try {
+<b class="nc">&nbsp;				float x = Float.parseFloat(v.substring(1, s0));</b>
+<b class="nc">&nbsp;				float y = Float.parseFloat(v.substring(s0 + 1, s1));</b>
+<b class="nc">&nbsp;				float width = Float.parseFloat(v.substring(s1 + 1, s2));</b>
+<b class="nc">&nbsp;				float height = Float.parseFloat(v.substring(s2 + 1, v.length() - 1));</b>
+<b class="nc">&nbsp;				return this.set(x, y, width, height);</b>
+<b class="nc">&nbsp;			} catch (NumberFormatException ex) {</b>
+&nbsp;				// Throw a GdxRuntimeException
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		throw new GdxRuntimeException(&quot;Malformed Rectangle: &quot; + v);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public float area () {
+<b class="nc">&nbsp;		return this.width * this.height;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public float perimeter () {
+<b class="nc">&nbsp;		return 2 * (this.width + this.height);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		final int prime = 31;</b>
+<b class="nc">&nbsp;		int result = 1;</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(height);</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(width);</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(x);</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(y);</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean equals (Object obj) {
+<b class="nc">&nbsp;		if (this == obj) return true;</b>
+<b class="nc">&nbsp;		if (obj == null) return false;</b>
+<b class="nc">&nbsp;		if (getClass() != obj.getClass()) return false;</b>
+<b class="nc">&nbsp;		Rectangle other = (Rectangle)obj;</b>
+<b class="nc">&nbsp;		if (NumberUtils.floatToRawIntBits(height) != NumberUtils.floatToRawIntBits(other.height)) return false;</b>
+<b class="nc">&nbsp;		if (NumberUtils.floatToRawIntBits(width) != NumberUtils.floatToRawIntBits(other.width)) return false;</b>
+<b class="nc">&nbsp;		if (NumberUtils.floatToRawIntBits(x) != NumberUtils.floatToRawIntBits(other.x)) return false;</b>
+<b class="nc">&nbsp;		if (NumberUtils.floatToRawIntBits(y) != NumberUtils.floatToRawIntBits(other.y)) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

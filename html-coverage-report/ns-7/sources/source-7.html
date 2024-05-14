@@ -1,0 +1,1016 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Input</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx</a>
+</div>
+
+<h1>Coverage Summary for Class: Input (com.badlogic.gdx)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Input</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.ObjectIntMap;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * Interface to the input facilities. This allows polling the state of the keyboard, the touch screen and the accelerometer. On
+&nbsp; * some backends (desktop, gwt, etc) the touch screen is replaced by mouse input. The accelerometer is of course not available on
+&nbsp; * all backends.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Instead of polling for events, one can process all input events with an {@link InputProcessor}. You can set the InputProcessor
+&nbsp; * via the {@link #setInputProcessor(InputProcessor)} method. It will be called before the {@link ApplicationListener#render()}
+&nbsp; * method in each frame.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Keyboard keys are translated to the constants in {@link Keys} transparently on all systems. Do not use system specific key
+&nbsp; * constants.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The class also offers methods to use (and test for the presence of) other input systems like vibration, compass, on-screen
+&nbsp; * keyboards, and cursor capture. Support for simple input dialogs is also provided.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * @author mzechner */
+&nbsp;public interface Input {
+&nbsp;	/** Callback interface for {@link Input#getTextInput(TextInputListener, String, String, String)}
+&nbsp;	 * 
+&nbsp;	 * @author mzechner */
+&nbsp;	static public interface TextInputListener {
+&nbsp;		public void input (String text);
+&nbsp;
+&nbsp;		public void canceled ();
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Mouse buttons.
+&nbsp;	 * @author mzechner */
+&nbsp;	static public class Buttons {
+&nbsp;		public static final int LEFT = 0;
+&nbsp;		public static final int RIGHT = 1;
+&nbsp;		public static final int MIDDLE = 2;
+&nbsp;		public static final int BACK = 3;
+&nbsp;		public static final int FORWARD = 4;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Keys.
+&nbsp;	 * 
+&nbsp;	 * @author mzechner */
+&nbsp;	static public class Keys {
+&nbsp;		public static final int ANY_KEY = -1;
+&nbsp;		public static final int NUM_0 = 7;
+&nbsp;		public static final int NUM_1 = 8;
+&nbsp;		public static final int NUM_2 = 9;
+&nbsp;		public static final int NUM_3 = 10;
+&nbsp;		public static final int NUM_4 = 11;
+&nbsp;		public static final int NUM_5 = 12;
+&nbsp;		public static final int NUM_6 = 13;
+&nbsp;		public static final int NUM_7 = 14;
+&nbsp;		public static final int NUM_8 = 15;
+&nbsp;		public static final int NUM_9 = 16;
+&nbsp;		public static final int A = 29;
+&nbsp;		public static final int ALT_LEFT = 57;
+&nbsp;		public static final int ALT_RIGHT = 58;
+&nbsp;		public static final int APOSTROPHE = 75;
+&nbsp;		public static final int AT = 77;
+&nbsp;		public static final int B = 30;
+&nbsp;		public static final int BACK = 4;
+&nbsp;		public static final int BACKSLASH = 73;
+&nbsp;		public static final int C = 31;
+&nbsp;		public static final int CALL = 5;
+&nbsp;		public static final int CAMERA = 27;
+&nbsp;		public static final int CAPS_LOCK = 115;
+&nbsp;		public static final int CLEAR = 28;
+&nbsp;		public static final int COMMA = 55;
+&nbsp;		public static final int D = 32;
+&nbsp;		public static final int DEL = 67;
+&nbsp;		public static final int BACKSPACE = 67;
+&nbsp;		public static final int FORWARD_DEL = 112;
+&nbsp;		public static final int DPAD_CENTER = 23;
+&nbsp;		public static final int DPAD_DOWN = 20;
+&nbsp;		public static final int DPAD_LEFT = 21;
+&nbsp;		public static final int DPAD_RIGHT = 22;
+&nbsp;		public static final int DPAD_UP = 19;
+&nbsp;		public static final int CENTER = 23;
+&nbsp;		public static final int DOWN = 20;
+&nbsp;		public static final int LEFT = 21;
+&nbsp;		public static final int RIGHT = 22;
+&nbsp;		public static final int UP = 19;
+&nbsp;		public static final int E = 33;
+&nbsp;		public static final int ENDCALL = 6;
+&nbsp;		public static final int ENTER = 66;
+&nbsp;		public static final int ENVELOPE = 65;
+&nbsp;		public static final int EQUALS = 70;
+&nbsp;		public static final int EXPLORER = 64;
+&nbsp;		public static final int F = 34;
+&nbsp;		public static final int FOCUS = 80;
+&nbsp;		public static final int G = 35;
+&nbsp;		public static final int GRAVE = 68;
+&nbsp;		public static final int H = 36;
+&nbsp;		public static final int HEADSETHOOK = 79;
+&nbsp;		public static final int HOME = 3;
+&nbsp;		public static final int I = 37;
+&nbsp;		public static final int J = 38;
+&nbsp;		public static final int K = 39;
+&nbsp;		public static final int L = 40;
+&nbsp;		public static final int LEFT_BRACKET = 71;
+&nbsp;		public static final int M = 41;
+&nbsp;		public static final int MEDIA_FAST_FORWARD = 90;
+&nbsp;		public static final int MEDIA_NEXT = 87;
+&nbsp;		public static final int MEDIA_PLAY_PAUSE = 85;
+&nbsp;		public static final int MEDIA_PREVIOUS = 88;
+&nbsp;		public static final int MEDIA_REWIND = 89;
+&nbsp;		public static final int MEDIA_STOP = 86;
+&nbsp;		public static final int MENU = 82;
+&nbsp;		public static final int MINUS = 69;
+&nbsp;		public static final int MUTE = 91;
+&nbsp;		public static final int N = 42;
+&nbsp;		public static final int NOTIFICATION = 83;
+&nbsp;		public static final int NUM = 78;
+&nbsp;		public static final int O = 43;
+&nbsp;		public static final int P = 44;
+&nbsp;		public static final int PAUSE = 121; // aka break
+&nbsp;		public static final int PERIOD = 56;
+&nbsp;		public static final int PLUS = 81;
+&nbsp;		public static final int POUND = 18;
+&nbsp;		public static final int POWER = 26;
+&nbsp;		public static final int PRINT_SCREEN = 120; // aka SYSRQ
+&nbsp;		public static final int Q = 45;
+&nbsp;		public static final int R = 46;
+&nbsp;		public static final int RIGHT_BRACKET = 72;
+&nbsp;		public static final int S = 47;
+&nbsp;		public static final int SCROLL_LOCK = 116;
+&nbsp;		public static final int SEARCH = 84;
+&nbsp;		public static final int SEMICOLON = 74;
+&nbsp;		public static final int SHIFT_LEFT = 59;
+&nbsp;		public static final int SHIFT_RIGHT = 60;
+&nbsp;		public static final int SLASH = 76;
+&nbsp;		public static final int SOFT_LEFT = 1;
+&nbsp;		public static final int SOFT_RIGHT = 2;
+&nbsp;		public static final int SPACE = 62;
+&nbsp;		public static final int STAR = 17;
+&nbsp;		public static final int SYM = 63; // on MacOS, this is Command (⌘)
+&nbsp;		public static final int T = 48;
+&nbsp;		public static final int TAB = 61;
+&nbsp;		public static final int U = 49;
+&nbsp;		public static final int UNKNOWN = 0;
+&nbsp;		public static final int V = 50;
+&nbsp;		public static final int VOLUME_DOWN = 25;
+&nbsp;		public static final int VOLUME_UP = 24;
+&nbsp;		public static final int W = 51;
+&nbsp;		public static final int X = 52;
+&nbsp;		public static final int Y = 53;
+&nbsp;		public static final int Z = 54;
+&nbsp;		public static final int META_ALT_LEFT_ON = 16;
+&nbsp;		public static final int META_ALT_ON = 2;
+&nbsp;		public static final int META_ALT_RIGHT_ON = 32;
+&nbsp;		public static final int META_SHIFT_LEFT_ON = 64;
+&nbsp;		public static final int META_SHIFT_ON = 1;
+&nbsp;		public static final int META_SHIFT_RIGHT_ON = 128;
+&nbsp;		public static final int META_SYM_ON = 4;
+&nbsp;		public static final int CONTROL_LEFT = 129;
+&nbsp;		public static final int CONTROL_RIGHT = 130;
+&nbsp;		public static final int ESCAPE = 111;
+&nbsp;		public static final int END = 123;
+&nbsp;		public static final int INSERT = 124;
+&nbsp;		public static final int PAGE_UP = 92;
+&nbsp;		public static final int PAGE_DOWN = 93;
+&nbsp;		public static final int PICTSYMBOLS = 94;
+&nbsp;		public static final int SWITCH_CHARSET = 95;
+&nbsp;		public static final int BUTTON_CIRCLE = 255;
+&nbsp;		public static final int BUTTON_A = 96;
+&nbsp;		public static final int BUTTON_B = 97;
+&nbsp;		public static final int BUTTON_C = 98;
+&nbsp;		public static final int BUTTON_X = 99;
+&nbsp;		public static final int BUTTON_Y = 100;
+&nbsp;		public static final int BUTTON_Z = 101;
+&nbsp;		public static final int BUTTON_L1 = 102;
+&nbsp;		public static final int BUTTON_R1 = 103;
+&nbsp;		public static final int BUTTON_L2 = 104;
+&nbsp;		public static final int BUTTON_R2 = 105;
+&nbsp;		public static final int BUTTON_THUMBL = 106;
+&nbsp;		public static final int BUTTON_THUMBR = 107;
+&nbsp;		public static final int BUTTON_START = 108;
+&nbsp;		public static final int BUTTON_SELECT = 109;
+&nbsp;		public static final int BUTTON_MODE = 110;
+&nbsp;
+&nbsp;		public static final int NUMPAD_0 = 144;
+&nbsp;		public static final int NUMPAD_1 = 145;
+&nbsp;		public static final int NUMPAD_2 = 146;
+&nbsp;		public static final int NUMPAD_3 = 147;
+&nbsp;		public static final int NUMPAD_4 = 148;
+&nbsp;		public static final int NUMPAD_5 = 149;
+&nbsp;		public static final int NUMPAD_6 = 150;
+&nbsp;		public static final int NUMPAD_7 = 151;
+&nbsp;		public static final int NUMPAD_8 = 152;
+&nbsp;		public static final int NUMPAD_9 = 153;
+&nbsp;
+&nbsp;		public static final int NUMPAD_DIVIDE = 154;
+&nbsp;		public static final int NUMPAD_MULTIPLY = 155;
+&nbsp;		public static final int NUMPAD_SUBTRACT = 156;
+&nbsp;		public static final int NUMPAD_ADD = 157;
+&nbsp;		public static final int NUMPAD_DOT = 158;
+&nbsp;		public static final int NUMPAD_COMMA = 159;
+&nbsp;		public static final int NUMPAD_ENTER = 160;
+&nbsp;		public static final int NUMPAD_EQUALS = 161;
+&nbsp;		public static final int NUMPAD_LEFT_PAREN = 162;
+&nbsp;		public static final int NUMPAD_RIGHT_PAREN = 163;
+&nbsp;		public static final int NUM_LOCK = 143;
+&nbsp;
+&nbsp;// public static final int BACKTICK = 0;
+&nbsp;// public static final int TILDE = 0;
+&nbsp;// public static final int UNDERSCORE = 0;
+&nbsp;// public static final int DOT = 0;
+&nbsp;// public static final int BREAK = 0;
+&nbsp;// public static final int PIPE = 0;
+&nbsp;// public static final int EXCLAMATION = 0;
+&nbsp;// public static final int QUESTIONMARK = 0;
+&nbsp;
+&nbsp;// ` | VK_BACKTICK
+&nbsp;// ~ | VK_TILDE
+&nbsp;// : | VK_COLON
+&nbsp;// _ | VK_UNDERSCORE
+&nbsp;// . | VK_DOT
+&nbsp;// (break) | VK_BREAK
+&nbsp;// | | VK_PIPE
+&nbsp;// ! | VK_EXCLAMATION
+&nbsp;// ? | VK_QUESTION
+&nbsp;		public static final int COLON = 243;
+&nbsp;		public static final int F1 = 131;
+&nbsp;		public static final int F2 = 132;
+&nbsp;		public static final int F3 = 133;
+&nbsp;		public static final int F4 = 134;
+&nbsp;		public static final int F5 = 135;
+&nbsp;		public static final int F6 = 136;
+&nbsp;		public static final int F7 = 137;
+&nbsp;		public static final int F8 = 138;
+&nbsp;		public static final int F9 = 139;
+&nbsp;		public static final int F10 = 140;
+&nbsp;		public static final int F11 = 141;
+&nbsp;		public static final int F12 = 142;
+&nbsp;		public static final int F13 = 183;
+&nbsp;		public static final int F14 = 184;
+&nbsp;		public static final int F15 = 185;
+&nbsp;		public static final int F16 = 186;
+&nbsp;		public static final int F17 = 187;
+&nbsp;		public static final int F18 = 188;
+&nbsp;		public static final int F19 = 189;
+&nbsp;		public static final int F20 = 190;
+&nbsp;		public static final int F21 = 191;
+&nbsp;		public static final int F22 = 192;
+&nbsp;		public static final int F23 = 193;
+&nbsp;		public static final int F24 = 194;
+&nbsp;
+&nbsp;		public static final int MAX_KEYCODE = 255;
+&nbsp;
+&nbsp;		/** @return a human readable representation of the keycode. The returned value can be used in
+&nbsp;		 *         {@link Input.Keys#valueOf(String)} */
+&nbsp;		public static String toString (int keycode) {
+&nbsp;			if (keycode &lt; 0) throw new IllegalArgumentException(&quot;keycode cannot be negative, keycode: &quot; + keycode);
+&nbsp;			if (keycode &gt; MAX_KEYCODE) throw new IllegalArgumentException(&quot;keycode cannot be greater than 255, keycode: &quot; + keycode);
+&nbsp;			switch (keycode) {
+&nbsp;			// META* variables should not be used with this method.
+&nbsp;			case UNKNOWN:
+&nbsp;				return &quot;Unknown&quot;;
+&nbsp;			case SOFT_LEFT:
+&nbsp;				return &quot;Soft Left&quot;;
+&nbsp;			case SOFT_RIGHT:
+&nbsp;				return &quot;Soft Right&quot;;
+&nbsp;			case HOME:
+&nbsp;				return &quot;Home&quot;;
+&nbsp;			case BACK:
+&nbsp;				return &quot;Back&quot;;
+&nbsp;			case CALL:
+&nbsp;				return &quot;Call&quot;;
+&nbsp;			case ENDCALL:
+&nbsp;				return &quot;End Call&quot;;
+&nbsp;			case NUM_0:
+&nbsp;				return &quot;0&quot;;
+&nbsp;			case NUM_1:
+&nbsp;				return &quot;1&quot;;
+&nbsp;			case NUM_2:
+&nbsp;				return &quot;2&quot;;
+&nbsp;			case NUM_3:
+&nbsp;				return &quot;3&quot;;
+&nbsp;			case NUM_4:
+&nbsp;				return &quot;4&quot;;
+&nbsp;			case NUM_5:
+&nbsp;				return &quot;5&quot;;
+&nbsp;			case NUM_6:
+&nbsp;				return &quot;6&quot;;
+&nbsp;			case NUM_7:
+&nbsp;				return &quot;7&quot;;
+&nbsp;			case NUM_8:
+&nbsp;				return &quot;8&quot;;
+&nbsp;			case NUM_9:
+&nbsp;				return &quot;9&quot;;
+&nbsp;			case STAR:
+&nbsp;				return &quot;*&quot;;
+&nbsp;			case POUND:
+&nbsp;				return &quot;#&quot;;
+&nbsp;			case UP:
+&nbsp;				return &quot;Up&quot;;
+&nbsp;			case DOWN:
+&nbsp;				return &quot;Down&quot;;
+&nbsp;			case LEFT:
+&nbsp;				return &quot;Left&quot;;
+&nbsp;			case RIGHT:
+&nbsp;				return &quot;Right&quot;;
+&nbsp;			case CENTER:
+&nbsp;				return &quot;Center&quot;;
+&nbsp;			case VOLUME_UP:
+&nbsp;				return &quot;Volume Up&quot;;
+&nbsp;			case VOLUME_DOWN:
+&nbsp;				return &quot;Volume Down&quot;;
+&nbsp;			case POWER:
+&nbsp;				return &quot;Power&quot;;
+&nbsp;			case CAMERA:
+&nbsp;				return &quot;Camera&quot;;
+&nbsp;			case CLEAR:
+&nbsp;				return &quot;Clear&quot;;
+&nbsp;			case A:
+&nbsp;				return &quot;A&quot;;
+&nbsp;			case B:
+&nbsp;				return &quot;B&quot;;
+&nbsp;			case C:
+&nbsp;				return &quot;C&quot;;
+&nbsp;			case D:
+&nbsp;				return &quot;D&quot;;
+&nbsp;			case E:
+&nbsp;				return &quot;E&quot;;
+&nbsp;			case F:
+&nbsp;				return &quot;F&quot;;
+&nbsp;			case G:
+&nbsp;				return &quot;G&quot;;
+&nbsp;			case H:
+&nbsp;				return &quot;H&quot;;
+&nbsp;			case I:
+&nbsp;				return &quot;I&quot;;
+&nbsp;			case J:
+&nbsp;				return &quot;J&quot;;
+&nbsp;			case K:
+&nbsp;				return &quot;K&quot;;
+&nbsp;			case L:
+&nbsp;				return &quot;L&quot;;
+&nbsp;			case M:
+&nbsp;				return &quot;M&quot;;
+&nbsp;			case N:
+&nbsp;				return &quot;N&quot;;
+&nbsp;			case O:
+&nbsp;				return &quot;O&quot;;
+&nbsp;			case P:
+&nbsp;				return &quot;P&quot;;
+&nbsp;			case Q:
+&nbsp;				return &quot;Q&quot;;
+&nbsp;			case R:
+&nbsp;				return &quot;R&quot;;
+&nbsp;			case S:
+&nbsp;				return &quot;S&quot;;
+&nbsp;			case T:
+&nbsp;				return &quot;T&quot;;
+&nbsp;			case U:
+&nbsp;				return &quot;U&quot;;
+&nbsp;			case V:
+&nbsp;				return &quot;V&quot;;
+&nbsp;			case W:
+&nbsp;				return &quot;W&quot;;
+&nbsp;			case X:
+&nbsp;				return &quot;X&quot;;
+&nbsp;			case Y:
+&nbsp;				return &quot;Y&quot;;
+&nbsp;			case Z:
+&nbsp;				return &quot;Z&quot;;
+&nbsp;			case COMMA:
+&nbsp;				return &quot;,&quot;;
+&nbsp;			case PERIOD:
+&nbsp;				return &quot;.&quot;;
+&nbsp;			case ALT_LEFT:
+&nbsp;				return &quot;L-Alt&quot;;
+&nbsp;			case ALT_RIGHT:
+&nbsp;				return &quot;R-Alt&quot;;
+&nbsp;			case SHIFT_LEFT:
+&nbsp;				return &quot;L-Shift&quot;;
+&nbsp;			case SHIFT_RIGHT:
+&nbsp;				return &quot;R-Shift&quot;;
+&nbsp;			case TAB:
+&nbsp;				return &quot;Tab&quot;;
+&nbsp;			case SPACE:
+&nbsp;				return &quot;Space&quot;;
+&nbsp;			case SYM:
+&nbsp;				return &quot;SYM&quot;;
+&nbsp;			case EXPLORER:
+&nbsp;				return &quot;Explorer&quot;;
+&nbsp;			case ENVELOPE:
+&nbsp;				return &quot;Envelope&quot;;
+&nbsp;			case ENTER:
+&nbsp;				return &quot;Enter&quot;;
+&nbsp;			case DEL:
+&nbsp;				return &quot;Delete&quot;; // also BACKSPACE
+&nbsp;			case GRAVE:
+&nbsp;				return &quot;`&quot;;
+&nbsp;			case MINUS:
+&nbsp;				return &quot;-&quot;;
+&nbsp;			case EQUALS:
+&nbsp;				return &quot;=&quot;;
+&nbsp;			case LEFT_BRACKET:
+&nbsp;				return &quot;[&quot;;
+&nbsp;			case RIGHT_BRACKET:
+&nbsp;				return &quot;]&quot;;
+&nbsp;			case BACKSLASH:
+&nbsp;				return &quot;\\&quot;;
+&nbsp;			case SEMICOLON:
+&nbsp;				return &quot;;&quot;;
+&nbsp;			case APOSTROPHE:
+&nbsp;				return &quot;&#39;&quot;;
+&nbsp;			case SLASH:
+&nbsp;				return &quot;/&quot;;
+&nbsp;			case AT:
+&nbsp;				return &quot;@&quot;;
+&nbsp;			case NUM:
+&nbsp;				return &quot;Num&quot;;
+&nbsp;			case HEADSETHOOK:
+&nbsp;				return &quot;Headset Hook&quot;;
+&nbsp;			case FOCUS:
+&nbsp;				return &quot;Focus&quot;;
+&nbsp;			case PLUS:
+&nbsp;				return &quot;Plus&quot;;
+&nbsp;			case MENU:
+&nbsp;				return &quot;Menu&quot;;
+&nbsp;			case NOTIFICATION:
+&nbsp;				return &quot;Notification&quot;;
+&nbsp;			case SEARCH:
+&nbsp;				return &quot;Search&quot;;
+&nbsp;			case MEDIA_PLAY_PAUSE:
+&nbsp;				return &quot;Play/Pause&quot;;
+&nbsp;			case MEDIA_STOP:
+&nbsp;				return &quot;Stop Media&quot;;
+&nbsp;			case MEDIA_NEXT:
+&nbsp;				return &quot;Next Media&quot;;
+&nbsp;			case MEDIA_PREVIOUS:
+&nbsp;				return &quot;Prev Media&quot;;
+&nbsp;			case MEDIA_REWIND:
+&nbsp;				return &quot;Rewind&quot;;
+&nbsp;			case MEDIA_FAST_FORWARD:
+&nbsp;				return &quot;Fast Forward&quot;;
+&nbsp;			case MUTE:
+&nbsp;				return &quot;Mute&quot;;
+&nbsp;			case PAGE_UP:
+&nbsp;				return &quot;Page Up&quot;;
+&nbsp;			case PAGE_DOWN:
+&nbsp;				return &quot;Page Down&quot;;
+&nbsp;			case PICTSYMBOLS:
+&nbsp;				return &quot;PICTSYMBOLS&quot;;
+&nbsp;			case SWITCH_CHARSET:
+&nbsp;				return &quot;SWITCH_CHARSET&quot;;
+&nbsp;			case BUTTON_A:
+&nbsp;				return &quot;A Button&quot;;
+&nbsp;			case BUTTON_B:
+&nbsp;				return &quot;B Button&quot;;
+&nbsp;			case BUTTON_C:
+&nbsp;				return &quot;C Button&quot;;
+&nbsp;			case BUTTON_X:
+&nbsp;				return &quot;X Button&quot;;
+&nbsp;			case BUTTON_Y:
+&nbsp;				return &quot;Y Button&quot;;
+&nbsp;			case BUTTON_Z:
+&nbsp;				return &quot;Z Button&quot;;
+&nbsp;			case BUTTON_L1:
+&nbsp;				return &quot;L1 Button&quot;;
+&nbsp;			case BUTTON_R1:
+&nbsp;				return &quot;R1 Button&quot;;
+&nbsp;			case BUTTON_L2:
+&nbsp;				return &quot;L2 Button&quot;;
+&nbsp;			case BUTTON_R2:
+&nbsp;				return &quot;R2 Button&quot;;
+&nbsp;			case BUTTON_THUMBL:
+&nbsp;				return &quot;Left Thumb&quot;;
+&nbsp;			case BUTTON_THUMBR:
+&nbsp;				return &quot;Right Thumb&quot;;
+&nbsp;			case BUTTON_START:
+&nbsp;				return &quot;Start&quot;;
+&nbsp;			case BUTTON_SELECT:
+&nbsp;				return &quot;Select&quot;;
+&nbsp;			case BUTTON_MODE:
+&nbsp;				return &quot;Button Mode&quot;;
+&nbsp;			case FORWARD_DEL:
+&nbsp;				return &quot;Forward Delete&quot;;
+&nbsp;			case CONTROL_LEFT:
+&nbsp;				return &quot;L-Ctrl&quot;;
+&nbsp;			case CONTROL_RIGHT:
+&nbsp;				return &quot;R-Ctrl&quot;;
+&nbsp;			case ESCAPE:
+&nbsp;				return &quot;Escape&quot;;
+&nbsp;			case END:
+&nbsp;				return &quot;End&quot;;
+&nbsp;			case INSERT:
+&nbsp;				return &quot;Insert&quot;;
+&nbsp;			case NUMPAD_0:
+&nbsp;				return &quot;Numpad 0&quot;;
+&nbsp;			case NUMPAD_1:
+&nbsp;				return &quot;Numpad 1&quot;;
+&nbsp;			case NUMPAD_2:
+&nbsp;				return &quot;Numpad 2&quot;;
+&nbsp;			case NUMPAD_3:
+&nbsp;				return &quot;Numpad 3&quot;;
+&nbsp;			case NUMPAD_4:
+&nbsp;				return &quot;Numpad 4&quot;;
+&nbsp;			case NUMPAD_5:
+&nbsp;				return &quot;Numpad 5&quot;;
+&nbsp;			case NUMPAD_6:
+&nbsp;				return &quot;Numpad 6&quot;;
+&nbsp;			case NUMPAD_7:
+&nbsp;				return &quot;Numpad 7&quot;;
+&nbsp;			case NUMPAD_8:
+&nbsp;				return &quot;Numpad 8&quot;;
+&nbsp;			case NUMPAD_9:
+&nbsp;				return &quot;Numpad 9&quot;;
+&nbsp;			case COLON:
+&nbsp;				return &quot;:&quot;;
+&nbsp;			case F1:
+&nbsp;				return &quot;F1&quot;;
+&nbsp;			case F2:
+&nbsp;				return &quot;F2&quot;;
+&nbsp;			case F3:
+&nbsp;				return &quot;F3&quot;;
+&nbsp;			case F4:
+&nbsp;				return &quot;F4&quot;;
+&nbsp;			case F5:
+&nbsp;				return &quot;F5&quot;;
+&nbsp;			case F6:
+&nbsp;				return &quot;F6&quot;;
+&nbsp;			case F7:
+&nbsp;				return &quot;F7&quot;;
+&nbsp;			case F8:
+&nbsp;				return &quot;F8&quot;;
+&nbsp;			case F9:
+&nbsp;				return &quot;F9&quot;;
+&nbsp;			case F10:
+&nbsp;				return &quot;F10&quot;;
+&nbsp;			case F11:
+&nbsp;				return &quot;F11&quot;;
+&nbsp;			case F12:
+&nbsp;				return &quot;F12&quot;;
+&nbsp;			case F13:
+&nbsp;				return &quot;F13&quot;;
+&nbsp;			case F14:
+&nbsp;				return &quot;F14&quot;;
+&nbsp;			case F15:
+&nbsp;				return &quot;F15&quot;;
+&nbsp;			case F16:
+&nbsp;				return &quot;F16&quot;;
+&nbsp;			case F17:
+&nbsp;				return &quot;F17&quot;;
+&nbsp;			case F18:
+&nbsp;				return &quot;F18&quot;;
+&nbsp;			case F19:
+&nbsp;				return &quot;F19&quot;;
+&nbsp;			case F20:
+&nbsp;				return &quot;F20&quot;;
+&nbsp;			case F21:
+&nbsp;				return &quot;F21&quot;;
+&nbsp;			case F22:
+&nbsp;				return &quot;F22&quot;;
+&nbsp;			case F23:
+&nbsp;				return &quot;F23&quot;;
+&nbsp;			case F24:
+&nbsp;				return &quot;F24&quot;;
+&nbsp;			case NUMPAD_DIVIDE:
+&nbsp;				return &quot;Num /&quot;;
+&nbsp;			case NUMPAD_MULTIPLY:
+&nbsp;				return &quot;Num *&quot;;
+&nbsp;			case NUMPAD_SUBTRACT:
+&nbsp;				return &quot;Num -&quot;;
+&nbsp;			case NUMPAD_ADD:
+&nbsp;				return &quot;Num +&quot;;
+&nbsp;			case NUMPAD_DOT:
+&nbsp;				return &quot;Num .&quot;;
+&nbsp;			case NUMPAD_COMMA:
+&nbsp;				return &quot;Num ,&quot;;
+&nbsp;			case NUMPAD_ENTER:
+&nbsp;				return &quot;Num Enter&quot;;
+&nbsp;			case NUMPAD_EQUALS:
+&nbsp;				return &quot;Num =&quot;;
+&nbsp;			case NUMPAD_LEFT_PAREN:
+&nbsp;				return &quot;Num (&quot;;
+&nbsp;			case NUMPAD_RIGHT_PAREN:
+&nbsp;				return &quot;Num )&quot;;
+&nbsp;			case NUM_LOCK:
+&nbsp;				return &quot;Num Lock&quot;;
+&nbsp;			case CAPS_LOCK:
+&nbsp;				return &quot;Caps Lock&quot;;
+&nbsp;			case SCROLL_LOCK:
+&nbsp;				return &quot;Scroll Lock&quot;;
+&nbsp;			case PAUSE:
+&nbsp;				return &quot;Pause&quot;;
+&nbsp;			case PRINT_SCREEN:
+&nbsp;				return &quot;Print&quot;;
+&nbsp;			// BUTTON_CIRCLE unhandled, as it conflicts with the more likely to be pressed F12
+&nbsp;			default:
+&nbsp;				// key name not found
+&nbsp;				return null;
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		private static ObjectIntMap&lt;String&gt; keyNames;
+&nbsp;
+&nbsp;		/** @param keyname the keyname returned by the {@link Keys#toString(int)} method
+&nbsp;		 * @return the int keycode */
+&nbsp;		public static int valueOf (String keyname) {
+&nbsp;			if (keyNames == null) initializeKeyNames();
+&nbsp;			return keyNames.get(keyname, -1);
+&nbsp;		}
+&nbsp;
+&nbsp;		/** lazily intialized in {@link Keys#valueOf(String)} */
+&nbsp;		private static void initializeKeyNames () {
+&nbsp;			keyNames = new ObjectIntMap&lt;String&gt;();
+&nbsp;			for (int i = 0; i &lt; 256; i++) {
+&nbsp;				String name = toString(i);
+&nbsp;				if (name != null) keyNames.put(name, i);
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Enumeration of potentially available peripherals. Use with {@link Input#isPeripheralAvailable(Peripheral)}.
+&nbsp;	 * @author mzechner */
+&nbsp;	public enum Peripheral {
+&nbsp;		HardwareKeyboard, OnscreenKeyboard, MultitouchScreen, Accelerometer, Compass, Vibrator, HapticFeedback, Gyroscope, RotationVector, Pressure
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The acceleration force in m/s^2 applied to the device in the X axis, including the force of gravity */
+&nbsp;	public float getAccelerometerX ();
+&nbsp;
+&nbsp;	/** @return The acceleration force in m/s^2 applied to the device in the Y axis, including the force of gravity */
+&nbsp;	public float getAccelerometerY ();
+&nbsp;
+&nbsp;	/** @return The acceleration force in m/s^2 applied to the device in the Z axis, including the force of gravity */
+&nbsp;	public float getAccelerometerZ ();
+&nbsp;
+&nbsp;	/** @return The rate of rotation in rad/s around the X axis */
+&nbsp;	public float getGyroscopeX ();
+&nbsp;
+&nbsp;	/** @return The rate of rotation in rad/s around the Y axis */
+&nbsp;	public float getGyroscopeY ();
+&nbsp;
+&nbsp;	/** @return The rate of rotation in rad/s around the Z axis */
+&nbsp;	public float getGyroscopeZ ();
+&nbsp;
+&nbsp;	/** @return The maximum number of pointers supported */
+&nbsp;	public int getMaxPointers ();
+&nbsp;
+&nbsp;	/** @return The x coordinate of the last touch on touch screen devices and the current mouse position on desktop for the first
+&nbsp;	 *         pointer in screen coordinates. The screen origin is the top left corner. */
+&nbsp;	public int getX ();
+&nbsp;
+&nbsp;	/** Returns the x coordinate in screen coordinates of the given pointer. Pointers are indexed from 0 to n. The pointer id
+&nbsp;	 * identifies the order in which the fingers went down on the screen, e.g. 0 is the first finger, 1 is the second and so on.
+&nbsp;	 * When two fingers are touched down and the first one is lifted the second one keeps its index. If another finger is placed on
+&nbsp;	 * the touch screen the first free index will be used.
+&nbsp;	 * 
+&nbsp;	 * @param pointer the pointer id.
+&nbsp;	 * @return the x coordinate */
+&nbsp;	public int getX (int pointer);
+&nbsp;
+&nbsp;	/** @return the different between the current pointer location and the last pointer location on the x-axis. */
+&nbsp;	public int getDeltaX ();
+&nbsp;
+&nbsp;	/** @return the different between the current pointer location and the last pointer location on the x-axis. */
+&nbsp;	public int getDeltaX (int pointer);
+&nbsp;
+&nbsp;	/** @return The y coordinate of the last touch on touch screen devices and the current mouse position on desktop for the first
+&nbsp;	 *         pointer in screen coordinates. The screen origin is the top left corner. */
+&nbsp;	public int getY ();
+&nbsp;
+&nbsp;	/** Returns the y coordinate in screen coordinates of the given pointer. Pointers are indexed from 0 to n. The pointer id
+&nbsp;	 * identifies the order in which the fingers went down on the screen, e.g. 0 is the first finger, 1 is the second and so on.
+&nbsp;	 * When two fingers are touched down and the first one is lifted the second one keeps its index. If another finger is placed on
+&nbsp;	 * the touch screen the first free index will be used.
+&nbsp;	 * 
+&nbsp;	 * @param pointer the pointer id.
+&nbsp;	 * @return the y coordinate */
+&nbsp;	public int getY (int pointer);
+&nbsp;
+&nbsp;	/** @return the different between the current pointer location and the last pointer location on the y-axis. */
+&nbsp;	public int getDeltaY ();
+&nbsp;
+&nbsp;	/** @return the different between the current pointer location and the last pointer location on the y-axis. */
+&nbsp;	public int getDeltaY (int pointer);
+&nbsp;
+&nbsp;	/** @return whether the screen is currently touched. */
+&nbsp;	public boolean isTouched ();
+&nbsp;
+&nbsp;	/** @return whether a new touch down event just occurred. */
+&nbsp;	public boolean justTouched ();
+&nbsp;
+&nbsp;	/** Whether the screen is currently touched by the pointer with the given index. Pointers are indexed from 0 to n. The pointer
+&nbsp;	 * id identifies the order in which the fingers went down on the screen, e.g. 0 is the first finger, 1 is the second and so on.
+&nbsp;	 * When two fingers are touched down and the first one is lifted the second one keeps its index. If another finger is placed on
+&nbsp;	 * the touch screen the first free index will be used.
+&nbsp;	 *
+&nbsp;	 * @param pointer the pointer
+&nbsp;	 * @return whether the screen is touched by the pointer */
+&nbsp;	public boolean isTouched (int pointer);
+&nbsp;
+&nbsp;	/** @return the pressure of the first pointer */
+&nbsp;	public float getPressure ();
+&nbsp;
+&nbsp;	/** Returns the pressure of the given pointer, where 0 is untouched. On Android it should be up to 1.0, but it can go above
+&nbsp;	 * that slightly and its not consistent between devices. On iOS 1.0 is the normal touch and significantly more of hard touch.
+&nbsp;	 * Check relevant manufacturer documentation for details. Check availability with
+&nbsp;	 * {@link Input#isPeripheralAvailable(Peripheral)}. If not supported, returns 1.0 when touched.
+&nbsp;	 *
+&nbsp;	 * @param pointer the pointer id.
+&nbsp;	 * @return the pressure */
+&nbsp;	public float getPressure (int pointer);
+&nbsp;
+&nbsp;	/** Whether a given button is pressed or not. Button constants can be found in {@link Buttons}. On Android only the
+&nbsp;	 * Buttons#LEFT constant is meaningful before version 4.0.
+&nbsp;	 * @param button the button to check.
+&nbsp;	 * @return whether the button is down or not. */
+&nbsp;	public boolean isButtonPressed (int button);
+&nbsp;
+&nbsp;	/** Returns whether a given button has just been pressed. Button constants can be found in {@link Buttons}. On Android only the
+&nbsp;	 * Buttons#LEFT constant is meaningful before version 4.0. On WebGL (GWT), only LEFT, RIGHT and MIDDLE buttons are supported.
+&nbsp;	 *
+&nbsp;	 * @param button the button to check.
+&nbsp;	 * @return true or false. */
+&nbsp;	public boolean isButtonJustPressed (int button);
+&nbsp;
+&nbsp;	/** Returns whether the key is pressed.
+&nbsp;	 * 
+&nbsp;	 * @param key The key code as found in {@link Input.Keys}.
+&nbsp;	 * @return true or false. */
+&nbsp;	public boolean isKeyPressed (int key);
+&nbsp;
+&nbsp;	/** Returns whether the key has just been pressed.
+&nbsp;	 * 
+&nbsp;	 * @param key The key code as found in {@link Input.Keys}.
+&nbsp;	 * @return true or false. */
+&nbsp;	public boolean isKeyJustPressed (int key);
+&nbsp;
+&nbsp;	/** System dependent method to input a string of text. A dialog box will be created with the given title and the given text as
+&nbsp;	 * a message for the user. Will use the Default keyboard type. Once the dialog has been closed the provided
+&nbsp;	 * {@link TextInputListener} will be called on the rendering thread.
+&nbsp;	 * 
+&nbsp;	 * @param listener The TextInputListener.
+&nbsp;	 * @param title The title of the text input dialog.
+&nbsp;	 * @param text The message presented to the user. */
+&nbsp;	public void getTextInput (TextInputListener listener, String title, String text, String hint);
+&nbsp;
+&nbsp;	/** System dependent method to input a string of text. A dialog box will be created with the given title and the given text as
+&nbsp;	 * a message for the user. Once the dialog has been closed the provided {@link TextInputListener} will be called on the
+&nbsp;	 * rendering thread.
+&nbsp;	 *
+&nbsp;	 * @param listener The TextInputListener.
+&nbsp;	 * @param title The title of the text input dialog.
+&nbsp;	 * @param text The message presented to the user.
+&nbsp;	 * @param type which type of keyboard we wish to display */
+&nbsp;	public void getTextInput (TextInputListener listener, String title, String text, String hint, OnscreenKeyboardType type);
+&nbsp;
+&nbsp;	/** Sets the on-screen keyboard visible if available. Will use the Default keyboard type.
+&nbsp;	 * 
+&nbsp;	 * @param visible visible or not */
+&nbsp;	public void setOnscreenKeyboardVisible (boolean visible);
+&nbsp;
+&nbsp;	/** Sets the on-screen keyboard visible if available.
+&nbsp;	 *
+&nbsp;	 * @param visible visible or not
+&nbsp;	 * @param type which type of keyboard we wish to display. Can be null when hiding */
+&nbsp;	public void setOnscreenKeyboardVisible (boolean visible, OnscreenKeyboardType type);
+&nbsp;
+&nbsp;	public enum OnscreenKeyboardType {
+&nbsp;		Default, NumberPad, PhonePad, Email, Password, URI
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Generates a simple haptic effect of a given duration or a vibration effect on devices without haptic capabilities. Note
+&nbsp;	 * that on Android backend you&#39;ll need the permission
+&nbsp;	 * &lt;code&gt; &lt;uses-permission android:name=&quot;android.permission.VIBRATE&quot; /&gt;&lt;/code&gt; in your manifest file in order for this to work.
+&nbsp;	 * On iOS backend you&#39;ll need to set &lt;code&gt;useHaptics = true&lt;/code&gt; for devices with haptics capabilities to use them.
+&nbsp;	 * 
+&nbsp;	 * @param milliseconds the number of milliseconds to vibrate. */
+&nbsp;	public void vibrate (int milliseconds);
+&nbsp;
+&nbsp;	/** Generates a simple haptic effect of a given duration and default amplitude. Note that on Android backend you&#39;ll need the
+&nbsp;	 * permission &lt;code&gt; &lt;uses-permission android:name=&quot;android.permission.VIBRATE&quot; /&gt;&lt;/code&gt; in your manifest file in order for
+&nbsp;	 * this to work. On iOS backend you&#39;ll need to set &lt;code&gt;useHaptics = true&lt;/code&gt; for devices with haptics capabilities to use
+&nbsp;	 * them.
+&nbsp;	 *
+&nbsp;	 * @param milliseconds the duration of the haptics effect
+&nbsp;	 * @param fallback whether to use non-haptic vibrator on devices without haptics capabilities (or haptics disabled). Fallback
+&nbsp;	 *           non-haptic vibrations may ignore length parameter in some backends. */
+&nbsp;	public void vibrate (int milliseconds, boolean fallback);
+&nbsp;
+&nbsp;	/** Generates a simple haptic effect of a given duration and amplitude. Note that on Android backend you&#39;ll need the permission
+&nbsp;	 * &lt;code&gt; &lt;uses-permission android:name=&quot;android.permission.VIBRATE&quot; /&gt;&lt;/code&gt; in your manifest file in order for this to work.
+&nbsp;	 * On iOS backend you&#39;ll need to set &lt;code&gt;useHaptics = true&lt;/code&gt; for devices with haptics capabilities to use them.
+&nbsp;	 *
+&nbsp;	 * @param milliseconds the duration of the haptics effect
+&nbsp;	 * @param amplitude the amplitude/strength of the haptics effect. Valid values in the range [0, 255].
+&nbsp;	 * @param fallback whether to use non-haptic vibrator on devices without haptics capabilities (or haptics disabled). Fallback
+&nbsp;	 *           non-haptic vibrations may ignore length and/or amplitude parameters in some backends. */
+&nbsp;	public void vibrate (int milliseconds, int amplitude, boolean fallback);
+&nbsp;
+&nbsp;	/** Generates a simple haptic effect of a type. VibrationTypes are length/amplitude haptic effect presets that depend on each
+&nbsp;	 * device and are defined by manufacturers. Should give most consistent results across devices and OSs. Note that on Android
+&nbsp;	 * backend you&#39;ll need the permission &lt;code&gt; &lt;uses-permission android:name=&quot;android.permission.VIBRATE&quot; /&gt;&lt;/code&gt; in your
+&nbsp;	 * manifest file in order for this to work. On iOS backend you&#39;ll need to set &lt;code&gt;useHaptics = true&lt;/code&gt; for devices with
+&nbsp;	 * haptics capabilities to use them.
+&nbsp;	 *
+&nbsp;	 * @param vibrationType the type of vibration */
+&nbsp;	public void vibrate (VibrationType vibrationType);
+&nbsp;
+&nbsp;	public enum VibrationType {
+&nbsp;		LIGHT, MEDIUM, HEAVY;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** The azimuth is the angle of the device&#39;s orientation around the z-axis. The positive z-axis points towards the earths
+&nbsp;	 * center.
+&nbsp;	 * 
+&nbsp;	 * @see &lt;a
+&nbsp;	 *      href=&quot;http://developer.android.com/reference/android/hardware/SensorManager.html#getRotationMatrix(float[], float[], float[], float[])&quot;&gt;http://developer.android.com/reference/android/hardware/SensorManager.html#getRotationMatrix(float[],
+&nbsp;	 *      float[], float[], float[])&lt;/a&gt;
+&nbsp;	 * @return the azimuth in degrees */
+&nbsp;	public float getAzimuth ();
+&nbsp;
+&nbsp;	/** The pitch is the angle of the device&#39;s orientation around the x-axis. The positive x-axis roughly points to the west and is
+&nbsp;	 * orthogonal to the z- and y-axis.
+&nbsp;	 * @see &lt;a
+&nbsp;	 *      href=&quot;http://developer.android.com/reference/android/hardware/SensorManager.html#getRotationMatrix(float[], float[], float[], float[])&quot;&gt;http://developer.android.com/reference/android/hardware/SensorManager.html#getRotationMatrix(float[],
+&nbsp;	 *      float[], float[], float[])&lt;/a&gt;
+&nbsp;	 * @return the pitch in degrees */
+&nbsp;	public float getPitch ();
+&nbsp;
+&nbsp;	/** The roll is the angle of the device&#39;s orientation around the y-axis. The positive y-axis points to the magnetic north pole
+&nbsp;	 * of the earth.
+&nbsp;	 * @see &lt;a
+&nbsp;	 *      href=&quot;http://developer.android.com/reference/android/hardware/SensorManager.html#getRotationMatrix(float[], float[], float[], float[])&quot;&gt;http://developer.android.com/reference/android/hardware/SensorManager.html#getRotationMatrix(float[],
+&nbsp;	 *      float[], float[], float[])&lt;/a&gt;
+&nbsp;	 * @return the roll in degrees */
+&nbsp;	public float getRoll ();
+&nbsp;
+&nbsp;	/** Returns the rotation matrix describing the devices rotation as per
+&nbsp;	 * &lt;a href= &quot;http://developer.android.com/reference/android/hardware/SensorManager.html#getRotationMatrix(float[], float[],
+&nbsp;	 * float[], float[])&quot; &gt;SensorManager#getRotationMatrix(float[], float[], float[], float[])&lt;/a&gt;. Does not manipulate the matrix
+&nbsp;	 * if the platform does not have an accelerometer.
+&nbsp;	 * @param matrix */
+&nbsp;	public void getRotationMatrix (float[] matrix);
+&nbsp;
+&nbsp;	/** @return the time of the event currently reported to the {@link InputProcessor}. */
+&nbsp;	public long getCurrentEventTime ();
+&nbsp;
+&nbsp;	/** @deprecated use {@link Input#setCatchKey(int keycode, boolean catchKey)} instead
+&nbsp;	 *
+&nbsp;	 *             Sets whether the BACK button on Android should be caught. This will prevent the app from being paused. Will have
+&nbsp;	 *             no effect on the desktop.
+&nbsp;	 *
+&nbsp;	 * @param catchBack whether to catch the back button */
+&nbsp;	@Deprecated
+&nbsp;	public void setCatchBackKey (boolean catchBack);
+&nbsp;
+&nbsp;	/** @deprecated use {@link Input#isCatchKey(int keycode)} instead
+&nbsp;	 * @return whether the back button is currently being caught */
+&nbsp;	@Deprecated
+&nbsp;	public boolean isCatchBackKey ();
+&nbsp;
+&nbsp;	/** @deprecated use {@link Input#setCatchKey(int keycode, boolean catchKey)} instead
+&nbsp;	 *
+&nbsp;	 *             Sets whether the MENU button on Android should be caught. This will prevent the onscreen keyboard to show up.
+&nbsp;	 *             Will have no effect on the desktop.
+&nbsp;	 * 
+&nbsp;	 * @param catchMenu whether to catch the menu button */
+&nbsp;	@Deprecated
+&nbsp;	public void setCatchMenuKey (boolean catchMenu);
+&nbsp;
+&nbsp;	/** @deprecated use {@link Input#isCatchKey(int keycode)} instead
+&nbsp;	 * @return whether the menu button is currently being caught */
+&nbsp;	@Deprecated
+&nbsp;	public boolean isCatchMenuKey ();
+&nbsp;
+&nbsp;	/** Sets whether the given key on Android or GWT should be caught. No effect on other platforms. All keys that are not caught
+&nbsp;	 * may be handled by other apps or background processes on Android, or may trigger default browser behaviour on GWT. For
+&nbsp;	 * example, media or volume buttons are handled by background media players if present, or Space key triggers a scroll. All
+&nbsp;	 * keys you need to control your game should be caught to prevent unintended behaviour.
+&nbsp;	 *
+&nbsp;	 * @param keycode keycode to catch
+&nbsp;	 * @param catchKey whether to catch the given keycode */
+&nbsp;	public void setCatchKey (int keycode, boolean catchKey);
+&nbsp;
+&nbsp;	/** @param keycode keycode to check if caught
+&nbsp;	 * @return true if the given keycode is configured to be caught */
+&nbsp;	public boolean isCatchKey (int keycode);
+&nbsp;
+&nbsp;	/** Sets the {@link InputProcessor} that will receive all touch and key input events. It will be called before the
+&nbsp;	 * {@link ApplicationListener#render()} method each frame.
+&nbsp;	 * 
+&nbsp;	 * @param processor the InputProcessor */
+&nbsp;	public void setInputProcessor (InputProcessor processor);
+&nbsp;
+&nbsp;	/** @return the currently set {@link InputProcessor} or null. */
+&nbsp;	public InputProcessor getInputProcessor ();
+&nbsp;
+&nbsp;	/** Queries whether a {@link Peripheral} is currently available. In case of Android and the {@link Peripheral#HardwareKeyboard}
+&nbsp;	 * this returns the whether the keyboard is currently slid out or not.
+&nbsp;	 * 
+&nbsp;	 * @param peripheral the {@link Peripheral}
+&nbsp;	 * @return whether the peripheral is available or not. */
+&nbsp;	public boolean isPeripheralAvailable (Peripheral peripheral);
+&nbsp;
+&nbsp;	/** @return the rotation of the device with respect to its native orientation. */
+&nbsp;	public int getRotation ();
+&nbsp;
+&nbsp;	/** @return the native orientation of the device. */
+&nbsp;	public Orientation getNativeOrientation ();
+&nbsp;
+&nbsp;	public enum Orientation {
+&nbsp;		Landscape, Portrait
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Only viable on the desktop. Will confine the mouse cursor location to the window and hide the mouse cursor. X and y
+&nbsp;	 * coordinates are still reported as if the mouse was not catched.
+&nbsp;	 * @param catched whether to catch or not to catch the mouse cursor */
+&nbsp;	public void setCursorCatched (boolean catched);
+&nbsp;
+&nbsp;	/** @return whether the mouse cursor is catched. */
+&nbsp;	public boolean isCursorCatched ();
+&nbsp;
+&nbsp;	/** Only viable on the desktop. Will set the mouse cursor location to the given window coordinates (origin top-left corner).
+&nbsp;	 * @param x the x-position
+&nbsp;	 * @param y the y-position */
+&nbsp;	public void setCursorPosition (int x, int y);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

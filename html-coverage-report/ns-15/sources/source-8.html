@@ -1,0 +1,359 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TmxMapLoader</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps.tiled</a>
+</div>
+
+<h1>Coverage Summary for Class: TmxMapLoader (com.badlogic.gdx.maps.tiled)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TmxMapLoader</td>
+<td class="coverageStat">
+  <span class="percent">
+    55.6%
+  </span>
+  <span class="absValue">
+    (5/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    37.5%
+  </span>
+  <span class="absValue">
+    (12/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50.5%
+  </span>
+  <span class="absValue">
+    (48/95)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TmxMapLoader$Parameters</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (6/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    37.5%
+  </span>
+  <span class="absValue">
+    (12/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    51%
+  </span>
+  <span class="absValue">
+    (49/96)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.maps.tiled;
+&nbsp;
+&nbsp;import com.badlogic.gdx.assets.AssetDescriptor;
+&nbsp;import com.badlogic.gdx.assets.AssetManager;
+&nbsp;import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+&nbsp;import com.badlogic.gdx.assets.loaders.TextureLoader;
+&nbsp;import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureRegion;
+&nbsp;import com.badlogic.gdx.maps.ImageResolver;
+&nbsp;import com.badlogic.gdx.maps.ImageResolver.AssetManagerImageResolver;
+&nbsp;import com.badlogic.gdx.maps.ImageResolver.DirectImageResolver;
+&nbsp;import com.badlogic.gdx.maps.MapProperties;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;import com.badlogic.gdx.utils.ObjectMap;
+&nbsp;import com.badlogic.gdx.utils.XmlReader.Element;
+&nbsp;
+&nbsp;/** @brief synchronous loader for TMX maps created with the Tiled tool */
+&nbsp;public class TmxMapLoader extends BaseTmxMapLoader&lt;TmxMapLoader.Parameters&gt; {
+&nbsp;
+<b class="fc">&nbsp;	public static class Parameters extends BaseTmxMapLoader.Parameters {</b>
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	public TmxMapLoader () {
+<b class="fc">&nbsp;		super(new InternalFileHandleResolver());</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates loader
+&nbsp;	 * 
+&nbsp;	 * @param resolver */
+&nbsp;	public TmxMapLoader (FileHandleResolver resolver) {
+<b class="nc">&nbsp;		super(resolver);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Loads the {@link TiledMap} from the given file. The file is resolved via the {@link FileHandleResolver} set in the
+&nbsp;	 * constructor of this class. By default it will resolve to an internal file. The map will be loaded for a y-up coordinate
+&nbsp;	 * system.
+&nbsp;	 * @param fileName the filename
+&nbsp;	 * @return the TiledMap */
+&nbsp;	public TiledMap load (String fileName) {
+<b class="fc">&nbsp;		return load(fileName, new TmxMapLoader.Parameters());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Loads the {@link TiledMap} from the given file. The file is resolved via the {@link FileHandleResolver} set in the
+&nbsp;	 * constructor of this class. By default it will resolve to an internal file.
+&nbsp;	 * @param fileName the filename
+&nbsp;	 * @param parameter specifies whether to use y-up, generate mip maps etc.
+&nbsp;	 * @return the TiledMap */
+&nbsp;	public TiledMap load (String fileName, TmxMapLoader.Parameters parameter) {
+<b class="fc">&nbsp;		FileHandle tmxFile = resolve(fileName);</b>
+&nbsp;
+<b class="fc">&nbsp;		this.root = xml.parse(tmxFile);</b>
+&nbsp;
+<b class="fc">&nbsp;		ObjectMap&lt;String, Texture&gt; textures = new ObjectMap&lt;String, Texture&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;		final Array&lt;FileHandle&gt; textureFiles = getDependencyFileHandles(tmxFile);</b>
+<b class="fc">&nbsp;		for (FileHandle textureFile : textureFiles) {</b>
+<b class="fc">&nbsp;			Texture texture = new Texture(textureFile, parameter.generateMipMaps);</b>
+<b class="fc">&nbsp;			texture.setFilter(parameter.textureMinFilter, parameter.textureMagFilter);</b>
+<b class="fc">&nbsp;			textures.put(textureFile.path(), texture);</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		TiledMap map = loadTiledMap(tmxFile, parameter, new DirectImageResolver(textures));</b>
+<b class="fc">&nbsp;		map.setOwnedResources(textures.values().toArray());</b>
+<b class="fc">&nbsp;		return map;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void loadAsync (AssetManager manager, String fileName, FileHandle tmxFile, Parameters parameter) {
+<b class="nc">&nbsp;		this.map = loadTiledMap(tmxFile, parameter, new AssetManagerImageResolver(manager));</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public TiledMap loadSync (AssetManager manager, String fileName, FileHandle file, Parameters parameter) {
+<b class="nc">&nbsp;		return map;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected Array&lt;AssetDescriptor&gt; getDependencyAssetDescriptors (FileHandle tmxFile,
+&nbsp;		TextureLoader.TextureParameter textureParameter) {
+<b class="nc">&nbsp;		Array&lt;AssetDescriptor&gt; descriptors = new Array&lt;AssetDescriptor&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		final Array&lt;FileHandle&gt; fileHandles = getDependencyFileHandles(tmxFile);</b>
+<b class="nc">&nbsp;		for (FileHandle handle : fileHandles) {</b>
+<b class="nc">&nbsp;			descriptors.add(new AssetDescriptor(handle, Texture.class, textureParameter));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		return descriptors;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Array&lt;FileHandle&gt; getDependencyFileHandles (FileHandle tmxFile) {
+<b class="fc">&nbsp;		Array&lt;FileHandle&gt; fileHandles = new Array&lt;FileHandle&gt;();</b>
+&nbsp;
+&nbsp;		// TileSet descriptors
+<b class="fc">&nbsp;		for (Element tileset : root.getChildrenByName(&quot;tileset&quot;)) {</b>
+<b class="fc">&nbsp;			String source = tileset.getAttribute(&quot;source&quot;, null);</b>
+<b class="pc">&nbsp;			if (source != null) {</b>
+<b class="nc">&nbsp;				FileHandle tsxFile = getRelativeFileHandle(tmxFile, source);</b>
+<b class="nc">&nbsp;				tileset = xml.parse(tsxFile);</b>
+<b class="nc">&nbsp;				Element imageElement = tileset.getChildByName(&quot;image&quot;);</b>
+<b class="nc">&nbsp;				if (imageElement != null) {</b>
+<b class="nc">&nbsp;					String imageSource = tileset.getChildByName(&quot;image&quot;).getAttribute(&quot;source&quot;);</b>
+<b class="nc">&nbsp;					FileHandle image = getRelativeFileHandle(tsxFile, imageSource);</b>
+<b class="nc">&nbsp;					fileHandles.add(image);</b>
+<b class="nc">&nbsp;				} else {</b>
+<b class="nc">&nbsp;					for (Element tile : tileset.getChildrenByName(&quot;tile&quot;)) {</b>
+<b class="nc">&nbsp;						String imageSource = tile.getChildByName(&quot;image&quot;).getAttribute(&quot;source&quot;);</b>
+<b class="nc">&nbsp;						FileHandle image = getRelativeFileHandle(tsxFile, imageSource);</b>
+<b class="nc">&nbsp;						fileHandles.add(image);</b>
+<b class="nc">&nbsp;					}</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else {</b>
+<b class="fc">&nbsp;				Element imageElement = tileset.getChildByName(&quot;image&quot;);</b>
+<b class="pc">&nbsp;				if (imageElement != null) {</b>
+<b class="fc">&nbsp;					String imageSource = tileset.getChildByName(&quot;image&quot;).getAttribute(&quot;source&quot;);</b>
+<b class="fc">&nbsp;					FileHandle image = getRelativeFileHandle(tmxFile, imageSource);</b>
+<b class="fc">&nbsp;					fileHandles.add(image);</b>
+<b class="fc">&nbsp;				} else {</b>
+<b class="nc">&nbsp;					for (Element tile : tileset.getChildrenByName(&quot;tile&quot;)) {</b>
+<b class="nc">&nbsp;						String imageSource = tile.getChildByName(&quot;image&quot;).getAttribute(&quot;source&quot;);</b>
+<b class="nc">&nbsp;						FileHandle image = getRelativeFileHandle(tmxFile, imageSource);</b>
+<b class="nc">&nbsp;						fileHandles.add(image);</b>
+<b class="nc">&nbsp;					}</b>
+&nbsp;				}
+&nbsp;			}
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		// ImageLayer descriptors
+<b class="pc">&nbsp;		for (Element imageLayer : root.getChildrenByName(&quot;imagelayer&quot;)) {</b>
+<b class="nc">&nbsp;			Element image = imageLayer.getChildByName(&quot;image&quot;);</b>
+<b class="nc">&nbsp;			String source = image.getAttribute(&quot;source&quot;, null);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (source != null) {</b>
+<b class="nc">&nbsp;				FileHandle handle = getRelativeFileHandle(tmxFile, source);</b>
+<b class="nc">&nbsp;				fileHandles.add(handle);</b>
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		return fileHandles;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void addStaticTiles (FileHandle tmxFile, ImageResolver imageResolver, TiledMapTileSet tileSet, Element element,
+&nbsp;		Array&lt;Element&gt; tileElements, String name, int firstgid, int tilewidth, int tileheight, int spacing, int margin,
+&nbsp;		String source, int offsetX, int offsetY, String imageSource, int imageWidth, int imageHeight, FileHandle image) {
+&nbsp;
+<b class="fc">&nbsp;		MapProperties props = tileSet.getProperties();</b>
+<b class="pc">&nbsp;		if (image != null) {</b>
+&nbsp;			// One image for the whole tileSet
+<b class="fc">&nbsp;			TextureRegion texture = imageResolver.getImage(image.path());</b>
+&nbsp;
+<b class="fc">&nbsp;			props.put(&quot;imagesource&quot;, imageSource);</b>
+<b class="fc">&nbsp;			props.put(&quot;imagewidth&quot;, imageWidth);</b>
+<b class="fc">&nbsp;			props.put(&quot;imageheight&quot;, imageHeight);</b>
+<b class="fc">&nbsp;			props.put(&quot;tilewidth&quot;, tilewidth);</b>
+<b class="fc">&nbsp;			props.put(&quot;tileheight&quot;, tileheight);</b>
+<b class="fc">&nbsp;			props.put(&quot;margin&quot;, margin);</b>
+<b class="fc">&nbsp;			props.put(&quot;spacing&quot;, spacing);</b>
+&nbsp;
+<b class="fc">&nbsp;			int stopWidth = texture.getRegionWidth() - tilewidth;</b>
+<b class="fc">&nbsp;			int stopHeight = texture.getRegionHeight() - tileheight;</b>
+&nbsp;
+<b class="fc">&nbsp;			int id = firstgid;</b>
+&nbsp;
+<b class="fc">&nbsp;			for (int y = margin; y &lt;= stopHeight; y += tileheight + spacing) {</b>
+<b class="fc">&nbsp;				for (int x = margin; x &lt;= stopWidth; x += tilewidth + spacing) {</b>
+<b class="fc">&nbsp;					TextureRegion tileRegion = new TextureRegion(texture, x, y, tilewidth, tileheight);</b>
+<b class="fc">&nbsp;					int tileId = id++;</b>
+<b class="fc">&nbsp;					addStaticTiledMapTile(tileSet, tileRegion, tileId, offsetX, offsetY);</b>
+&nbsp;				}
+&nbsp;			}
+<b class="fc">&nbsp;		} else {</b>
+&nbsp;			// Every tile has its own image source
+<b class="nc">&nbsp;			for (Element tileElement : tileElements) {</b>
+<b class="nc">&nbsp;				Element imageElement = tileElement.getChildByName(&quot;image&quot;);</b>
+<b class="nc">&nbsp;				if (imageElement != null) {</b>
+<b class="nc">&nbsp;					imageSource = imageElement.getAttribute(&quot;source&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;					if (source != null) {</b>
+<b class="nc">&nbsp;						image = getRelativeFileHandle(getRelativeFileHandle(tmxFile, source), imageSource);</b>
+&nbsp;					} else {
+<b class="nc">&nbsp;						image = getRelativeFileHandle(tmxFile, imageSource);</b>
+&nbsp;					}
+&nbsp;				}
+<b class="nc">&nbsp;				TextureRegion texture = imageResolver.getImage(image.path());</b>
+<b class="nc">&nbsp;				int tileId = firstgid + tileElement.getIntAttribute(&quot;id&quot;);</b>
+<b class="nc">&nbsp;				addStaticTiledMapTile(tileSet, texture, tileId, offsetX, offsetY);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

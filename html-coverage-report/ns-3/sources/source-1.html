@@ -1,0 +1,267 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameMap</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.map</a>
+</div>
+
+<h1>Coverage Summary for Class: GameMap (bytemusketeers.heslingtonhustle.map)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameMap</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (3/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.7%
+  </span>
+  <span class="absValue">
+    (10/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.map;
+&nbsp;
+&nbsp;import com.badlogic.gdx.graphics.OrthographicCamera;
+&nbsp;import com.badlogic.gdx.maps.MapProperties;
+&nbsp;import com.badlogic.gdx.maps.tiled.TiledMap;
+&nbsp;import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+&nbsp;import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the game map, handling rendering and toggling layer visibility.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class GameMap extends TiledMap {
+&nbsp;    /**
+&nbsp;     * The required tile size of each TMX tile
+&nbsp;     */
+&nbsp;    private static final int TILE_SIZE = 16;
+&nbsp;    /**
+&nbsp;     * The width of the total map
+&nbsp;     */
+&nbsp;    private final int width;
+&nbsp;    /**
+&nbsp;     * The height of the total map
+&nbsp;     */
+&nbsp;    private final int height;
+&nbsp;    /**
+&nbsp;     * The LibGDX-managed {@link TiledMap} resource corresponding to the tiled {@link com.badlogic.gdx.graphics.Texture}
+&nbsp;     * areas
+&nbsp;     */
+&nbsp;    private final TiledMap gameMap;
+&nbsp;    /**
+&nbsp;     * The LibGDX-provided provision for rendering the map
+&nbsp;     *
+&nbsp;     * @see #gameMap
+&nbsp;     */
+&nbsp;    private final OrthogonalTiledMapRenderer tiledMapRenderer;
+&nbsp;    /**
+&nbsp;     * The LibGDX-provided {@link com.badlogic.gdx.graphics.Camera} reference for viewport-tracking
+&nbsp;     *
+&nbsp;     * @see bytemusketeers.heslingtonhustle.entity.Player
+&nbsp;     */
+&nbsp;    private final OrthographicCamera camera;
+&nbsp;    /**
+&nbsp;     * Render-time threshold for displaying secondary assets on the {@link #gameMap}
+&nbsp;     *
+&nbsp;     * @see #update(float)
+&nbsp;     */
+&nbsp;    float layerToggleTime;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructs a GameMap with an orthographic camera.
+&nbsp;     *
+&nbsp;     * @param camera The camera used to view the map.
+&nbsp;     */
+<b class="fc">&nbsp;    public GameMap(OrthographicCamera camera, OrthogonalTiledMapRenderer tiledMapRenderer, TiledMap map) {</b>
+&nbsp;        // Load the .tmx with the MainMap for game
+<b class="fc">&nbsp;        gameMap = map;</b>
+<b class="fc">&nbsp;        MapProperties properties = gameMap.getProperties();</b>
+<b class="fc">&nbsp;        height = properties.get(&quot;tileheight&quot;, Integer.class) * properties.get(&quot;height&quot;, Integer.class);</b>
+<b class="fc">&nbsp;        width = properties.get(&quot;tilewidth&quot;, Integer.class) * properties.get(&quot;width&quot;, Integer.class);</b>
+&nbsp;
+&nbsp;        // Render the MainMap
+<b class="fc">&nbsp;        this.tiledMapRenderer = tiledMapRenderer;</b>
+&nbsp;
+<b class="fc">&nbsp;        this.camera = camera;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the map by updating the camera and setting the renderer&#39;s view accordingly.
+&nbsp;     */
+&nbsp;    public void render() {
+&nbsp;        // Update the camera and set the tiledMapRenderer&#39;s view based on that camera
+<b class="nc">&nbsp;        camera.update();</b>
+<b class="nc">&nbsp;        tiledMapRenderer.setView(camera);</b>
+&nbsp;
+&nbsp;        // Render the map
+<b class="nc">&nbsp;        tiledMapRenderer.render();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the map, including toggling layer visibility based on a timer.
+&nbsp;     *
+&nbsp;     * @param delta The time in seconds since the last update.
+&nbsp;     */
+&nbsp;    public void update(float delta) {
+<b class="nc">&nbsp;        layerToggleTime += delta;</b>
+<b class="nc">&nbsp;        if (layerToggleTime &gt;= 0.75f) {</b>
+<b class="nc">&nbsp;            toggleLayerVisibility(&quot;Water_2&quot;);</b>
+&nbsp;            //toggleLayerVisibility(&quot;Trees&quot;);
+<b class="nc">&nbsp;            layerToggleTime = 0;</b>
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Toggles the visibility of a specific layer within the map.
+&nbsp;     *
+&nbsp;     * @param layerName The name of the layer to toggle.
+&nbsp;     */
+&nbsp;    public void toggleLayerVisibility(String layerName) {
+<b class="nc">&nbsp;        TiledMapTileLayer layer = (TiledMapTileLayer) gameMap.getLayers().get(layerName);</b>
+<b class="nc">&nbsp;        if (layer != null) {</b>
+<b class="nc">&nbsp;            layer.setVisible(!layer.isVisible());</b>
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the tile size of the map.
+&nbsp;     *
+&nbsp;     * @return The size of the tiles in the map.
+&nbsp;     */
+&nbsp;    public int getTileSize() {
+<b class="fc">&nbsp;        return TILE_SIZE;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the width of the map in tiles.
+&nbsp;     *
+&nbsp;     * @return The width of the map.
+&nbsp;     */
+&nbsp;    public int getWidth() {
+<b class="nc">&nbsp;        return width;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the height of the map in tiles.
+&nbsp;     *
+&nbsp;     * @return The height of the map.
+&nbsp;     */
+&nbsp;    public int getHeight() {
+<b class="nc">&nbsp;        return height;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the TiledMap instance representing the game map.
+&nbsp;     *
+&nbsp;     * @return The TiledMap instance.
+&nbsp;     */
+&nbsp;    public TiledMap getMap() {
+<b class="fc">&nbsp;        return gameMap;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Releases all non-managed resources used by the {@link GameMap}
+&nbsp;     */
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        gameMap.dispose();</b>
+<b class="nc">&nbsp;        tiledMapRenderer.dispose();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

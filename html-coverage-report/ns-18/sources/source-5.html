@@ -1,0 +1,995 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Quaternion</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: Quaternion (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Quaternion</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.4%
+  </span>
+  <span class="absValue">
+    (5/68)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/82)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.5%
+  </span>
+  <span class="absValue">
+    (14/309)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.NumberUtils;
+&nbsp;
+&nbsp;/** A simple quaternion class.
+&nbsp; * @see &lt;a href=&quot;http://en.wikipedia.org/wiki/Quaternion&quot;&gt;http://en.wikipedia.org/wiki/Quaternion&lt;/a&gt;
+&nbsp; * @author badlogicgames@gmail.com
+&nbsp; * @author vesuvio
+&nbsp; * @author xoppa */
+&nbsp;public class Quaternion implements Serializable {
+&nbsp;	private static final long serialVersionUID = -7661875440774897168L;
+<b class="fc">&nbsp;	private static Quaternion tmp1 = new Quaternion(0, 0, 0, 0);</b>
+<b class="fc">&nbsp;	private static Quaternion tmp2 = new Quaternion(0, 0, 0, 0);</b>
+&nbsp;
+&nbsp;	public float x;
+&nbsp;	public float y;
+&nbsp;	public float z;
+&nbsp;	public float w;
+&nbsp;
+&nbsp;	/** Constructor, sets the four components of the quaternion.
+&nbsp;	 * @param x The x-component
+&nbsp;	 * @param y The y-component
+&nbsp;	 * @param z The z-component
+&nbsp;	 * @param w The w-component */
+<b class="fc">&nbsp;	public Quaternion (float x, float y, float z, float w) {</b>
+<b class="fc">&nbsp;		this.set(x, y, z, w);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+<b class="fc">&nbsp;	public Quaternion () {</b>
+<b class="fc">&nbsp;		idt();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructor, sets the quaternion components from the given quaternion.
+&nbsp;	 * 
+&nbsp;	 * @param quaternion The quaternion to copy. */
+<b class="nc">&nbsp;	public Quaternion (Quaternion quaternion) {</b>
+<b class="nc">&nbsp;		this.set(quaternion);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructor, sets the quaternion from the given axis vector and the angle around that axis in degrees.
+&nbsp;	 * 
+&nbsp;	 * @param axis The axis
+&nbsp;	 * @param angle The angle in degrees. */
+<b class="nc">&nbsp;	public Quaternion (Vector3 axis, float angle) {</b>
+<b class="nc">&nbsp;		this.set(axis, angle);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the components of the quaternion
+&nbsp;	 * @param x The x-component
+&nbsp;	 * @param y The y-component
+&nbsp;	 * @param z The z-component
+&nbsp;	 * @param w The w-component
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion set (float x, float y, float z, float w) {
+<b class="fc">&nbsp;		this.x = x;</b>
+<b class="fc">&nbsp;		this.y = y;</b>
+<b class="fc">&nbsp;		this.z = z;</b>
+<b class="fc">&nbsp;		this.w = w;</b>
+<b class="fc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the quaternion components from the given quaternion.
+&nbsp;	 * @param quaternion The quaternion.
+&nbsp;	 * @return This quaternion for chaining. */
+&nbsp;	public Quaternion set (Quaternion quaternion) {
+<b class="nc">&nbsp;		return this.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the quaternion components from the given axis and angle around that axis.
+&nbsp;	 * 
+&nbsp;	 * @param axis The axis
+&nbsp;	 * @param angle The angle in degrees
+&nbsp;	 * @return This quaternion for chaining. */
+&nbsp;	public Quaternion set (Vector3 axis, float angle) {
+<b class="nc">&nbsp;		return setFromAxis(axis.x, axis.y, axis.z, angle);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return a copy of this quaternion */
+&nbsp;	public Quaternion cpy () {
+<b class="nc">&nbsp;		return new Quaternion(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the euclidean length of the specified quaternion */
+&nbsp;	public final static float len (final float x, final float y, final float z, final float w) {
+<b class="nc">&nbsp;		return (float)Math.sqrt(x * x + y * y + z * z + w * w);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the euclidean length of this quaternion */
+&nbsp;	public float len () {
+<b class="nc">&nbsp;		return (float)Math.sqrt(x * x + y * y + z * z + w * w);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return &quot;[&quot; + x + &quot;|&quot; + y + &quot;|&quot; + z + &quot;|&quot; + w + &quot;]&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the quaternion to the given euler angles in degrees.
+&nbsp;	 * @param yaw the rotation around the y axis in degrees
+&nbsp;	 * @param pitch the rotation around the x axis in degrees
+&nbsp;	 * @param roll the rotation around the z axis degrees
+&nbsp;	 * @return this quaternion */
+&nbsp;	public Quaternion setEulerAngles (float yaw, float pitch, float roll) {
+<b class="nc">&nbsp;		return setEulerAnglesRad(yaw * MathUtils.degreesToRadians, pitch * MathUtils.degreesToRadians,</b>
+&nbsp;			roll * MathUtils.degreesToRadians);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the quaternion to the given euler angles in radians.
+&nbsp;	 * @param yaw the rotation around the y axis in radians
+&nbsp;	 * @param pitch the rotation around the x axis in radians
+&nbsp;	 * @param roll the rotation around the z axis in radians
+&nbsp;	 * @return this quaternion */
+&nbsp;	public Quaternion setEulerAnglesRad (float yaw, float pitch, float roll) {
+<b class="nc">&nbsp;		final float hr = roll * 0.5f;</b>
+<b class="nc">&nbsp;		final float shr = (float)Math.sin(hr);</b>
+<b class="nc">&nbsp;		final float chr = (float)Math.cos(hr);</b>
+<b class="nc">&nbsp;		final float hp = pitch * 0.5f;</b>
+<b class="nc">&nbsp;		final float shp = (float)Math.sin(hp);</b>
+<b class="nc">&nbsp;		final float chp = (float)Math.cos(hp);</b>
+<b class="nc">&nbsp;		final float hy = yaw * 0.5f;</b>
+<b class="nc">&nbsp;		final float shy = (float)Math.sin(hy);</b>
+<b class="nc">&nbsp;		final float chy = (float)Math.cos(hy);</b>
+<b class="nc">&nbsp;		final float chy_shp = chy * shp;</b>
+<b class="nc">&nbsp;		final float shy_chp = shy * chp;</b>
+<b class="nc">&nbsp;		final float chy_chp = chy * chp;</b>
+<b class="nc">&nbsp;		final float shy_shp = shy * shp;</b>
+&nbsp;
+<b class="nc">&nbsp;		x = (chy_shp * chr) + (shy_chp * shr); // cos(yaw/2) * sin(pitch/2) * cos(roll/2) + sin(yaw/2) * cos(pitch/2) * sin(roll/2)</b>
+<b class="nc">&nbsp;		y = (shy_chp * chr) - (chy_shp * shr); // sin(yaw/2) * cos(pitch/2) * cos(roll/2) - cos(yaw/2) * sin(pitch/2) * sin(roll/2)</b>
+<b class="nc">&nbsp;		z = (chy_chp * shr) - (shy_shp * chr); // cos(yaw/2) * cos(pitch/2) * sin(roll/2) - sin(yaw/2) * sin(pitch/2) * cos(roll/2)</b>
+<b class="nc">&nbsp;		w = (chy_chp * chr) + (shy_shp * shr); // cos(yaw/2) * cos(pitch/2) * cos(roll/2) + sin(yaw/2) * sin(pitch/2) * sin(roll/2)</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the pole of the gimbal lock, if any.
+&nbsp;	 * @return positive (+1) for north pole, negative (-1) for south pole, zero (0) when no gimbal lock */
+&nbsp;	public int getGimbalPole () {
+<b class="nc">&nbsp;		final float t = y * x + z * w;</b>
+<b class="nc">&nbsp;		return t &gt; 0.499f ? 1 : (t &lt; -0.499f ? -1 : 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the roll euler angle in radians, which is the rotation around the z axis. Requires that this quaternion is normalized.
+&nbsp;	 * @return the rotation around the z axis in radians (between -PI and +PI) */
+&nbsp;	public float getRollRad () {
+<b class="nc">&nbsp;		final int pole = getGimbalPole();</b>
+<b class="nc">&nbsp;		return pole == 0 ? MathUtils.atan2(2f * (w * z + y * x), 1f - 2f * (x * x + z * z))</b>
+<b class="nc">&nbsp;			: (float)pole * 2f * MathUtils.atan2(y, w);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the roll euler angle in degrees, which is the rotation around the z axis. Requires that this quaternion is normalized.
+&nbsp;	 * @return the rotation around the z axis in degrees (between -180 and +180) */
+&nbsp;	public float getRoll () {
+<b class="nc">&nbsp;		return getRollRad() * MathUtils.radiansToDegrees;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the pitch euler angle in radians, which is the rotation around the x axis. Requires that this quaternion is normalized.
+&nbsp;	 * @return the rotation around the x axis in radians (between -(PI/2) and +(PI/2)) */
+&nbsp;	public float getPitchRad () {
+<b class="nc">&nbsp;		final int pole = getGimbalPole();</b>
+<b class="nc">&nbsp;		return pole == 0 ? (float)Math.asin(MathUtils.clamp(2f * (w * x - z * y), -1f, 1f)) : (float)pole * MathUtils.PI * 0.5f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the pitch euler angle in degrees, which is the rotation around the x axis. Requires that this quaternion is normalized.
+&nbsp;	 * @return the rotation around the x axis in degrees (between -90 and +90) */
+&nbsp;	public float getPitch () {
+<b class="nc">&nbsp;		return getPitchRad() * MathUtils.radiansToDegrees;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the yaw euler angle in radians, which is the rotation around the y axis. Requires that this quaternion is normalized.
+&nbsp;	 * @return the rotation around the y axis in radians (between -PI and +PI) */
+&nbsp;	public float getYawRad () {
+<b class="nc">&nbsp;		return getGimbalPole() == 0 ? MathUtils.atan2(2f * (y * w + x * z), 1f - 2f * (y * y + x * x)) : 0f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the yaw euler angle in degrees, which is the rotation around the y axis. Requires that this quaternion is normalized.
+&nbsp;	 * @return the rotation around the y axis in degrees (between -180 and +180) */
+&nbsp;	public float getYaw () {
+<b class="nc">&nbsp;		return getYawRad() * MathUtils.radiansToDegrees;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public final static float len2 (final float x, final float y, final float z, final float w) {
+<b class="nc">&nbsp;		return x * x + y * y + z * z + w * w;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the length of this quaternion without square root */
+&nbsp;	public float len2 () {
+<b class="nc">&nbsp;		return x * x + y * y + z * z + w * w;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Normalizes this quaternion to unit length
+&nbsp;	 * @return the quaternion for chaining */
+&nbsp;	public Quaternion nor () {
+<b class="nc">&nbsp;		float len = len2();</b>
+<b class="nc">&nbsp;		if (len != 0.f &amp;&amp; !MathUtils.isEqual(len, 1f)) {</b>
+<b class="nc">&nbsp;			len = (float)Math.sqrt(len);</b>
+<b class="nc">&nbsp;			w /= len;</b>
+<b class="nc">&nbsp;			x /= len;</b>
+<b class="nc">&nbsp;			y /= len;</b>
+<b class="nc">&nbsp;			z /= len;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Conjugate the quaternion.
+&nbsp;	 * 
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion conjugate () {
+<b class="nc">&nbsp;		x = -x;</b>
+<b class="nc">&nbsp;		y = -y;</b>
+<b class="nc">&nbsp;		z = -z;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// TODO : this would better fit into the vector3 class
+&nbsp;	/** Transforms the given vector using this quaternion
+&nbsp;	 * 
+&nbsp;	 * @param v Vector to transform */
+&nbsp;	public Vector3 transform (Vector3 v) {
+<b class="nc">&nbsp;		tmp2.set(this);</b>
+<b class="nc">&nbsp;		tmp2.conjugate();</b>
+<b class="nc">&nbsp;		tmp2.mulLeft(tmp1.set(v.x, v.y, v.z, 0)).mulLeft(this);</b>
+&nbsp;
+<b class="nc">&nbsp;		v.x = tmp2.x;</b>
+<b class="nc">&nbsp;		v.y = tmp2.y;</b>
+<b class="nc">&nbsp;		v.z = tmp2.z;</b>
+<b class="nc">&nbsp;		return v;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Multiplies this quaternion with another one in the form of this = this * other
+&nbsp;	 * 
+&nbsp;	 * @param other Quaternion to multiply with
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion mul (final Quaternion other) {
+<b class="nc">&nbsp;		final float newX = this.w * other.x + this.x * other.w + this.y * other.z - this.z * other.y;</b>
+<b class="nc">&nbsp;		final float newY = this.w * other.y + this.y * other.w + this.z * other.x - this.x * other.z;</b>
+<b class="nc">&nbsp;		final float newZ = this.w * other.z + this.z * other.w + this.x * other.y - this.y * other.x;</b>
+<b class="nc">&nbsp;		final float newW = this.w * other.w - this.x * other.x - this.y * other.y - this.z * other.z;</b>
+<b class="nc">&nbsp;		this.x = newX;</b>
+<b class="nc">&nbsp;		this.y = newY;</b>
+<b class="nc">&nbsp;		this.z = newZ;</b>
+<b class="nc">&nbsp;		this.w = newW;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Multiplies this quaternion with another one in the form of this = this * other
+&nbsp;	 * 
+&nbsp;	 * @param x the x component of the other quaternion to multiply with
+&nbsp;	 * @param y the y component of the other quaternion to multiply with
+&nbsp;	 * @param z the z component of the other quaternion to multiply with
+&nbsp;	 * @param w the w component of the other quaternion to multiply with
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion mul (final float x, final float y, final float z, final float w) {
+<b class="nc">&nbsp;		final float newX = this.w * x + this.x * w + this.y * z - this.z * y;</b>
+<b class="nc">&nbsp;		final float newY = this.w * y + this.y * w + this.z * x - this.x * z;</b>
+<b class="nc">&nbsp;		final float newZ = this.w * z + this.z * w + this.x * y - this.y * x;</b>
+<b class="nc">&nbsp;		final float newW = this.w * w - this.x * x - this.y * y - this.z * z;</b>
+<b class="nc">&nbsp;		this.x = newX;</b>
+<b class="nc">&nbsp;		this.y = newY;</b>
+<b class="nc">&nbsp;		this.z = newZ;</b>
+<b class="nc">&nbsp;		this.w = newW;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Multiplies this quaternion with another one in the form of this = other * this
+&nbsp;	 * 
+&nbsp;	 * @param other Quaternion to multiply with
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion mulLeft (Quaternion other) {
+<b class="nc">&nbsp;		final float newX = other.w * this.x + other.x * this.w + other.y * this.z - other.z * this.y;</b>
+<b class="nc">&nbsp;		final float newY = other.w * this.y + other.y * this.w + other.z * this.x - other.x * this.z;</b>
+<b class="nc">&nbsp;		final float newZ = other.w * this.z + other.z * this.w + other.x * this.y - other.y * this.x;</b>
+<b class="nc">&nbsp;		final float newW = other.w * this.w - other.x * this.x - other.y * this.y - other.z * this.z;</b>
+<b class="nc">&nbsp;		this.x = newX;</b>
+<b class="nc">&nbsp;		this.y = newY;</b>
+<b class="nc">&nbsp;		this.z = newZ;</b>
+<b class="nc">&nbsp;		this.w = newW;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Multiplies this quaternion with another one in the form of this = other * this
+&nbsp;	 * 
+&nbsp;	 * @param x the x component of the other quaternion to multiply with
+&nbsp;	 * @param y the y component of the other quaternion to multiply with
+&nbsp;	 * @param z the z component of the other quaternion to multiply with
+&nbsp;	 * @param w the w component of the other quaternion to multiply with
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion mulLeft (final float x, final float y, final float z, final float w) {
+<b class="nc">&nbsp;		final float newX = w * this.x + x * this.w + y * this.z - z * this.y;</b>
+<b class="nc">&nbsp;		final float newY = w * this.y + y * this.w + z * this.x - x * this.z;</b>
+<b class="nc">&nbsp;		final float newZ = w * this.z + z * this.w + x * this.y - y * this.x;</b>
+<b class="nc">&nbsp;		final float newW = w * this.w - x * this.x - y * this.y - z * this.z;</b>
+<b class="nc">&nbsp;		this.x = newX;</b>
+<b class="nc">&nbsp;		this.y = newY;</b>
+<b class="nc">&nbsp;		this.z = newZ;</b>
+<b class="nc">&nbsp;		this.w = newW;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Add the x,y,z,w components of the passed in quaternion to the ones of this quaternion */
+&nbsp;	public Quaternion add (Quaternion quaternion) {
+<b class="nc">&nbsp;		this.x += quaternion.x;</b>
+<b class="nc">&nbsp;		this.y += quaternion.y;</b>
+<b class="nc">&nbsp;		this.z += quaternion.z;</b>
+<b class="nc">&nbsp;		this.w += quaternion.w;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Add the x,y,z,w components of the passed in quaternion to the ones of this quaternion */
+&nbsp;	public Quaternion add (float qx, float qy, float qz, float qw) {
+<b class="nc">&nbsp;		this.x += qx;</b>
+<b class="nc">&nbsp;		this.y += qy;</b>
+<b class="nc">&nbsp;		this.z += qz;</b>
+<b class="nc">&nbsp;		this.w += qw;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// TODO : the matrix4 set(quaternion) doesnt set the last row+col of the matrix to 0,0,0,1 so... that&#39;s why there is this
+&nbsp;// method
+&nbsp;	/** Fills a 4x4 matrix with the rotation matrix represented by this quaternion.
+&nbsp;	 * 
+&nbsp;	 * @param matrix Matrix to fill */
+&nbsp;	public void toMatrix (final float[] matrix) {
+<b class="nc">&nbsp;		final float xx = x * x;</b>
+<b class="nc">&nbsp;		final float xy = x * y;</b>
+<b class="nc">&nbsp;		final float xz = x * z;</b>
+<b class="nc">&nbsp;		final float xw = x * w;</b>
+<b class="nc">&nbsp;		final float yy = y * y;</b>
+<b class="nc">&nbsp;		final float yz = y * z;</b>
+<b class="nc">&nbsp;		final float yw = y * w;</b>
+<b class="nc">&nbsp;		final float zz = z * z;</b>
+<b class="nc">&nbsp;		final float zw = z * w;</b>
+&nbsp;		// Set matrix from quaternion
+<b class="nc">&nbsp;		matrix[Matrix4.M00] = 1 - 2 * (yy + zz);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M01] = 2 * (xy - zw);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M02] = 2 * (xz + yw);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M03] = 0;</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M10] = 2 * (xy + zw);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M11] = 1 - 2 * (xx + zz);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M12] = 2 * (yz - xw);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M13] = 0;</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M20] = 2 * (xz - yw);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M21] = 2 * (yz + xw);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M22] = 1 - 2 * (xx + yy);</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M23] = 0;</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M30] = 0;</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M31] = 0;</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M32] = 0;</b>
+<b class="nc">&nbsp;		matrix[Matrix4.M33] = 1;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the quaternion to an identity Quaternion
+&nbsp;	 * @return this quaternion for chaining */
+&nbsp;	public Quaternion idt () {
+<b class="fc">&nbsp;		return this.set(0, 0, 0, 1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return If this quaternion is an identity Quaternion */
+&nbsp;	public boolean isIdentity () {
+<b class="nc">&nbsp;		return MathUtils.isZero(x) &amp;&amp; MathUtils.isZero(y) &amp;&amp; MathUtils.isZero(z) &amp;&amp; MathUtils.isEqual(w, 1f);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return If this quaternion is an identity Quaternion */
+&nbsp;	public boolean isIdentity (final float tolerance) {
+<b class="nc">&nbsp;		return MathUtils.isZero(x, tolerance) &amp;&amp; MathUtils.isZero(y, tolerance) &amp;&amp; MathUtils.isZero(z, tolerance)</b>
+<b class="nc">&nbsp;			&amp;&amp; MathUtils.isEqual(w, 1f, tolerance);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// todo : the setFromAxis(v3,float) method should replace the set(v3,float) method
+&nbsp;	/** Sets the quaternion components from the given axis and angle around that axis.
+&nbsp;	 * 
+&nbsp;	 * @param axis The axis
+&nbsp;	 * @param degrees The angle in degrees
+&nbsp;	 * @return This quaternion for chaining. */
+&nbsp;	public Quaternion setFromAxis (final Vector3 axis, final float degrees) {
+<b class="nc">&nbsp;		return setFromAxis(axis.x, axis.y, axis.z, degrees);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the quaternion components from the given axis and angle around that axis.
+&nbsp;	 * 
+&nbsp;	 * @param axis The axis
+&nbsp;	 * @param radians The angle in radians
+&nbsp;	 * @return This quaternion for chaining. */
+&nbsp;	public Quaternion setFromAxisRad (final Vector3 axis, final float radians) {
+<b class="nc">&nbsp;		return setFromAxisRad(axis.x, axis.y, axis.z, radians);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the quaternion components from the given axis and angle around that axis.
+&nbsp;	 * @param x X direction of the axis
+&nbsp;	 * @param y Y direction of the axis
+&nbsp;	 * @param z Z direction of the axis
+&nbsp;	 * @param degrees The angle in degrees
+&nbsp;	 * @return This quaternion for chaining. */
+&nbsp;	public Quaternion setFromAxis (final float x, final float y, final float z, final float degrees) {
+<b class="nc">&nbsp;		return setFromAxisRad(x, y, z, degrees * MathUtils.degreesToRadians);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the quaternion components from the given axis and angle around that axis.
+&nbsp;	 * @param x X direction of the axis
+&nbsp;	 * @param y Y direction of the axis
+&nbsp;	 * @param z Z direction of the axis
+&nbsp;	 * @param radians The angle in radians
+&nbsp;	 * @return This quaternion for chaining. */
+&nbsp;	public Quaternion setFromAxisRad (final float x, final float y, final float z, final float radians) {
+<b class="nc">&nbsp;		float d = Vector3.len(x, y, z);</b>
+<b class="nc">&nbsp;		if (d == 0f) return idt();</b>
+<b class="nc">&nbsp;		d = 1f / d;</b>
+<b class="nc">&nbsp;		float l_ang = radians &lt; 0 ? MathUtils.PI2 - (-radians % MathUtils.PI2) : radians % MathUtils.PI2;</b>
+<b class="nc">&nbsp;		float l_sin = (float)Math.sin(l_ang / 2);</b>
+<b class="nc">&nbsp;		float l_cos = (float)Math.cos(l_ang / 2);</b>
+<b class="nc">&nbsp;		return this.set(d * x * l_sin, d * y * l_sin, d * z * l_sin, l_cos).nor();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the Quaternion from the given matrix, optionally removing any scaling. */
+&nbsp;	public Quaternion setFromMatrix (boolean normalizeAxes, Matrix4 matrix) {
+<b class="nc">&nbsp;		return setFromAxes(normalizeAxes, matrix.val[Matrix4.M00], matrix.val[Matrix4.M01], matrix.val[Matrix4.M02],</b>
+&nbsp;			matrix.val[Matrix4.M10], matrix.val[Matrix4.M11], matrix.val[Matrix4.M12], matrix.val[Matrix4.M20],
+&nbsp;			matrix.val[Matrix4.M21], matrix.val[Matrix4.M22]);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the Quaternion from the given rotation matrix, which must not contain scaling. */
+&nbsp;	public Quaternion setFromMatrix (Matrix4 matrix) {
+<b class="nc">&nbsp;		return setFromMatrix(false, matrix);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the Quaternion from the given matrix, optionally removing any scaling. */
+&nbsp;	public Quaternion setFromMatrix (boolean normalizeAxes, Matrix3 matrix) {
+<b class="nc">&nbsp;		return setFromAxes(normalizeAxes, matrix.val[Matrix3.M00], matrix.val[Matrix3.M01], matrix.val[Matrix3.M02],</b>
+&nbsp;			matrix.val[Matrix3.M10], matrix.val[Matrix3.M11], matrix.val[Matrix3.M12], matrix.val[Matrix3.M20],
+&nbsp;			matrix.val[Matrix3.M21], matrix.val[Matrix3.M22]);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the Quaternion from the given rotation matrix, which must not contain scaling. */
+&nbsp;	public Quaternion setFromMatrix (Matrix3 matrix) {
+<b class="nc">&nbsp;		return setFromMatrix(false, matrix);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Sets the Quaternion from the given x-, y- and z-axis which have to be orthonormal.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Taken from Bones framework for JPCT, see http://www.aptalkarga.com/bones/ which in turn took it from Graphics Gem code at
+&nbsp;	 * ftp://ftp.cis.upenn.edu/pub/graphics/shoemake/quatut.ps.Z.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * @param xx x-axis x-coordinate
+&nbsp;	 * @param xy x-axis y-coordinate
+&nbsp;	 * @param xz x-axis z-coordinate
+&nbsp;	 * @param yx y-axis x-coordinate
+&nbsp;	 * @param yy y-axis y-coordinate
+&nbsp;	 * @param yz y-axis z-coordinate
+&nbsp;	 * @param zx z-axis x-coordinate
+&nbsp;	 * @param zy z-axis y-coordinate
+&nbsp;	 * @param zz z-axis z-coordinate */
+&nbsp;	public Quaternion setFromAxes (float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz) {
+<b class="nc">&nbsp;		return setFromAxes(false, xx, xy, xz, yx, yy, yz, zx, zy, zz);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Sets the Quaternion from the given x-, y- and z-axis.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Taken from Bones framework for JPCT, see http://www.aptalkarga.com/bones/ which in turn took it from Graphics Gem code at
+&nbsp;	 * ftp://ftp.cis.upenn.edu/pub/graphics/shoemake/quatut.ps.Z.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * @param normalizeAxes whether to normalize the axes (necessary when they contain scaling)
+&nbsp;	 * @param xx x-axis x-coordinate
+&nbsp;	 * @param xy x-axis y-coordinate
+&nbsp;	 * @param xz x-axis z-coordinate
+&nbsp;	 * @param yx y-axis x-coordinate
+&nbsp;	 * @param yy y-axis y-coordinate
+&nbsp;	 * @param yz y-axis z-coordinate
+&nbsp;	 * @param zx z-axis x-coordinate
+&nbsp;	 * @param zy z-axis y-coordinate
+&nbsp;	 * @param zz z-axis z-coordinate */
+&nbsp;	public Quaternion setFromAxes (boolean normalizeAxes, float xx, float xy, float xz, float yx, float yy, float yz, float zx,
+&nbsp;		float zy, float zz) {
+<b class="nc">&nbsp;		if (normalizeAxes) {</b>
+<b class="nc">&nbsp;			final float lx = 1f / Vector3.len(xx, xy, xz);</b>
+<b class="nc">&nbsp;			final float ly = 1f / Vector3.len(yx, yy, yz);</b>
+<b class="nc">&nbsp;			final float lz = 1f / Vector3.len(zx, zy, zz);</b>
+<b class="nc">&nbsp;			xx *= lx;</b>
+<b class="nc">&nbsp;			xy *= lx;</b>
+<b class="nc">&nbsp;			xz *= lx;</b>
+<b class="nc">&nbsp;			yx *= ly;</b>
+<b class="nc">&nbsp;			yy *= ly;</b>
+<b class="nc">&nbsp;			yz *= ly;</b>
+<b class="nc">&nbsp;			zx *= lz;</b>
+<b class="nc">&nbsp;			zy *= lz;</b>
+<b class="nc">&nbsp;			zz *= lz;</b>
+&nbsp;		}
+&nbsp;		// the trace is the sum of the diagonal elements; see
+&nbsp;		// http://mathworld.wolfram.com/MatrixTrace.html
+<b class="nc">&nbsp;		final float t = xx + yy + zz;</b>
+&nbsp;
+&nbsp;		// we protect the division by s by ensuring that s&gt;=1
+<b class="nc">&nbsp;		if (t &gt;= 0) { // |w| &gt;= .5</b>
+<b class="nc">&nbsp;			float s = (float)Math.sqrt(t + 1); // |s|&gt;=1 ...</b>
+<b class="nc">&nbsp;			w = 0.5f * s;</b>
+<b class="nc">&nbsp;			s = 0.5f / s; // so this division isn&#39;t bad</b>
+<b class="nc">&nbsp;			x = (zy - yz) * s;</b>
+<b class="nc">&nbsp;			y = (xz - zx) * s;</b>
+<b class="nc">&nbsp;			z = (yx - xy) * s;</b>
+<b class="nc">&nbsp;		} else if ((xx &gt; yy) &amp;&amp; (xx &gt; zz)) {</b>
+<b class="nc">&nbsp;			float s = (float)Math.sqrt(1.0 + xx - yy - zz); // |s|&gt;=1</b>
+<b class="nc">&nbsp;			x = s * 0.5f; // |x| &gt;= .5</b>
+<b class="nc">&nbsp;			s = 0.5f / s;</b>
+<b class="nc">&nbsp;			y = (yx + xy) * s;</b>
+<b class="nc">&nbsp;			z = (xz + zx) * s;</b>
+<b class="nc">&nbsp;			w = (zy - yz) * s;</b>
+<b class="nc">&nbsp;		} else if (yy &gt; zz) {</b>
+<b class="nc">&nbsp;			float s = (float)Math.sqrt(1.0 + yy - xx - zz); // |s|&gt;=1</b>
+<b class="nc">&nbsp;			y = s * 0.5f; // |y| &gt;= .5</b>
+<b class="nc">&nbsp;			s = 0.5f / s;</b>
+<b class="nc">&nbsp;			x = (yx + xy) * s;</b>
+<b class="nc">&nbsp;			z = (zy + yz) * s;</b>
+<b class="nc">&nbsp;			w = (xz - zx) * s;</b>
+<b class="nc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			float s = (float)Math.sqrt(1.0 + zz - xx - yy); // |s|&gt;=1</b>
+<b class="nc">&nbsp;			z = s * 0.5f; // |z| &gt;= .5</b>
+<b class="nc">&nbsp;			s = 0.5f / s;</b>
+<b class="nc">&nbsp;			x = (xz + zx) * s;</b>
+<b class="nc">&nbsp;			y = (zy + yz) * s;</b>
+<b class="nc">&nbsp;			w = (yx - xy) * s;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Set this quaternion to the rotation between two vectors.
+&nbsp;	 * @param v1 The base vector, which should be normalized.
+&nbsp;	 * @param v2 The target vector, which should be normalized.
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion setFromCross (final Vector3 v1, final Vector3 v2) {
+<b class="nc">&nbsp;		final float dot = MathUtils.clamp(v1.dot(v2), -1f, 1f);</b>
+<b class="nc">&nbsp;		final float angle = (float)Math.acos(dot);</b>
+<b class="nc">&nbsp;		return setFromAxisRad(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x, angle);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Set this quaternion to the rotation between two vectors.
+&nbsp;	 * @param x1 The base vectors x value, which should be normalized.
+&nbsp;	 * @param y1 The base vectors y value, which should be normalized.
+&nbsp;	 * @param z1 The base vectors z value, which should be normalized.
+&nbsp;	 * @param x2 The target vector x value, which should be normalized.
+&nbsp;	 * @param y2 The target vector y value, which should be normalized.
+&nbsp;	 * @param z2 The target vector z value, which should be normalized.
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion setFromCross (final float x1, final float y1, final float z1, final float x2, final float y2,
+&nbsp;		final float z2) {
+<b class="nc">&nbsp;		final float dot = MathUtils.clamp(Vector3.dot(x1, y1, z1, x2, y2, z2), -1f, 1f);</b>
+<b class="nc">&nbsp;		final float angle = (float)Math.acos(dot);</b>
+<b class="nc">&nbsp;		return setFromAxisRad(y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2, angle);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Spherical linear interpolation between this quaternion and the other quaternion, based on the alpha value in the range
+&nbsp;	 * [0,1]. Taken from Bones framework for JPCT, see http://www.aptalkarga.com/bones/
+&nbsp;	 * @param end the end quaternion
+&nbsp;	 * @param alpha alpha in the range [0,1]
+&nbsp;	 * @return this quaternion for chaining */
+&nbsp;	public Quaternion slerp (Quaternion end, float alpha) {
+<b class="nc">&nbsp;		final float d = this.x * end.x + this.y * end.y + this.z * end.z + this.w * end.w;</b>
+<b class="nc">&nbsp;		float absDot = d &lt; 0.f ? -d : d;</b>
+&nbsp;
+&nbsp;		// Set the first and second scale for the interpolation
+<b class="nc">&nbsp;		float scale0 = 1f - alpha;</b>
+<b class="nc">&nbsp;		float scale1 = alpha;</b>
+&nbsp;
+&nbsp;		// Check if the angle between the 2 quaternions was big enough to
+&nbsp;		// warrant such calculations
+<b class="nc">&nbsp;		if ((1 - absDot) &gt; 0.1) {// Get the angle between the 2 quaternions,</b>
+&nbsp;			// and then store the sin() of that angle
+<b class="nc">&nbsp;			final float angle = (float)Math.acos(absDot);</b>
+<b class="nc">&nbsp;			final float invSinTheta = 1f / (float)Math.sin(angle);</b>
+&nbsp;
+&nbsp;			// Calculate the scale for q1 and q2, according to the angle and
+&nbsp;			// it&#39;s sine value
+<b class="nc">&nbsp;			scale0 = ((float)Math.sin((1f - alpha) * angle) * invSinTheta);</b>
+<b class="nc">&nbsp;			scale1 = ((float)Math.sin((alpha * angle)) * invSinTheta);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (d &lt; 0.f) scale1 = -scale1;</b>
+&nbsp;
+&nbsp;		// Calculate the x, y, z and w values for the quaternion by using a
+&nbsp;		// special form of linear interpolation for quaternions.
+<b class="nc">&nbsp;		x = (scale0 * x) + (scale1 * end.x);</b>
+<b class="nc">&nbsp;		y = (scale0 * y) + (scale1 * end.y);</b>
+<b class="nc">&nbsp;		z = (scale0 * z) + (scale1 * end.z);</b>
+<b class="nc">&nbsp;		w = (scale0 * w) + (scale1 * end.w);</b>
+&nbsp;
+&nbsp;		// Return the interpolated quaternion
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Spherical linearly interpolates multiple quaternions and stores the result in this Quaternion. Will not destroy the data
+&nbsp;	 * previously inside the elements of q. result = (q_1^w_1)*(q_2^w_2)* ... *(q_n^w_n) where w_i=1/n.
+&nbsp;	 * @param q List of quaternions
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion slerp (Quaternion[] q) {
+&nbsp;
+&nbsp;		// Calculate exponents and multiply everything from left to right
+<b class="nc">&nbsp;		final float w = 1.0f / q.length;</b>
+<b class="nc">&nbsp;		set(q[0]).exp(w);</b>
+<b class="nc">&nbsp;		for (int i = 1; i &lt; q.length; i++)</b>
+<b class="nc">&nbsp;			mul(tmp1.set(q[i]).exp(w));</b>
+<b class="nc">&nbsp;		nor();</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Spherical linearly interpolates multiple quaternions by the given weights and stores the result in this Quaternion. Will
+&nbsp;	 * not destroy the data previously inside the elements of q or w. result = (q_1^w_1)*(q_2^w_2)* ... *(q_n^w_n) where the sum of
+&nbsp;	 * w_i is 1. Lists must be equal in length.
+&nbsp;	 * @param q List of quaternions
+&nbsp;	 * @param w List of weights
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion slerp (Quaternion[] q, float[] w) {
+&nbsp;
+&nbsp;		// Calculate exponents and multiply everything from left to right
+<b class="nc">&nbsp;		set(q[0]).exp(w[0]);</b>
+<b class="nc">&nbsp;		for (int i = 1; i &lt; q.length; i++)</b>
+<b class="nc">&nbsp;			mul(tmp1.set(q[i]).exp(w[i]));</b>
+<b class="nc">&nbsp;		nor();</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calculates (this quaternion)^alpha where alpha is a real number and stores the result in this quaternion. See
+&nbsp;	 * http://en.wikipedia.org/wiki/Quaternion#Exponential.2C_logarithm.2C_and_power
+&nbsp;	 * @param alpha Exponent
+&nbsp;	 * @return This quaternion for chaining */
+&nbsp;	public Quaternion exp (float alpha) {
+&nbsp;
+&nbsp;		// Calculate |q|^alpha
+<b class="nc">&nbsp;		float norm = len();</b>
+<b class="nc">&nbsp;		float normExp = (float)Math.pow(norm, alpha);</b>
+&nbsp;
+&nbsp;		// Calculate theta
+<b class="nc">&nbsp;		float theta = (float)Math.acos(w / norm);</b>
+&nbsp;
+&nbsp;		// Calculate coefficient of basis elements
+<b class="nc">&nbsp;		float coeff = 0;</b>
+<b class="nc">&nbsp;		if (Math.abs(theta) &lt; 0.001) // If theta is small enough, use the limit of sin(alpha*theta) / sin(theta) instead of actual</b>
+&nbsp;// value
+<b class="nc">&nbsp;			coeff = normExp * alpha / norm;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			coeff = (float)(normExp * Math.sin(alpha * theta) / (norm * Math.sin(theta)));</b>
+&nbsp;
+&nbsp;		// Write results
+<b class="nc">&nbsp;		w = (float)(normExp * Math.cos(alpha * theta));</b>
+<b class="nc">&nbsp;		x *= coeff;</b>
+<b class="nc">&nbsp;		y *= coeff;</b>
+<b class="nc">&nbsp;		z *= coeff;</b>
+&nbsp;
+&nbsp;		// Fix any possible discrepancies
+<b class="nc">&nbsp;		nor();</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		final int prime = 31;</b>
+<b class="nc">&nbsp;		int result = 1;</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(w);</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(x);</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(y);</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToRawIntBits(z);</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean equals (Object obj) {
+<b class="nc">&nbsp;		if (this == obj) {</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (obj == null) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (!(obj instanceof Quaternion)) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		Quaternion other = (Quaternion)obj;</b>
+<b class="nc">&nbsp;		return (NumberUtils.floatToRawIntBits(w) == NumberUtils.floatToRawIntBits(other.w))</b>
+<b class="nc">&nbsp;			&amp;&amp; (NumberUtils.floatToRawIntBits(x) == NumberUtils.floatToRawIntBits(other.x))</b>
+<b class="nc">&nbsp;			&amp;&amp; (NumberUtils.floatToRawIntBits(y) == NumberUtils.floatToRawIntBits(other.y))</b>
+<b class="nc">&nbsp;			&amp;&amp; (NumberUtils.floatToRawIntBits(z) == NumberUtils.floatToRawIntBits(other.z));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the dot product between the two quaternions (commutative).
+&nbsp;	 * @param x1 the x component of the first quaternion
+&nbsp;	 * @param y1 the y component of the first quaternion
+&nbsp;	 * @param z1 the z component of the first quaternion
+&nbsp;	 * @param w1 the w component of the first quaternion
+&nbsp;	 * @param x2 the x component of the second quaternion
+&nbsp;	 * @param y2 the y component of the second quaternion
+&nbsp;	 * @param z2 the z component of the second quaternion
+&nbsp;	 * @param w2 the w component of the second quaternion
+&nbsp;	 * @return the dot product between the first and second quaternion. */
+&nbsp;	public final static float dot (final float x1, final float y1, final float z1, final float w1, final float x2, final float y2,
+&nbsp;		final float z2, final float w2) {
+<b class="nc">&nbsp;		return x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the dot product between this and the other quaternion (commutative).
+&nbsp;	 * @param other the other quaternion.
+&nbsp;	 * @return the dot product of this and the other quaternion. */
+&nbsp;	public float dot (final Quaternion other) {
+<b class="nc">&nbsp;		return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the dot product between this and the other quaternion (commutative).
+&nbsp;	 * @param x the x component of the other quaternion
+&nbsp;	 * @param y the y component of the other quaternion
+&nbsp;	 * @param z the z component of the other quaternion
+&nbsp;	 * @param w the w component of the other quaternion
+&nbsp;	 * @return the dot product of this and the other quaternion. */
+&nbsp;	public float dot (final float x, final float y, final float z, final float w) {
+<b class="nc">&nbsp;		return this.x * x + this.y * y + this.z * z + this.w * w;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Multiplies the components of this quaternion with the given scalar.
+&nbsp;	 * @param scalar the scalar.
+&nbsp;	 * @return this quaternion for chaining. */
+&nbsp;	public Quaternion mul (float scalar) {
+<b class="nc">&nbsp;		this.x *= scalar;</b>
+<b class="nc">&nbsp;		this.y *= scalar;</b>
+<b class="nc">&nbsp;		this.z *= scalar;</b>
+<b class="nc">&nbsp;		this.w *= scalar;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the axis angle representation of the rotation in degrees. The supplied vector will receive the axis (x, y and z values)
+&nbsp;	 * of the rotation and the value returned is the angle in degrees around that axis. Note that this method will alter the
+&nbsp;	 * supplied vector, the existing value of the vector is ignored.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * This will normalize this quaternion if needed. The received axis is a unit vector. However, if this is an identity
+&nbsp;	 * quaternion (no rotation), then the length of the axis may be zero.
+&nbsp;	 * 
+&nbsp;	 * @param axis vector which will receive the axis
+&nbsp;	 * @return the angle in degrees
+&nbsp;	 * @see &lt;a href=&quot;http://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation&quot;&gt;wikipedia&lt;/a&gt;
+&nbsp;	 * @see &lt;a href=&quot;http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle&quot;&gt;calculation&lt;/a&gt; */
+&nbsp;	public float getAxisAngle (Vector3 axis) {
+<b class="nc">&nbsp;		return getAxisAngleRad(axis) * MathUtils.radiansToDegrees;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the axis-angle representation of the rotation in radians. The supplied vector will receive the axis (x, y and z values)
+&nbsp;	 * of the rotation and the value returned is the angle in radians around that axis. Note that this method will alter the
+&nbsp;	 * supplied vector, the existing value of the vector is ignored.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * This will normalize this quaternion if needed. The received axis is a unit vector. However, if this is an identity
+&nbsp;	 * quaternion (no rotation), then the length of the axis may be zero.
+&nbsp;	 * 
+&nbsp;	 * @param axis vector which will receive the axis
+&nbsp;	 * @return the angle in radians
+&nbsp;	 * @see &lt;a href=&quot;http://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation&quot;&gt;wikipedia&lt;/a&gt;
+&nbsp;	 * @see &lt;a href=&quot;http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle&quot;&gt;calculation&lt;/a&gt; */
+&nbsp;	public float getAxisAngleRad (Vector3 axis) {
+<b class="nc">&nbsp;		if (this.w &gt; 1) this.nor(); // if w&gt;1 acos and sqrt will produce errors, this cant happen if quaternion is normalised</b>
+<b class="nc">&nbsp;		float angle = (float)(2.0 * Math.acos(this.w));</b>
+<b class="nc">&nbsp;		double s = Math.sqrt(1 - this.w * this.w); // assuming quaternion normalised then w is less than 1, so term always positive.</b>
+<b class="nc">&nbsp;		if (s &lt; MathUtils.FLOAT_ROUNDING_ERROR) { // test to avoid divide by zero, s is always positive due to sqrt</b>
+&nbsp;			// if s close to zero then direction of axis not important
+<b class="nc">&nbsp;			axis.x = this.x; // if it is important that axis is normalised then replace with x=1; y=z=0;</b>
+<b class="nc">&nbsp;			axis.y = this.y;</b>
+<b class="nc">&nbsp;			axis.z = this.z;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			axis.x = (float)(this.x / s); // normalise axis</b>
+<b class="nc">&nbsp;			axis.y = (float)(this.y / s);</b>
+<b class="nc">&nbsp;			axis.z = (float)(this.z / s);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return angle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the angle in radians of the rotation this quaternion represents. Does not normalize the quaternion. Use
+&nbsp;	 * {@link #getAxisAngleRad(Vector3)} to get both the axis and the angle of this rotation. Use
+&nbsp;	 * {@link #getAngleAroundRad(Vector3)} to get the angle around a specific axis.
+&nbsp;	 * @return the angle in radians of the rotation */
+&nbsp;	public float getAngleRad () {
+<b class="nc">&nbsp;		return (float)(2.0 * Math.acos((this.w &gt; 1) ? (this.w / len()) : this.w));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the angle in degrees of the rotation this quaternion represents. Use {@link #getAxisAngle(Vector3)} to get both the
+&nbsp;	 * axis and the angle of this rotation. Use {@link #getAngleAround(Vector3)} to get the angle around a specific axis.
+&nbsp;	 * @return the angle in degrees of the rotation */
+&nbsp;	public float getAngle () {
+<b class="nc">&nbsp;		return getAngleRad() * MathUtils.radiansToDegrees;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the swing rotation and twist rotation for the specified axis. The twist rotation represents the rotation around the
+&nbsp;	 * specified axis. The swing rotation represents the rotation of the specified axis itself, which is the rotation around an
+&nbsp;	 * axis perpendicular to the specified axis.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * The swing and twist rotation can be used to reconstruct the original quaternion: this = swing * twist
+&nbsp;	 * 
+&nbsp;	 * @param axisX the X component of the normalized axis for which to get the swing and twist rotation
+&nbsp;	 * @param axisY the Y component of the normalized axis for which to get the swing and twist rotation
+&nbsp;	 * @param axisZ the Z component of the normalized axis for which to get the swing and twist rotation
+&nbsp;	 * @param swing will receive the swing rotation: the rotation around an axis perpendicular to the specified axis
+&nbsp;	 * @param twist will receive the twist rotation: the rotation around the specified axis
+&nbsp;	 * @see &lt;a href=&quot;http://www.euclideanspace.com/maths/geometry/rotations/for/decomposition&quot;&gt;calculation&lt;/a&gt; */
+&nbsp;	public void getSwingTwist (final float axisX, final float axisY, final float axisZ, final Quaternion swing,
+&nbsp;		final Quaternion twist) {
+<b class="nc">&nbsp;		final float d = Vector3.dot(this.x, this.y, this.z, axisX, axisY, axisZ);</b>
+<b class="nc">&nbsp;		twist.set(axisX * d, axisY * d, axisZ * d, this.w).nor();</b>
+<b class="nc">&nbsp;		if (d &lt; 0) twist.mul(-1f);</b>
+<b class="nc">&nbsp;		swing.set(twist).conjugate().mulLeft(this);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Get the swing rotation and twist rotation for the specified axis. The twist rotation represents the rotation around the
+&nbsp;	 * specified axis. The swing rotation represents the rotation of the specified axis itself, which is the rotation around an
+&nbsp;	 * axis perpendicular to the specified axis.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * The swing and twist rotation can be used to reconstruct the original quaternion: this = swing * twist
+&nbsp;	 * 
+&nbsp;	 * @param axis the normalized axis for which to get the swing and twist rotation
+&nbsp;	 * @param swing will receive the swing rotation: the rotation around an axis perpendicular to the specified axis
+&nbsp;	 * @param twist will receive the twist rotation: the rotation around the specified axis
+&nbsp;	 * @see &lt;a href=&quot;http://www.euclideanspace.com/maths/geometry/rotations/for/decomposition&quot;&gt;calculation&lt;/a&gt; */
+&nbsp;	public void getSwingTwist (final Vector3 axis, final Quaternion swing, final Quaternion twist) {
+<b class="nc">&nbsp;		getSwingTwist(axis.x, axis.y, axis.z, swing, twist);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Get the angle in radians of the rotation around the specified axis. The axis must be normalized.
+&nbsp;	 * @param axisX the x component of the normalized axis for which to get the angle
+&nbsp;	 * @param axisY the y component of the normalized axis for which to get the angle
+&nbsp;	 * @param axisZ the z component of the normalized axis for which to get the angle
+&nbsp;	 * @return the angle in radians of the rotation around the specified axis */
+&nbsp;	public float getAngleAroundRad (final float axisX, final float axisY, final float axisZ) {
+<b class="nc">&nbsp;		final float d = Vector3.dot(this.x, this.y, this.z, axisX, axisY, axisZ);</b>
+<b class="nc">&nbsp;		final float l2 = Quaternion.len2(axisX * d, axisY * d, axisZ * d, this.w);</b>
+<b class="nc">&nbsp;		return MathUtils.isZero(l2) ? 0f</b>
+<b class="nc">&nbsp;			: (float)(2.0 * Math.acos(MathUtils.clamp((float)((d &lt; 0 ? -this.w : this.w) / Math.sqrt(l2)), -1f, 1f)));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the angle in radians of the rotation around the specified axis. The axis must be normalized.
+&nbsp;	 * @param axis the normalized axis for which to get the angle
+&nbsp;	 * @return the angle in radians of the rotation around the specified axis */
+&nbsp;	public float getAngleAroundRad (final Vector3 axis) {
+<b class="nc">&nbsp;		return getAngleAroundRad(axis.x, axis.y, axis.z);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the angle in degrees of the rotation around the specified axis. The axis must be normalized.
+&nbsp;	 * @param axisX the x component of the normalized axis for which to get the angle
+&nbsp;	 * @param axisY the y component of the normalized axis for which to get the angle
+&nbsp;	 * @param axisZ the z component of the normalized axis for which to get the angle
+&nbsp;	 * @return the angle in degrees of the rotation around the specified axis */
+&nbsp;	public float getAngleAround (final float axisX, final float axisY, final float axisZ) {
+<b class="nc">&nbsp;		return getAngleAroundRad(axisX, axisY, axisZ) * MathUtils.radiansToDegrees;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the angle in degrees of the rotation around the specified axis. The axis must be normalized.
+&nbsp;	 * @param axis the normalized axis for which to get the angle
+&nbsp;	 * @return the angle in degrees of the rotation around the specified axis */
+&nbsp;	public float getAngleAround (final Vector3 axis) {
+<b class="nc">&nbsp;		return getAngleAround(axis.x, axis.y, axis.z);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

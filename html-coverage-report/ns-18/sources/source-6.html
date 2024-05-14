@@ -1,0 +1,311 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > RandomXS128</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: RandomXS128 (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RandomXS128</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (4/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.2%
+  </span>
+  <span class="absValue">
+    (1/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (15/45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;/** This class implements the xorshift128+ algorithm that is a very fast, top-quality 64-bit pseudo-random number generator. The
+&nbsp; * quality of this PRNG is much higher than {@link Random}&#39;s, and its cycle length is 2&lt;sup&gt;128&lt;/sup&gt;&amp;nbsp;&amp;minus;&amp;nbsp;1, which
+&nbsp; * is more than enough for any single-thread application. More details and algorithms can be found
+&nbsp; * &lt;a href=&quot;http://xorshift.di.unimi.it/&quot;&gt;here&lt;/a&gt;.
+&nbsp; * &lt;p&gt;
+&nbsp; * Instances of RandomXS128 are not thread-safe.
+&nbsp; * 
+&nbsp; * @author Inferno
+&nbsp; * @author davebaol */
+&nbsp;public class RandomXS128 extends Random {
+&nbsp;
+&nbsp;	/** Normalization constant for double. */
+&nbsp;	private static final double NORM_DOUBLE = 1.0 / (1L &lt;&lt; 53);
+&nbsp;
+&nbsp;	/** Normalization constant for float. */
+&nbsp;	private static final double NORM_FLOAT = 1.0 / (1L &lt;&lt; 24);
+&nbsp;
+&nbsp;	/** The first half of the internal state of this pseudo-random number generator. */
+&nbsp;	private long seed0;
+&nbsp;
+&nbsp;	/** The second half of the internal state of this pseudo-random number generator. */
+&nbsp;	private long seed1;
+&nbsp;
+&nbsp;	/** Creates a new random number generator. This constructor sets the seed of the random number generator to a value very likely
+&nbsp;	 * to be distinct from any other invocation of this constructor.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation creates a {@link Random} instance to generate the initial seed. */
+<b class="fc">&nbsp;	public RandomXS128 () {</b>
+<b class="fc">&nbsp;		setSeed(new Random().nextLong());</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new random number generator using a single {@code long} seed.
+&nbsp;	 * @param seed the initial seed */
+<b class="nc">&nbsp;	public RandomXS128 (long seed) {</b>
+<b class="nc">&nbsp;		setSeed(seed);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new random number generator using two {@code long} seeds.
+&nbsp;	 * @param seed0 the first part of the initial seed
+&nbsp;	 * @param seed1 the second part of the initial seed */
+<b class="nc">&nbsp;	public RandomXS128 (long seed0, long seed1) {</b>
+<b class="nc">&nbsp;		setState(seed0, seed1);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the next pseudo-random, uniformly distributed {@code long} value from this random number generator&#39;s sequence.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Subclasses should override this, as this is used by all other methods. */
+&nbsp;	@Override
+&nbsp;	public long nextLong () {
+<b class="nc">&nbsp;		long s1 = this.seed0;</b>
+<b class="nc">&nbsp;		final long s0 = this.seed1;</b>
+<b class="nc">&nbsp;		this.seed0 = s0;</b>
+<b class="nc">&nbsp;		s1 ^= s1 &lt;&lt; 23;</b>
+<b class="nc">&nbsp;		return (this.seed1 = (s1 ^ s0 ^ (s1 &gt;&gt;&gt; 17) ^ (s0 &gt;&gt;&gt; 26))) + s0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** This protected method is final because, contrary to the superclass, it&#39;s not used anymore by the other methods. */
+&nbsp;	@Override
+&nbsp;	protected final int next (int bits) {
+<b class="nc">&nbsp;		return (int)(nextLong() &amp; ((1L &lt;&lt; bits) - 1));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the next pseudo-random, uniformly distributed {@code int} value from this random number generator&#39;s sequence.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation uses {@link #nextLong()} internally. */
+&nbsp;	@Override
+&nbsp;	public int nextInt () {
+<b class="nc">&nbsp;		return (int)nextLong();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a pseudo-random, uniformly distributed {@code int} value between 0 (inclusive) and the specified value (exclusive),
+&nbsp;	 * drawn from this random number generator&#39;s sequence.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation uses {@link #nextLong()} internally.
+&nbsp;	 * @param n the positive bound on the random number to be returned.
+&nbsp;	 * @return the next pseudo-random {@code int} value between {@code 0} (inclusive) and {@code n} (exclusive). */
+&nbsp;	@Override
+&nbsp;	public int nextInt (final int n) {
+<b class="nc">&nbsp;		return (int)nextLong(n);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a pseudo-random, uniformly distributed {@code long} value between 0 (inclusive) and the specified value
+&nbsp;	 * (exclusive), drawn from this random number generator&#39;s sequence. The algorithm used to generate the value guarantees that
+&nbsp;	 * the result is uniform, provided that the sequence of 64-bit values produced by this generator is.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation uses {@link #nextLong()} internally.
+&nbsp;	 * @param n the positive bound on the random number to be returned.
+&nbsp;	 * @return the next pseudo-random {@code long} value between {@code 0} (inclusive) and {@code n} (exclusive). */
+&nbsp;	public long nextLong (final long n) {
+<b class="nc">&nbsp;		if (n &lt;= 0) throw new IllegalArgumentException(&quot;n must be positive&quot;);</b>
+&nbsp;		for (;;) {
+<b class="nc">&nbsp;			final long bits = nextLong() &gt;&gt;&gt; 1;</b>
+<b class="nc">&nbsp;			final long value = bits % n;</b>
+<b class="nc">&nbsp;			if (bits - value + (n - 1) &gt;= 0) return value;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a pseudo-random, uniformly distributed {@code double} value between 0.0 and 1.0 from this random number generator&#39;s
+&nbsp;	 * sequence.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation uses {@link #nextLong()} internally. */
+&nbsp;	@Override
+&nbsp;	public double nextDouble () {
+<b class="nc">&nbsp;		return (nextLong() &gt;&gt;&gt; 11) * NORM_DOUBLE;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a pseudo-random, uniformly distributed {@code float} value between 0.0 and 1.0 from this random number generator&#39;s
+&nbsp;	 * sequence.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation uses {@link #nextLong()} internally. */
+&nbsp;	@Override
+&nbsp;	public float nextFloat () {
+<b class="nc">&nbsp;		return (float)((nextLong() &gt;&gt;&gt; 40) * NORM_FLOAT);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a pseudo-random, uniformly distributed {@code boolean } value from this random number generator&#39;s sequence.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation uses {@link #nextLong()} internally. */
+&nbsp;	@Override
+&nbsp;	public boolean nextBoolean () {
+<b class="nc">&nbsp;		return (nextLong() &amp; 1) != 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Generates random bytes and places them into a user-supplied byte array. The number of random bytes produced is equal to the
+&nbsp;	 * length of the byte array.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This implementation uses {@link #nextLong()} internally. */
+&nbsp;	@Override
+&nbsp;	public void nextBytes (final byte[] bytes) {
+<b class="nc">&nbsp;		int n = 0;</b>
+<b class="nc">&nbsp;		int i = bytes.length;</b>
+<b class="nc">&nbsp;		while (i != 0) {</b>
+<b class="nc">&nbsp;			n = i &lt; 8 ? i : 8; // min(i, 8);</b>
+<b class="nc">&nbsp;			for (long bits = nextLong(); n-- != 0; bits &gt;&gt;= 8)</b>
+<b class="nc">&nbsp;				bytes[--i] = (byte)bits;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the internal seed of this generator based on the given {@code long} value.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The given seed is passed twice through a hash function. This way, if the user passes a small value we avoid the short
+&nbsp;	 * irregular transient associated with states having a very small number of bits set.
+&nbsp;	 * @param seed a nonzero seed for this generator (if zero, the generator will be seeded with {@link Long#MIN_VALUE}). */
+&nbsp;	@Override
+&nbsp;	public void setSeed (final long seed) {
+<b class="pc">&nbsp;		long seed0 = murmurHash3(seed == 0 ? Long.MIN_VALUE : seed);</b>
+<b class="fc">&nbsp;		setState(seed0, murmurHash3(seed0));</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the internal state of this generator.
+&nbsp;	 * @param seed0 the first part of the internal state
+&nbsp;	 * @param seed1 the second part of the internal state */
+&nbsp;	public void setState (final long seed0, final long seed1) {
+<b class="fc">&nbsp;		this.seed0 = seed0;</b>
+<b class="fc">&nbsp;		this.seed1 = seed1;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the internal seeds to allow state saving.
+&nbsp;	 * @param seed must be 0 or 1, designating which of the 2 long seeds to return
+&nbsp;	 * @return the internal seed that can be used in setState */
+&nbsp;	public long getState (int seed) {
+<b class="nc">&nbsp;		return seed == 0 ? seed0 : seed1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private final static long murmurHash3 (long x) {
+<b class="fc">&nbsp;		x ^= x &gt;&gt;&gt; 33;</b>
+<b class="fc">&nbsp;		x *= 0xff51afd7ed558ccdL;</b>
+<b class="fc">&nbsp;		x ^= x &gt;&gt;&gt; 33;</b>
+<b class="fc">&nbsp;		x *= 0xc4ceb9fe1a85ec53L;</b>
+<b class="fc">&nbsp;		x ^= x &gt;&gt;&gt; 33;</b>
+&nbsp;
+<b class="fc">&nbsp;		return x;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

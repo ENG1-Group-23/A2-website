@@ -1,0 +1,123 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApplicationListener</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx</a>
+</div>
+
+<h1>Coverage Summary for Class: ApplicationListener (com.badlogic.gdx)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ApplicationListener</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * An &lt;code&gt;ApplicationListener&lt;/code&gt; is called when the {@link Application} is created, resumed, rendering, paused or destroyed.
+&nbsp; * All methods are called in a thread that has the OpenGL context current. You can thus safely create and manipulate graphics
+&nbsp; * resources.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The &lt;code&gt;ApplicationListener&lt;/code&gt; interface follows the standard Android activity life-cycle and is emulated on the desktop
+&nbsp; * accordingly.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * @author mzechner */
+&nbsp;public interface ApplicationListener {
+&nbsp;	/** Called when the {@link Application} is first created. */
+&nbsp;	public void create ();
+&nbsp;
+&nbsp;	/** Called when the {@link Application} is resized. This can happen at any point during a non-paused state but will never
+&nbsp;	 * happen before a call to {@link #create()}.
+&nbsp;	 * 
+&nbsp;	 * @param width the new width in pixels
+&nbsp;	 * @param height the new height in pixels */
+&nbsp;	public void resize (int width, int height);
+&nbsp;
+&nbsp;	/** Called when the {@link Application} should render itself. */
+&nbsp;	public void render ();
+&nbsp;
+&nbsp;	/** Called when the {@link Application} is paused, usually when it&#39;s not active or visible on-screen. An Application is also
+&nbsp;	 * paused before it is destroyed. */
+&nbsp;	public void pause ();
+&nbsp;
+&nbsp;	/** Called when the {@link Application} is resumed from a paused state, usually when it regains focus. */
+&nbsp;	public void resume ();
+&nbsp;
+&nbsp;	/** Called when the {@link Application} is destroyed. Preceded by a call to {@link #pause()}. */
+&nbsp;	public void dispose ();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

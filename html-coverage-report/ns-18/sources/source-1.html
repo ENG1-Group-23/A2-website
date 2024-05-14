@@ -1,0 +1,335 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Frustum</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: Frustum (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Frustum</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23.1%
+  </span>
+  <span class="absValue">
+    (3/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.1%
+  </span>
+  <span class="absValue">
+    (6/84)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    34.1%
+  </span>
+  <span class="absValue">
+    (29/85)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import com.badlogic.gdx.graphics.Camera;
+&nbsp;import com.badlogic.gdx.graphics.OrthographicCamera;
+&nbsp;import com.badlogic.gdx.graphics.PerspectiveCamera;
+&nbsp;import com.badlogic.gdx.math.Plane.PlaneSide;
+&nbsp;import com.badlogic.gdx.math.collision.BoundingBox;
+&nbsp;import com.badlogic.gdx.math.collision.OrientedBoundingBox;
+&nbsp;
+&nbsp;/** A truncated rectangular pyramid. Used to define the viewable region and its projection onto the screen.
+&nbsp; * @see Camera#frustum */
+&nbsp;public class Frustum {
+<b class="fc">&nbsp;	protected static final Vector3[] clipSpacePlanePoints = {new Vector3(-1, -1, -1), new Vector3(1, -1, -1),</b>
+&nbsp;		new Vector3(1, 1, -1), new Vector3(-1, 1, -1), // near clip
+&nbsp;		new Vector3(-1, -1, 1), new Vector3(1, -1, 1), new Vector3(1, 1, 1), new Vector3(-1, 1, 1)}; // far clip
+<b class="fc">&nbsp;	protected static final float[] clipSpacePlanePointsArray = new float[8 * 3];</b>
+&nbsp;
+&nbsp;	static {
+<b class="fc">&nbsp;		int j = 0;</b>
+<b class="fc">&nbsp;		for (Vector3 v : clipSpacePlanePoints) {</b>
+<b class="fc">&nbsp;			clipSpacePlanePointsArray[j++] = v.x;</b>
+<b class="fc">&nbsp;			clipSpacePlanePointsArray[j++] = v.y;</b>
+<b class="fc">&nbsp;			clipSpacePlanePointsArray[j++] = v.z;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	private final static Vector3 tmpV = new Vector3();</b>
+&nbsp;
+&nbsp;	/** the six clipping planes, near, far, left, right, top, bottom **/
+<b class="fc">&nbsp;	public final Plane[] planes = new Plane[6];</b>
+&nbsp;
+&nbsp;	/** eight points making up the near and far clipping &quot;rectangles&quot;. order is counter clockwise, starting at bottom left **/
+<b class="fc">&nbsp;	public final Vector3[] planePoints = {new Vector3(), new Vector3(), new Vector3(), new Vector3(), new Vector3(), new Vector3(),</b>
+&nbsp;		new Vector3(), new Vector3()};
+<b class="fc">&nbsp;	protected final float[] planePointsArray = new float[8 * 3];</b>
+&nbsp;
+<b class="fc">&nbsp;	public Frustum () {</b>
+<b class="fc">&nbsp;		for (int i = 0; i &lt; 6; i++) {</b>
+<b class="fc">&nbsp;			planes[i] = new Plane(new Vector3(), 0);</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Updates the clipping plane&#39;s based on the given inverse combined projection and view matrix, e.g. from an
+&nbsp;	 * {@link OrthographicCamera} or {@link PerspectiveCamera}.
+&nbsp;	 * @param inverseProjectionView the combined projection and view matrices. */
+&nbsp;	public void update (Matrix4 inverseProjectionView) {
+<b class="fc">&nbsp;		System.arraycopy(clipSpacePlanePointsArray, 0, planePointsArray, 0, clipSpacePlanePointsArray.length);</b>
+<b class="fc">&nbsp;		Matrix4.prj(inverseProjectionView.val, planePointsArray, 0, 8, 3);</b>
+<b class="fc">&nbsp;		for (int i = 0, j = 0; i &lt; 8; i++) {</b>
+<b class="fc">&nbsp;			Vector3 v = planePoints[i];</b>
+<b class="fc">&nbsp;			v.x = planePointsArray[j++];</b>
+<b class="fc">&nbsp;			v.y = planePointsArray[j++];</b>
+<b class="fc">&nbsp;			v.z = planePointsArray[j++];</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		planes[0].set(planePoints[1], planePoints[0], planePoints[2]);</b>
+<b class="fc">&nbsp;		planes[1].set(planePoints[4], planePoints[5], planePoints[7]);</b>
+<b class="fc">&nbsp;		planes[2].set(planePoints[0], planePoints[4], planePoints[3]);</b>
+<b class="fc">&nbsp;		planes[3].set(planePoints[5], planePoints[1], planePoints[6]);</b>
+<b class="fc">&nbsp;		planes[4].set(planePoints[2], planePoints[3], planePoints[6]);</b>
+<b class="fc">&nbsp;		planes[5].set(planePoints[4], planePoints[0], planePoints[1]);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns whether the point is in the frustum.
+&nbsp;	 * 
+&nbsp;	 * @param point The point
+&nbsp;	 * @return Whether the point is in the frustum. */
+&nbsp;	public boolean pointInFrustum (Vector3 point) {
+<b class="nc">&nbsp;		for (int i = 0; i &lt; planes.length; i++) {</b>
+<b class="nc">&nbsp;			PlaneSide result = planes[i].testPoint(point);</b>
+<b class="nc">&nbsp;			if (result == PlaneSide.Back) return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the point is in the frustum.
+&nbsp;	 * 
+&nbsp;	 * @param x The X coordinate of the point
+&nbsp;	 * @param y The Y coordinate of the point
+&nbsp;	 * @param z The Z coordinate of the point
+&nbsp;	 * @return Whether the point is in the frustum. */
+&nbsp;	public boolean pointInFrustum (float x, float y, float z) {
+<b class="nc">&nbsp;		for (int i = 0; i &lt; planes.length; i++) {</b>
+<b class="nc">&nbsp;			PlaneSide result = planes[i].testPoint(x, y, z);</b>
+<b class="nc">&nbsp;			if (result == PlaneSide.Back) return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given sphere is in the frustum.
+&nbsp;	 * 
+&nbsp;	 * @param center The center of the sphere
+&nbsp;	 * @param radius The radius of the sphere
+&nbsp;	 * @return Whether the sphere is in the frustum */
+&nbsp;	public boolean sphereInFrustum (Vector3 center, float radius) {
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 6; i++)</b>
+<b class="nc">&nbsp;			if ((planes[i].normal.x * center.x + planes[i].normal.y * center.y + planes[i].normal.z * center.z) &lt; (-radius</b>
+<b class="nc">&nbsp;				- planes[i].d)) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given sphere is in the frustum.
+&nbsp;	 * 
+&nbsp;	 * @param x The X coordinate of the center of the sphere
+&nbsp;	 * @param y The Y coordinate of the center of the sphere
+&nbsp;	 * @param z The Z coordinate of the center of the sphere
+&nbsp;	 * @param radius The radius of the sphere
+&nbsp;	 * @return Whether the sphere is in the frustum */
+&nbsp;	public boolean sphereInFrustum (float x, float y, float z, float radius) {
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 6; i++)</b>
+<b class="nc">&nbsp;			if ((planes[i].normal.x * x + planes[i].normal.y * y + planes[i].normal.z * z) &lt; (-radius - planes[i].d)) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given sphere is in the frustum not checking whether it is behind the near and far clipping plane.
+&nbsp;	 * 
+&nbsp;	 * @param center The center of the sphere
+&nbsp;	 * @param radius The radius of the sphere
+&nbsp;	 * @return Whether the sphere is in the frustum */
+&nbsp;	public boolean sphereInFrustumWithoutNearFar (Vector3 center, float radius) {
+<b class="nc">&nbsp;		for (int i = 2; i &lt; 6; i++)</b>
+<b class="nc">&nbsp;			if ((planes[i].normal.x * center.x + planes[i].normal.y * center.y + planes[i].normal.z * center.z) &lt; (-radius</b>
+<b class="nc">&nbsp;				- planes[i].d)) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given sphere is in the frustum not checking whether it is behind the near and far clipping plane.
+&nbsp;	 * 
+&nbsp;	 * @param x The X coordinate of the center of the sphere
+&nbsp;	 * @param y The Y coordinate of the center of the sphere
+&nbsp;	 * @param z The Z coordinate of the center of the sphere
+&nbsp;	 * @param radius The radius of the sphere
+&nbsp;	 * @return Whether the sphere is in the frustum */
+&nbsp;	public boolean sphereInFrustumWithoutNearFar (float x, float y, float z, float radius) {
+<b class="nc">&nbsp;		for (int i = 2; i &lt; 6; i++)</b>
+<b class="nc">&nbsp;			if ((planes[i].normal.x * x + planes[i].normal.y * y + planes[i].normal.z * z) &lt; (-radius - planes[i].d)) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given {@link BoundingBox} is in the frustum.
+&nbsp;	 * 
+&nbsp;	 * @param bounds The bounding box
+&nbsp;	 * @return Whether the bounding box is in the frustum */
+&nbsp;	public boolean boundsInFrustum (BoundingBox bounds) {
+<b class="nc">&nbsp;		for (int i = 0, len2 = planes.length; i &lt; len2; i++) {</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner000(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner001(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner010(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner011(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner100(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner101(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner110(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(bounds.getCorner111(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given bounding box is in the frustum.
+&nbsp;	 * @return Whether the bounding box is in the frustum */
+&nbsp;	public boolean boundsInFrustum (Vector3 center, Vector3 dimensions) {
+<b class="nc">&nbsp;		return boundsInFrustum(center.x, center.y, center.z, dimensions.x / 2, dimensions.y / 2, dimensions.z / 2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given bounding box is in the frustum.
+&nbsp;	 * @return Whether the bounding box is in the frustum */
+&nbsp;	public boolean boundsInFrustum (float x, float y, float z, float halfWidth, float halfHeight, float halfDepth) {
+<b class="nc">&nbsp;		for (int i = 0, len2 = planes.length; i &lt; len2; i++) {</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x + halfWidth, y + halfHeight, z + halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x + halfWidth, y + halfHeight, z - halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x + halfWidth, y - halfHeight, z + halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x + halfWidth, y - halfHeight, z - halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x - halfWidth, y + halfHeight, z + halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x - halfWidth, y + halfHeight, z - halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x - halfWidth, y - halfHeight, z + halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(x - halfWidth, y - halfHeight, z - halfDepth) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns whether the given {@link OrientedBoundingBox} is in the frustum.
+&nbsp;	 *
+&nbsp;	 * @param obb The oriented bounding box
+&nbsp;	 * @return Whether the oriented bounding box is in the frustum */
+&nbsp;	public boolean boundsInFrustum (OrientedBoundingBox obb) {
+<b class="nc">&nbsp;		for (int i = 0, len2 = planes.length; i &lt; len2; i++) {</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner000(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner001(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner010(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner011(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner100(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner101(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner110(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			if (planes[i].testPoint(obb.getCorner111(tmpV)) != PlaneSide.Back) continue;</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>
