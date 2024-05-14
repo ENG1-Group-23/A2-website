@@ -1,0 +1,208 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TiledMapTileSets</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps.tiled</a>
+</div>
+
+<h1>Coverage Summary for Class: TiledMapTileSets (com.badlogic.gdx.maps.tiled)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TiledMapTileSets</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    37.5%
+  </span>
+  <span class="absValue">
+    (3/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (4/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (11/22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.maps.tiled;
+&nbsp;
+&nbsp;import java.util.Iterator;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;
+&nbsp;/** @brief Collection of {@link TiledMapTileSet} */
+&nbsp;public class TiledMapTileSets implements Iterable&lt;TiledMapTileSet&gt; {
+&nbsp;
+&nbsp;	private Array&lt;TiledMapTileSet&gt; tilesets;
+&nbsp;
+&nbsp;	/** Creates an empty collection of tilesets. */
+<b class="fc">&nbsp;	public TiledMapTileSets () {</b>
+<b class="fc">&nbsp;		tilesets = new Array&lt;TiledMapTileSet&gt;();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param index index to get the desired {@link TiledMapTileSet} at.
+&nbsp;	 * @return tileset at index */
+&nbsp;	public TiledMapTileSet getTileSet (int index) {
+<b class="nc">&nbsp;		return tilesets.get(index);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param name Name of the {@link TiledMapTileSet} to retrieve.
+&nbsp;	 * @return tileset with matching name, null if it doesn&#39;t exist */
+&nbsp;	public TiledMapTileSet getTileSet (String name) {
+<b class="nc">&nbsp;		for (TiledMapTileSet tileset : tilesets) {</b>
+<b class="nc">&nbsp;			if (name.equals(tileset.getName())) {</b>
+<b class="nc">&nbsp;				return tileset;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param tileset set to be added to the collection */
+&nbsp;	public void addTileSet (TiledMapTileSet tileset) {
+<b class="fc">&nbsp;		tilesets.add(tileset);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Removes tileset at index
+&nbsp;	 * 
+&nbsp;	 * @param index index at which to remove a tileset. */
+&nbsp;	public void removeTileSet (int index) {
+<b class="nc">&nbsp;		tilesets.removeIndex(index);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param tileset set to be removed */
+&nbsp;	public void removeTileSet (TiledMapTileSet tileset) {
+<b class="nc">&nbsp;		tilesets.removeValue(tileset, true);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param id id of the {@link TiledMapTile} to get.
+&nbsp;	 * @return tile with matching id, null if it doesn&#39;t exist */
+&nbsp;	public TiledMapTile getTile (int id) {
+&nbsp;		// The purpose of backward iteration here is to maintain backwards compatibility
+&nbsp;		// with maps created with earlier versions of a shared tileset. The assumption
+&nbsp;		// is that the tilesets are in order of ascending firstgid, and by backward
+&nbsp;		// iterating precedence for conflicts is given to later tilesets in the list,
+&nbsp;		// which are likely to be the earlier version of any given gid.
+&nbsp;		// See TiledMapModifiedExternalTilesetTest for example of this issue.
+<b class="fc">&nbsp;		for (int i = tilesets.size - 1; i &gt;= 0; i--) {</b>
+<b class="fc">&nbsp;			TiledMapTileSet tileset = tilesets.get(i);</b>
+<b class="fc">&nbsp;			TiledMapTile tile = tileset.getTile(id);</b>
+<b class="fc">&nbsp;			if (tile != null) {</b>
+<b class="fc">&nbsp;				return tile;</b>
+&nbsp;			}
+&nbsp;		}
+<b class="fc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return iterator to tilesets */
+&nbsp;	@Override
+&nbsp;	public Iterator&lt;TiledMapTileSet&gt; iterator () {
+<b class="nc">&nbsp;		return tilesets.iterator();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

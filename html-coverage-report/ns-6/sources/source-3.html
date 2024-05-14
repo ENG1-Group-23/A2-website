@@ -1,0 +1,247 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameData</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: GameData (bytemusketeers.heslingtonhustle.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameData</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28.6%
+  </span>
+  <span class="absValue">
+    (4/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.7%
+  </span>
+  <span class="absValue">
+    (10/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.utils;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.sound.GameMusic;
+&nbsp;import bytemusketeers.heslingtonhustle.sound.GameSound;
+&nbsp;
+&nbsp;/**
+&nbsp; * The {@link GameData} class stores game settings and data and handles the manipulation and querying thereof.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class GameData {
+&nbsp;    /**
+&nbsp;     * The {@link GameMusic} data reference
+&nbsp;     *
+&nbsp;     * @see GameMusic
+&nbsp;     */
+&nbsp;    private final GameMusic music;
+&nbsp;    /**
+&nbsp;     * The {@link GameSound} data reference
+&nbsp;     *
+&nbsp;     * @see GameSound
+&nbsp;     */
+&nbsp;    private final GameSound sound;
+&nbsp;    /**
+&nbsp;     * The current gender of the {@link bytemusketeers.heslingtonhustle.entity.Player}
+&nbsp;     *
+&nbsp;     * @apiNote The male state is encoded as {@code true}, and the female state as {@code false}.
+&nbsp;     */
+<b class="fc">&nbsp;    private boolean gender = true;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor initializes the game music settings.
+&nbsp;     */
+<b class="fc">&nbsp;    public GameData() {</b>
+<b class="fc">&nbsp;        this.music = new GameMusic();</b>
+<b class="fc">&nbsp;        this.sound = new GameSound();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the player&#39;s gender selection.
+&nbsp;     *
+&nbsp;     * @return A boolean representing the gender, true for male, false for female.
+&nbsp;     */
+&nbsp;    public boolean getGender() {
+<b class="fc">&nbsp;        return gender;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the player&#39;s gender preference.
+&nbsp;     *
+&nbsp;     * @param gender A boolean, true for male and false for female.
+&nbsp;     */
+&nbsp;    public void setGender(boolean gender) {
+<b class="nc">&nbsp;        this.gender = gender;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the current sound level setting.
+&nbsp;     *
+&nbsp;     * @return The sound level as an integer.
+&nbsp;     */
+&nbsp;    public int getSoundLevel() {
+<b class="nc">&nbsp;        return sound.getSoundLevel();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the current music level setting.
+&nbsp;     *
+&nbsp;     * @return The music volume level
+&nbsp;     */
+&nbsp;    public int getMusicLevel() {
+<b class="nc">&nbsp;        return music.getMusicLevel();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Increments the music volume level if not at maximum.
+&nbsp;     */
+&nbsp;    public void incrementMusicLevel() {
+<b class="nc">&nbsp;        music.incrementVolume();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Decrements the music volume level if not at minimum.
+&nbsp;     */
+&nbsp;    public void decrementMusicLevel() {
+<b class="nc">&nbsp;        music.decrementVolume();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Increments the sound-effects volume level if not at maximum.
+&nbsp;     */
+&nbsp;    public void incrementSoundLevel() {
+<b class="nc">&nbsp;        sound.incrementVolume();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Decrements the sound-effects volume level if not at minimum.
+&nbsp;     */
+&nbsp;    public void decrementSoundLevel() {
+<b class="nc">&nbsp;        sound.decrementVolume();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Activates the sound of the volume being raised
+&nbsp;     *
+&nbsp;     * @see GameSound#incrementVolume()
+&nbsp;     */
+&nbsp;    public void upSoundActivate() {
+<b class="nc">&nbsp;        sound.upSoundActivate();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Activates the sound of the volume being lowered
+&nbsp;     *
+&nbsp;     * @see GameSound#decrementVolume()
+&nbsp;     */
+&nbsp;    public void downSoundActivate() {
+<b class="nc">&nbsp;        sound.downSoundActivate();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Activates the sound of the {@link bytemusketeers.heslingtonhustle.entity.Player} consuming food
+&nbsp;     *
+&nbsp;     * @see GameSound#eatingSoundActivate()
+&nbsp;     */
+&nbsp;    public void eatingSoundActivate() {
+<b class="fc">&nbsp;        sound.eatingSoundActivate();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Activates the sound of a UI button being pressed
+&nbsp;     *
+&nbsp;     * @see GameSound#buttonClickedSoundActivate()
+&nbsp;     */
+&nbsp;    public void buttonClickedSoundActivate() {
+<b class="fc">&nbsp;        sound.buttonClickedSoundActivate();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void duckSoundActivate() {
+<b class="nc">&nbsp;        sound.duckSoundActivate();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

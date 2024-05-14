@@ -1,0 +1,223 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ClassRequest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.junit.internal.requests</a>
+</div>
+
+<h1>Coverage Summary for Class: ClassRequest (org.junit.internal.requests)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClassRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ClassRequest$CustomAllDefaultPossibilitiesBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ClassRequest$CustomSuiteMethodBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (6/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71.4%
+  </span>
+  <span class="absValue">
+    (10/14)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.junit.internal.requests;
+&nbsp;
+&nbsp;import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
+&nbsp;import org.junit.internal.builders.SuiteMethodBuilder;
+&nbsp;import org.junit.runner.Runner;
+&nbsp;import org.junit.runners.model.RunnerBuilder;
+&nbsp;
+<b class="nc">&nbsp;public class ClassRequest extends MemoizingRequest {</b>
+&nbsp;    /*
+&nbsp;     * We have to use the f prefix, because IntelliJ&#39;s JUnit4IdeaTestRunner uses
+&nbsp;     * reflection to access this field. See
+&nbsp;     * https://github.com/junit-team/junit4/issues/960
+&nbsp;     */
+&nbsp;    private final Class&lt;?&gt; fTestClass;
+&nbsp;    private final boolean canUseSuiteMethod;
+&nbsp;
+<b class="fc">&nbsp;    public ClassRequest(Class&lt;?&gt; testClass, boolean canUseSuiteMethod) {</b>
+<b class="fc">&nbsp;        this.fTestClass = testClass;</b>
+<b class="fc">&nbsp;        this.canUseSuiteMethod = canUseSuiteMethod;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public ClassRequest(Class&lt;?&gt; testClass) {
+<b class="fc">&nbsp;        this(testClass, true);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    protected Runner createRunner() {
+<b class="fc">&nbsp;        return new CustomAllDefaultPossibilitiesBuilder().safeRunnerForClass(fTestClass);</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    private class CustomAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBuilder {</b>
+&nbsp;
+&nbsp;        @Override
+&nbsp;        protected RunnerBuilder suiteMethodBuilder() {
+<b class="fc">&nbsp;            return new CustomSuiteMethodBuilder();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /*
+&nbsp;     * Customization of {@link SuiteMethodBuilder} that prevents use of the
+&nbsp;     * suite method when creating a runner for fTestClass when canUseSuiteMethod
+&nbsp;     * is false.
+&nbsp;     */
+<b class="fc">&nbsp;    private class CustomSuiteMethodBuilder extends SuiteMethodBuilder {</b>
+&nbsp;
+&nbsp;        @Override
+&nbsp;        public Runner runnerForClass(Class&lt;?&gt; testClass) throws Throwable {
+<b class="nc">&nbsp;            if (testClass == fTestClass &amp;&amp; !canUseSuiteMethod) {</b>
+<b class="nc">&nbsp;                return null;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return super.runnerForClass(testClass);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

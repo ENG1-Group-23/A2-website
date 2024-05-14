@@ -1,0 +1,399 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GLTexture</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics</a>
+</div>
+
+<h1>Coverage Summary for Class: GLTexture (com.badlogic.gdx.graphics)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GLTexture</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (10/25)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (18/54)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    48.6%
+  </span>
+  <span class="absValue">
+    (52/107)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; *
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.graphics.Pixmap.Blending;
+&nbsp;import com.badlogic.gdx.graphics.Texture.TextureFilter;
+&nbsp;import com.badlogic.gdx.graphics.Texture.TextureWrap;
+&nbsp;import com.badlogic.gdx.graphics.TextureData.TextureDataType;
+&nbsp;import com.badlogic.gdx.graphics.glutils.MipMapGenerator;
+&nbsp;import com.badlogic.gdx.math.MathUtils;
+&nbsp;import com.badlogic.gdx.utils.BufferUtils;
+&nbsp;import com.badlogic.gdx.utils.Disposable;
+&nbsp;
+&nbsp;import java.nio.Buffer;
+&nbsp;import java.nio.FloatBuffer;
+&nbsp;
+&nbsp;/** Class representing an OpenGL texture by its target and handle. Keeps track of its state like the TextureFilter and
+&nbsp; * TextureWrap. Also provides some (protected) static methods to create TextureData and upload image data.
+&nbsp; * @author badlogic, Xoppa */
+&nbsp;public abstract class GLTexture implements Disposable {
+&nbsp;	/** The target of this texture, used when binding the texture, e.g. GL_TEXTURE_2D */
+&nbsp;	public final int glTarget;
+&nbsp;	protected int glHandle;
+<b class="fc">&nbsp;	protected TextureFilter minFilter = TextureFilter.Nearest;</b>
+<b class="fc">&nbsp;	protected TextureFilter magFilter = TextureFilter.Nearest;</b>
+<b class="fc">&nbsp;	protected TextureWrap uWrap = TextureWrap.ClampToEdge;</b>
+<b class="fc">&nbsp;	protected TextureWrap vWrap = TextureWrap.ClampToEdge;</b>
+<b class="fc">&nbsp;	protected float anisotropicFilterLevel = 1.0f;</b>
+<b class="fc">&nbsp;	private static float maxAnisotropicFilterLevel = 0;</b>
+&nbsp;
+&nbsp;	/** @return the width of the texture in pixels */
+&nbsp;	public abstract int getWidth ();
+&nbsp;
+&nbsp;	/** @return the height of the texture in pixels */
+&nbsp;	public abstract int getHeight ();
+&nbsp;
+&nbsp;	/** @return the depth of the texture in pixels */
+&nbsp;	public abstract int getDepth ();
+&nbsp;
+&nbsp;	/** Generates a new OpenGL texture with the specified target. */
+&nbsp;	public GLTexture (int glTarget) {
+<b class="nc">&nbsp;		this(glTarget, Gdx.gl.glGenTexture());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+<b class="fc">&nbsp;	public GLTexture (int glTarget, int glHandle) {</b>
+<b class="fc">&nbsp;		this.glTarget = glTarget;</b>
+<b class="fc">&nbsp;		this.glHandle = glHandle;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return whether this texture is managed or not. */
+&nbsp;	public abstract boolean isManaged ();
+&nbsp;
+&nbsp;	protected abstract void reload ();
+&nbsp;
+&nbsp;	/** Binds this texture. The texture will be bound to the currently active texture unit specified via
+&nbsp;	 * {@link GL20#glActiveTexture(int)}. */
+&nbsp;	public void bind () {
+<b class="fc">&nbsp;		Gdx.gl.glBindTexture(glTarget, glHandle);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Binds the texture to the given texture unit. Sets the currently active texture unit via {@link GL20#glActiveTexture(int)}.
+&nbsp;	 * @param unit the unit (0 to MAX_TEXTURE_UNITS). */
+&nbsp;	public void bind (int unit) {
+<b class="nc">&nbsp;		Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0 + unit);</b>
+<b class="nc">&nbsp;		Gdx.gl.glBindTexture(glTarget, glHandle);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return The {@link Texture.TextureFilter} used for minification. */
+&nbsp;	public TextureFilter getMinFilter () {
+<b class="nc">&nbsp;		return minFilter;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The {@link Texture.TextureFilter} used for magnification. */
+&nbsp;	public TextureFilter getMagFilter () {
+<b class="nc">&nbsp;		return magFilter;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The {@link Texture.TextureWrap} used for horizontal (U) texture coordinates. */
+&nbsp;	public TextureWrap getUWrap () {
+<b class="nc">&nbsp;		return uWrap;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The {@link Texture.TextureWrap} used for vertical (V) texture coordinates. */
+&nbsp;	public TextureWrap getVWrap () {
+<b class="nc">&nbsp;		return vWrap;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The OpenGL handle for this texture. */
+&nbsp;	public int getTextureObjectHandle () {
+<b class="nc">&nbsp;		return glHandle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the {@link TextureWrap} for this texture on the u and v axis. Assumes the texture is bound and active!
+&nbsp;	 * @param u the u wrap
+&nbsp;	 * @param v the v wrap */
+&nbsp;	public void unsafeSetWrap (TextureWrap u, TextureWrap v) {
+<b class="nc">&nbsp;		unsafeSetWrap(u, v, false);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the {@link TextureWrap} for this texture on the u and v axis. Assumes the texture is bound and active!
+&nbsp;	 * @param u the u wrap
+&nbsp;	 * @param v the v wrap
+&nbsp;	 * @param force True to always set the values, even if they are the same as the current values. */
+&nbsp;	public void unsafeSetWrap (TextureWrap u, TextureWrap v, boolean force) {
+<b class="pc">&nbsp;		if (u != null &amp;&amp; (force || uWrap != u)) {</b>
+<b class="fc">&nbsp;			Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_WRAP_S, u.getGLEnum());</b>
+<b class="fc">&nbsp;			uWrap = u;</b>
+&nbsp;		}
+<b class="pc">&nbsp;		if (v != null &amp;&amp; (force || vWrap != v)) {</b>
+<b class="fc">&nbsp;			Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_WRAP_T, v.getGLEnum());</b>
+<b class="fc">&nbsp;			vWrap = v;</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the {@link TextureWrap} for this texture on the u and v axis. This will bind this texture!
+&nbsp;	 * @param u the u wrap
+&nbsp;	 * @param v the v wrap */
+&nbsp;	public void setWrap (TextureWrap u, TextureWrap v) {
+<b class="nc">&nbsp;		this.uWrap = u;</b>
+<b class="nc">&nbsp;		this.vWrap = v;</b>
+<b class="nc">&nbsp;		bind();</b>
+<b class="nc">&nbsp;		Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_WRAP_S, u.getGLEnum());</b>
+<b class="nc">&nbsp;		Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_WRAP_T, v.getGLEnum());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the {@link TextureFilter} for this texture for minification and magnification. Assumes the texture is bound and
+&nbsp;	 * active!
+&nbsp;	 * @param minFilter the minification filter
+&nbsp;	 * @param magFilter the magnification filter */
+&nbsp;	public void unsafeSetFilter (TextureFilter minFilter, TextureFilter magFilter) {
+<b class="nc">&nbsp;		unsafeSetFilter(minFilter, magFilter, false);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the {@link TextureFilter} for this texture for minification and magnification. Assumes the texture is bound and
+&nbsp;	 * active!
+&nbsp;	 * @param minFilter the minification filter
+&nbsp;	 * @param magFilter the magnification filter
+&nbsp;	 * @param force True to always set the values, even if they are the same as the current values. */
+&nbsp;	public void unsafeSetFilter (TextureFilter minFilter, TextureFilter magFilter, boolean force) {
+<b class="pc">&nbsp;		if (minFilter != null &amp;&amp; (force || this.minFilter != minFilter)) {</b>
+<b class="fc">&nbsp;			Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_MIN_FILTER, minFilter.getGLEnum());</b>
+<b class="fc">&nbsp;			this.minFilter = minFilter;</b>
+&nbsp;		}
+<b class="pc">&nbsp;		if (magFilter != null &amp;&amp; (force || this.magFilter != magFilter)) {</b>
+<b class="fc">&nbsp;			Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_MAG_FILTER, magFilter.getGLEnum());</b>
+<b class="fc">&nbsp;			this.magFilter = magFilter;</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the {@link TextureFilter} for this texture for minification and magnification. This will bind this texture!
+&nbsp;	 * @param minFilter the minification filter
+&nbsp;	 * @param magFilter the magnification filter */
+&nbsp;	public void setFilter (TextureFilter minFilter, TextureFilter magFilter) {
+<b class="fc">&nbsp;		this.minFilter = minFilter;</b>
+<b class="fc">&nbsp;		this.magFilter = magFilter;</b>
+<b class="fc">&nbsp;		bind();</b>
+<b class="fc">&nbsp;		Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_MIN_FILTER, minFilter.getGLEnum());</b>
+<b class="fc">&nbsp;		Gdx.gl.glTexParameteri(glTarget, GL20.GL_TEXTURE_MAG_FILTER, magFilter.getGLEnum());</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the anisotropic filter level for the texture. Assumes the texture is bound and active!
+&nbsp;	 *
+&nbsp;	 * @param level The desired level of filtering. The maximum level supported by the device up to this value will be used.
+&nbsp;	 * @return The actual level set, which may be lower than the provided value due to device limitations. */
+&nbsp;	public float unsafeSetAnisotropicFilter (float level) {
+<b class="nc">&nbsp;		return unsafeSetAnisotropicFilter(level, false);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the anisotropic filter level for the texture. Assumes the texture is bound and active!
+&nbsp;	 *
+&nbsp;	 * @param level The desired level of filtering. The maximum level supported by the device up to this value will be used.
+&nbsp;	 * @param force True to always set the value, even if it is the same as the current values.
+&nbsp;	 * @return The actual level set, which may be lower than the provided value due to device limitations. */
+&nbsp;	public float unsafeSetAnisotropicFilter (float level, boolean force) {
+<b class="fc">&nbsp;		float max = getMaxAnisotropicFilterLevel();</b>
+<b class="pc">&nbsp;		if (max == 1f) return 1f;</b>
+<b class="nc">&nbsp;		level = Math.min(level, max);</b>
+<b class="nc">&nbsp;		if (!force &amp;&amp; MathUtils.isEqual(level, anisotropicFilterLevel, 0.1f)) return anisotropicFilterLevel;</b>
+<b class="nc">&nbsp;		Gdx.gl20.glTexParameterf(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);</b>
+<b class="nc">&nbsp;		return anisotropicFilterLevel = level;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the anisotropic filter level for the texture. This will bind the texture!
+&nbsp;	 *
+&nbsp;	 * @param level The desired level of filtering. The maximum level supported by the device up to this value will be used.
+&nbsp;	 * @return The actual level set, which may be lower than the provided value due to device limitations. */
+&nbsp;	public float setAnisotropicFilter (float level) {
+<b class="nc">&nbsp;		float max = getMaxAnisotropicFilterLevel();</b>
+<b class="nc">&nbsp;		if (max == 1f) return 1f;</b>
+<b class="nc">&nbsp;		level = Math.min(level, max);</b>
+<b class="nc">&nbsp;		if (MathUtils.isEqual(level, anisotropicFilterLevel, 0.1f)) return level;</b>
+<b class="nc">&nbsp;		bind();</b>
+<b class="nc">&nbsp;		Gdx.gl20.glTexParameterf(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);</b>
+<b class="nc">&nbsp;		return anisotropicFilterLevel = level;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The currently set anisotropic filtering level for the texture, or 1.0f if none has been set. */
+&nbsp;	public float getAnisotropicFilter () {
+<b class="nc">&nbsp;		return anisotropicFilterLevel;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The maximum supported anisotropic filtering level supported by the device. */
+&nbsp;	public static float getMaxAnisotropicFilterLevel () {
+<b class="fc">&nbsp;		if (maxAnisotropicFilterLevel &gt; 0) return maxAnisotropicFilterLevel;</b>
+<b class="pc">&nbsp;		if (Gdx.graphics.supportsExtension(&quot;GL_EXT_texture_filter_anisotropic&quot;)) {</b>
+<b class="nc">&nbsp;			FloatBuffer buffer = BufferUtils.newFloatBuffer(16);</b>
+<b class="nc">&nbsp;			((Buffer)buffer).position(0);</b>
+<b class="nc">&nbsp;			((Buffer)buffer).limit(buffer.capacity());</b>
+<b class="nc">&nbsp;			Gdx.gl20.glGetFloatv(GL20.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, buffer);</b>
+<b class="nc">&nbsp;			return maxAnisotropicFilterLevel = buffer.get(0);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		return maxAnisotropicFilterLevel = 1f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Destroys the OpenGL Texture as specified by the glHandle. */
+&nbsp;	protected void delete () {
+<b class="nc">&nbsp;		if (glHandle != 0) {</b>
+<b class="nc">&nbsp;			Gdx.gl.glDeleteTexture(glHandle);</b>
+<b class="nc">&nbsp;			glHandle = 0;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void dispose () {
+<b class="nc">&nbsp;		delete();</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected static void uploadImageData (int target, TextureData data) {
+<b class="fc">&nbsp;		uploadImageData(target, data, 0);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public static void uploadImageData (int target, TextureData data, int miplevel) {
+<b class="pc">&nbsp;		if (data == null) {</b>
+&nbsp;			// FIXME: remove texture on target?
+<b class="nc">&nbsp;			return;</b>
+&nbsp;		}
+&nbsp;
+<b class="pc">&nbsp;		if (!data.isPrepared()) data.prepare();</b>
+&nbsp;
+<b class="fc">&nbsp;		final TextureDataType type = data.getType();</b>
+<b class="pc">&nbsp;		if (type == TextureDataType.Custom) {</b>
+<b class="nc">&nbsp;			data.consumeCustomData(target);</b>
+<b class="nc">&nbsp;			return;</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		Pixmap pixmap = data.consumePixmap();</b>
+<b class="fc">&nbsp;		boolean disposePixmap = data.disposePixmap();</b>
+<b class="pc">&nbsp;		if (data.getFormat() != pixmap.getFormat()) {</b>
+<b class="nc">&nbsp;			Pixmap tmp = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), data.getFormat());</b>
+<b class="nc">&nbsp;			tmp.setBlending(Blending.None);</b>
+<b class="nc">&nbsp;			tmp.drawPixmap(pixmap, 0, 0, 0, 0, pixmap.getWidth(), pixmap.getHeight());</b>
+<b class="nc">&nbsp;			if (data.disposePixmap()) {</b>
+<b class="nc">&nbsp;				pixmap.dispose();</b>
+&nbsp;			}
+<b class="nc">&nbsp;			pixmap = tmp;</b>
+<b class="nc">&nbsp;			disposePixmap = true;</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		Gdx.gl.glPixelStorei(GL20.GL_UNPACK_ALIGNMENT, 1);</b>
+<b class="pc">&nbsp;		if (data.useMipMaps()) {</b>
+<b class="nc">&nbsp;			MipMapGenerator.generateMipMap(target, pixmap, pixmap.getWidth(), pixmap.getHeight());</b>
+&nbsp;		} else {
+<b class="fc">&nbsp;			Gdx.gl.glTexImage2D(target, miplevel, pixmap.getGLInternalFormat(), pixmap.getWidth(), pixmap.getHeight(), 0,</b>
+<b class="fc">&nbsp;				pixmap.getGLFormat(), pixmap.getGLType(), pixmap.getPixels());</b>
+&nbsp;		}
+<b class="pc">&nbsp;		if (disposePixmap) pixmap.dispose();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,932 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TextureAtlas</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics.g2d</a>
+</div>
+
+<h1>Coverage Summary for Class: TextureAtlas (com.badlogic.gdx.graphics.g2d)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+  <tr>
+    <td class="name">TextureAtlas$AtlasRegion</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics.g2d;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.Comparator;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Files.FileType;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.graphics.Pixmap.Format;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.Texture.TextureFilter;
+&nbsp;import com.badlogic.gdx.graphics.Texture.TextureWrap;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Page;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;import com.badlogic.gdx.utils.Disposable;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;import com.badlogic.gdx.utils.Null;
+&nbsp;import com.badlogic.gdx.utils.ObjectMap;
+&nbsp;import com.badlogic.gdx.utils.ObjectSet;
+&nbsp;import com.badlogic.gdx.utils.StreamUtils;
+&nbsp;
+&nbsp;/** Loads images from texture atlases created by TexturePacker.&lt;br&gt;
+&nbsp; * &lt;br&gt;
+&nbsp; * A TextureAtlas must be disposed to free up the resources consumed by the backing textures.
+&nbsp; * @author Nathan Sweet */
+&nbsp;public class TextureAtlas implements Disposable {
+&nbsp;	private final ObjectSet&lt;Texture&gt; textures = new ObjectSet(4);
+&nbsp;	private final Array&lt;AtlasRegion&gt; regions = new Array();
+&nbsp;
+&nbsp;	/** Creates an empty atlas to which regions can be added. */
+&nbsp;	public TextureAtlas () {
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Loads the specified pack file using {@link FileType#Internal}, using the parent directory of the pack file to find the page
+&nbsp;	 * images. */
+&nbsp;	public TextureAtlas (String internalPackFile) {
+&nbsp;		this(Gdx.files.internal(internalPackFile));
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Loads the specified pack file, using the parent directory of the pack file to find the page images. */
+&nbsp;	public TextureAtlas (FileHandle packFile) {
+&nbsp;		this(packFile, packFile.parent());
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param flip If true, all regions loaded will be flipped for use with a perspective where 0,0 is the upper left corner.
+&nbsp;	 * @see #TextureAtlas(FileHandle) */
+&nbsp;	public TextureAtlas (FileHandle packFile, boolean flip) {
+&nbsp;		this(packFile, packFile.parent(), flip);
+&nbsp;	}
+&nbsp;
+&nbsp;	public TextureAtlas (FileHandle packFile, FileHandle imagesDir) {
+&nbsp;		this(packFile, imagesDir, false);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param flip If true, all regions loaded will be flipped for use with a perspective where 0,0 is the upper left corner. */
+&nbsp;	public TextureAtlas (FileHandle packFile, FileHandle imagesDir, boolean flip) {
+&nbsp;		this(new TextureAtlasData(packFile, imagesDir, flip));
+&nbsp;	}
+&nbsp;
+&nbsp;	public TextureAtlas (TextureAtlasData data) {
+&nbsp;		load(data);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Adds the textures and regions from the specified texture atlas data. */
+&nbsp;	public void load (TextureAtlasData data) {
+&nbsp;		textures.ensureCapacity(data.pages.size);
+&nbsp;		for (Page page : data.pages) {
+&nbsp;			if (page.texture == null) page.texture = new Texture(page.textureFile, page.format, page.useMipMaps);
+&nbsp;			page.texture.setFilter(page.minFilter, page.magFilter);
+&nbsp;			page.texture.setWrap(page.uWrap, page.vWrap);
+&nbsp;			textures.add(page.texture);
+&nbsp;		}
+&nbsp;
+&nbsp;		regions.ensureCapacity(data.regions.size);
+&nbsp;		for (Region region : data.regions) {
+&nbsp;			AtlasRegion atlasRegion = new AtlasRegion(region.page.texture, region.left, region.top, //
+&nbsp;				region.rotate ? region.height : region.width, //
+&nbsp;				region.rotate ? region.width : region.height);
+&nbsp;			atlasRegion.index = region.index;
+&nbsp;			atlasRegion.name = region.name;
+&nbsp;			atlasRegion.offsetX = region.offsetX;
+&nbsp;			atlasRegion.offsetY = region.offsetY;
+&nbsp;			atlasRegion.originalHeight = region.originalHeight;
+&nbsp;			atlasRegion.originalWidth = region.originalWidth;
+&nbsp;			atlasRegion.rotate = region.rotate;
+&nbsp;			atlasRegion.degrees = region.degrees;
+&nbsp;			atlasRegion.names = region.names;
+&nbsp;			atlasRegion.values = region.values;
+&nbsp;			if (region.flip) atlasRegion.flip(false, true);
+&nbsp;			regions.add(atlasRegion);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Adds a region to the atlas. The specified texture will be disposed when the atlas is disposed. */
+&nbsp;	public AtlasRegion addRegion (String name, Texture texture, int x, int y, int width, int height) {
+&nbsp;		textures.add(texture);
+&nbsp;		AtlasRegion region = new AtlasRegion(texture, x, y, width, height);
+&nbsp;		region.name = name;
+&nbsp;		regions.add(region);
+&nbsp;		return region;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Adds a region to the atlas. The texture for the specified region will be disposed when the atlas is disposed. */
+&nbsp;	public AtlasRegion addRegion (String name, TextureRegion textureRegion) {
+&nbsp;		textures.add(textureRegion.texture);
+&nbsp;		AtlasRegion region = new AtlasRegion(textureRegion);
+&nbsp;		region.name = name;
+&nbsp;		regions.add(region);
+&nbsp;		return region;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns all regions in the atlas. */
+&nbsp;	public Array&lt;AtlasRegion&gt; getRegions () {
+&nbsp;		return regions;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the first region found with the specified name. This method uses string comparison to find the region, so the
+&nbsp;	 * result should be cached rather than calling this method multiple times. */
+&nbsp;	public @Null AtlasRegion findRegion (String name) {
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++)
+&nbsp;			if (regions.get(i).name.equals(name)) return regions.get(i);
+&nbsp;		return null;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the first region found with the specified name and index. This method uses string comparison to find the region, so
+&nbsp;	 * the result should be cached rather than calling this method multiple times. */
+&nbsp;	public @Null AtlasRegion findRegion (String name, int index) {
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++) {
+&nbsp;			AtlasRegion region = regions.get(i);
+&nbsp;			if (!region.name.equals(name)) continue;
+&nbsp;			if (region.index != index) continue;
+&nbsp;			return region;
+&nbsp;		}
+&nbsp;		return null;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns all regions with the specified name, ordered by smallest to largest {@link AtlasRegion#index index}. This method
+&nbsp;	 * uses string comparison to find the regions, so the result should be cached rather than calling this method multiple
+&nbsp;	 * times. */
+&nbsp;	public Array&lt;AtlasRegion&gt; findRegions (String name) {
+&nbsp;		Array&lt;AtlasRegion&gt; matched = new Array(AtlasRegion.class);
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++) {
+&nbsp;			AtlasRegion region = regions.get(i);
+&nbsp;			if (region.name.equals(name)) matched.add(new AtlasRegion(region));
+&nbsp;		}
+&nbsp;		return matched;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns all regions in the atlas as sprites. This method creates a new sprite for each region, so the result should be
+&nbsp;	 * stored rather than calling this method multiple times.
+&nbsp;	 * @see #createSprite(String) */
+&nbsp;	public Array&lt;Sprite&gt; createSprites () {
+&nbsp;		Array sprites = new Array(true, regions.size, Sprite.class);
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++)
+&nbsp;			sprites.add(newSprite(regions.get(i)));
+&nbsp;		return sprites;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the first region found with the specified name as a sprite. If whitespace was stripped from the region when it was
+&nbsp;	 * packed, the sprite is automatically positioned as if whitespace had not been stripped. This method uses string comparison to
+&nbsp;	 * find the region and constructs a new sprite, so the result should be cached rather than calling this method multiple
+&nbsp;	 * times. */
+&nbsp;	public @Null Sprite createSprite (String name) {
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++)
+&nbsp;			if (regions.get(i).name.equals(name)) return newSprite(regions.get(i));
+&nbsp;		return null;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the first region found with the specified name and index as a sprite. This method uses string comparison to find
+&nbsp;	 * the region and constructs a new sprite, so the result should be cached rather than calling this method multiple times.
+&nbsp;	 * @see #createSprite(String) */
+&nbsp;	public @Null Sprite createSprite (String name, int index) {
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++) {
+&nbsp;			AtlasRegion region = regions.get(i);
+&nbsp;			if (region.index != index) continue;
+&nbsp;			if (!region.name.equals(name)) continue;
+&nbsp;			return newSprite(regions.get(i));
+&nbsp;		}
+&nbsp;		return null;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns all regions with the specified name as sprites, ordered by smallest to largest {@link AtlasRegion#index index}.
+&nbsp;	 * This method uses string comparison to find the regions and constructs new sprites, so the result should be cached rather
+&nbsp;	 * than calling this method multiple times.
+&nbsp;	 * @see #createSprite(String) */
+&nbsp;	public Array&lt;Sprite&gt; createSprites (String name) {
+&nbsp;		Array&lt;Sprite&gt; matched = new Array(Sprite.class);
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++) {
+&nbsp;			AtlasRegion region = regions.get(i);
+&nbsp;			if (region.name.equals(name)) matched.add(newSprite(region));
+&nbsp;		}
+&nbsp;		return matched;
+&nbsp;	}
+&nbsp;
+&nbsp;	private Sprite newSprite (AtlasRegion region) {
+&nbsp;		if (region.packedWidth == region.originalWidth &amp;&amp; region.packedHeight == region.originalHeight) {
+&nbsp;			if (region.rotate) {
+&nbsp;				Sprite sprite = new Sprite(region);
+&nbsp;				sprite.setBounds(0, 0, region.getRegionHeight(), region.getRegionWidth());
+&nbsp;				sprite.rotate90(true);
+&nbsp;				return sprite;
+&nbsp;			}
+&nbsp;			return new Sprite(region);
+&nbsp;		}
+&nbsp;		return new AtlasSprite(region);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the first region found with the specified name as a {@link NinePatch}. The region must have been packed with
+&nbsp;	 * ninepatch splits. This method uses string comparison to find the region and constructs a new ninepatch, so the result should
+&nbsp;	 * be cached rather than calling this method multiple times. */
+&nbsp;	public @Null NinePatch createPatch (String name) {
+&nbsp;		for (int i = 0, n = regions.size; i &lt; n; i++) {
+&nbsp;			AtlasRegion region = regions.get(i);
+&nbsp;			if (region.name.equals(name)) {
+&nbsp;				int[] splits = region.findValue(&quot;split&quot;);
+&nbsp;				if (splits == null) throw new IllegalArgumentException(&quot;Region does not have ninepatch splits: &quot; + name);
+&nbsp;				NinePatch patch = new NinePatch(region, splits[0], splits[1], splits[2], splits[3]);
+&nbsp;				int[] pads = region.findValue(&quot;pad&quot;);
+&nbsp;				if (pads != null) patch.setPadding(pads[0], pads[1], pads[2], pads[3]);
+&nbsp;				return patch;
+&nbsp;			}
+&nbsp;		}
+&nbsp;		return null;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the textures of the pages, unordered */
+&nbsp;	public ObjectSet&lt;Texture&gt; getTextures () {
+&nbsp;		return textures;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Releases all resources associated with this TextureAtlas instance. This releases all the textures backing all
+&nbsp;	 * TextureRegions and Sprites, which should no longer be used after calling dispose. */
+&nbsp;	public void dispose () {
+&nbsp;		for (Texture texture : textures)
+&nbsp;			texture.dispose();
+&nbsp;		textures.clear(0);
+&nbsp;	}
+&nbsp;
+&nbsp;	static public class TextureAtlasData {
+&nbsp;		final Array&lt;Page&gt; pages = new Array();
+&nbsp;		final Array&lt;Region&gt; regions = new Array();
+&nbsp;
+&nbsp;		public TextureAtlasData () {
+&nbsp;		}
+&nbsp;
+&nbsp;		public TextureAtlasData (FileHandle packFile, FileHandle imagesDir, boolean flip) {
+&nbsp;			load(packFile, imagesDir, flip);
+&nbsp;		}
+&nbsp;
+&nbsp;		public void load (FileHandle packFile, FileHandle imagesDir, boolean flip) {
+&nbsp;			final String[] entry = new String[5];
+&nbsp;
+&nbsp;			ObjectMap&lt;String, Field&lt;Page&gt;&gt; pageFields = new ObjectMap(15, 0.99f); // Size needed to avoid collisions.
+&nbsp;			pageFields.put(&quot;size&quot;, new Field&lt;Page&gt;() {
+&nbsp;				public void parse (Page page) {
+&nbsp;					page.width = Integer.parseInt(entry[1]);
+&nbsp;					page.height = Integer.parseInt(entry[2]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			pageFields.put(&quot;format&quot;, new Field&lt;Page&gt;() {
+&nbsp;				public void parse (Page page) {
+&nbsp;					page.format = Format.valueOf(entry[1]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			pageFields.put(&quot;filter&quot;, new Field&lt;Page&gt;() {
+&nbsp;				public void parse (Page page) {
+&nbsp;					page.minFilter = TextureFilter.valueOf(entry[1]);
+&nbsp;					page.magFilter = TextureFilter.valueOf(entry[2]);
+&nbsp;					page.useMipMaps = page.minFilter.isMipMap();
+&nbsp;				}
+&nbsp;			});
+&nbsp;			pageFields.put(&quot;repeat&quot;, new Field&lt;Page&gt;() {
+&nbsp;				public void parse (Page page) {
+&nbsp;					if (entry[1].indexOf(&#39;x&#39;) != -1) page.uWrap = TextureWrap.Repeat;
+&nbsp;					if (entry[1].indexOf(&#39;y&#39;) != -1) page.vWrap = TextureWrap.Repeat;
+&nbsp;				}
+&nbsp;			});
+&nbsp;			pageFields.put(&quot;pma&quot;, new Field&lt;Page&gt;() {
+&nbsp;				public void parse (Page page) {
+&nbsp;					page.pma = entry[1].equals(&quot;true&quot;);
+&nbsp;				}
+&nbsp;			});
+&nbsp;
+&nbsp;			final boolean[] hasIndexes = {false};
+&nbsp;			ObjectMap&lt;String, Field&lt;Region&gt;&gt; regionFields = new ObjectMap(127, 0.99f); // Size needed to avoid collisions.
+&nbsp;			regionFields.put(&quot;xy&quot;, new Field&lt;Region&gt;() { // Deprecated, use bounds.
+&nbsp;				public void parse (Region region) {
+&nbsp;					region.left = Integer.parseInt(entry[1]);
+&nbsp;					region.top = Integer.parseInt(entry[2]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			regionFields.put(&quot;size&quot;, new Field&lt;Region&gt;() { // Deprecated, use bounds.
+&nbsp;				public void parse (Region region) {
+&nbsp;					region.width = Integer.parseInt(entry[1]);
+&nbsp;					region.height = Integer.parseInt(entry[2]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			regionFields.put(&quot;bounds&quot;, new Field&lt;Region&gt;() {
+&nbsp;				public void parse (Region region) {
+&nbsp;					region.left = Integer.parseInt(entry[1]);
+&nbsp;					region.top = Integer.parseInt(entry[2]);
+&nbsp;					region.width = Integer.parseInt(entry[3]);
+&nbsp;					region.height = Integer.parseInt(entry[4]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			regionFields.put(&quot;offset&quot;, new Field&lt;Region&gt;() { // Deprecated, use offsets.
+&nbsp;				public void parse (Region region) {
+&nbsp;					region.offsetX = Integer.parseInt(entry[1]);
+&nbsp;					region.offsetY = Integer.parseInt(entry[2]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			regionFields.put(&quot;orig&quot;, new Field&lt;Region&gt;() { // Deprecated, use offsets.
+&nbsp;				public void parse (Region region) {
+&nbsp;					region.originalWidth = Integer.parseInt(entry[1]);
+&nbsp;					region.originalHeight = Integer.parseInt(entry[2]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			regionFields.put(&quot;offsets&quot;, new Field&lt;Region&gt;() {
+&nbsp;				public void parse (Region region) {
+&nbsp;					region.offsetX = Integer.parseInt(entry[1]);
+&nbsp;					region.offsetY = Integer.parseInt(entry[2]);
+&nbsp;					region.originalWidth = Integer.parseInt(entry[3]);
+&nbsp;					region.originalHeight = Integer.parseInt(entry[4]);
+&nbsp;				}
+&nbsp;			});
+&nbsp;			regionFields.put(&quot;rotate&quot;, new Field&lt;Region&gt;() {
+&nbsp;				public void parse (Region region) {
+&nbsp;					String value = entry[1];
+&nbsp;					if (value.equals(&quot;true&quot;))
+&nbsp;						region.degrees = 90;
+&nbsp;					else if (!value.equals(&quot;false&quot;)) //
+&nbsp;						region.degrees = Integer.parseInt(value);
+&nbsp;					region.rotate = region.degrees == 90;
+&nbsp;				}
+&nbsp;			});
+&nbsp;			regionFields.put(&quot;index&quot;, new Field&lt;Region&gt;() {
+&nbsp;				public void parse (Region region) {
+&nbsp;					region.index = Integer.parseInt(entry[1]);
+&nbsp;					if (region.index != -1) hasIndexes[0] = true;
+&nbsp;				}
+&nbsp;			});
+&nbsp;
+&nbsp;			BufferedReader reader = packFile.reader(1024);
+&nbsp;			try {
+&nbsp;				String line = reader.readLine();
+&nbsp;				// Ignore empty lines before first entry.
+&nbsp;				while (line != null &amp;&amp; line.trim().length() == 0)
+&nbsp;					line = reader.readLine();
+&nbsp;				// Header entries.
+&nbsp;				while (true) {
+&nbsp;					if (line == null || line.trim().length() == 0) break;
+&nbsp;					if (readEntry(entry, line) == 0) break; // Silently ignore all header fields.
+&nbsp;					line = reader.readLine();
+&nbsp;				}
+&nbsp;				// Page and region entries.
+&nbsp;				Page page = null;
+&nbsp;				Array&lt;Object&gt; names = null, values = null;
+&nbsp;				while (true) {
+&nbsp;					if (line == null) break;
+&nbsp;					if (line.trim().length() == 0) {
+&nbsp;						page = null;
+&nbsp;						line = reader.readLine();
+&nbsp;					} else if (page == null) {
+&nbsp;						page = new Page();
+&nbsp;						page.textureFile = imagesDir.child(line);
+&nbsp;						while (true) {
+&nbsp;							if (readEntry(entry, line = reader.readLine()) == 0) break;
+&nbsp;							Field field = pageFields.get(entry[0]);
+&nbsp;							if (field != null) field.parse(page); // Silently ignore unknown page fields.
+&nbsp;						}
+&nbsp;						pages.add(page);
+&nbsp;					} else {
+&nbsp;						Region region = new Region();
+&nbsp;						region.page = page;
+&nbsp;						region.name = line.trim();
+&nbsp;						if (flip) region.flip = true;
+&nbsp;						while (true) {
+&nbsp;							int count = readEntry(entry, line = reader.readLine());
+&nbsp;							if (count == 0) break;
+&nbsp;							Field field = regionFields.get(entry[0]);
+&nbsp;							if (field != null)
+&nbsp;								field.parse(region);
+&nbsp;							else {
+&nbsp;								if (names == null) {
+&nbsp;									names = new Array(8);
+&nbsp;									values = new Array(8);
+&nbsp;								}
+&nbsp;								names.add(entry[0]);
+&nbsp;								int[] entryValues = new int[count];
+&nbsp;								for (int i = 0; i &lt; count; i++) {
+&nbsp;									try {
+&nbsp;										entryValues[i] = Integer.parseInt(entry[i + 1]);
+&nbsp;									} catch (NumberFormatException ignored) { // Silently ignore non-integer values.
+&nbsp;									}
+&nbsp;								}
+&nbsp;								values.add(entryValues);
+&nbsp;							}
+&nbsp;						}
+&nbsp;						if (region.originalWidth == 0 &amp;&amp; region.originalHeight == 0) {
+&nbsp;							region.originalWidth = region.width;
+&nbsp;							region.originalHeight = region.height;
+&nbsp;						}
+&nbsp;						if (names != null &amp;&amp; names.size &gt; 0) {
+&nbsp;							region.names = names.toArray(String.class);
+&nbsp;							region.values = values.toArray(int[].class);
+&nbsp;							names.clear();
+&nbsp;							values.clear();
+&nbsp;						}
+&nbsp;						regions.add(region);
+&nbsp;					}
+&nbsp;				}
+&nbsp;			} catch (Exception ex) {
+&nbsp;				throw new GdxRuntimeException(&quot;Error reading texture atlas file: &quot; + packFile, ex);
+&nbsp;			} finally {
+&nbsp;				StreamUtils.closeQuietly(reader);
+&nbsp;			}
+&nbsp;
+&nbsp;			if (hasIndexes[0]) {
+&nbsp;				regions.sort(new Comparator&lt;Region&gt;() {
+&nbsp;					public int compare (Region region1, Region region2) {
+&nbsp;						int i1 = region1.index;
+&nbsp;						if (i1 == -1) i1 = Integer.MAX_VALUE;
+&nbsp;						int i2 = region2.index;
+&nbsp;						if (i2 == -1) i2 = Integer.MAX_VALUE;
+&nbsp;						return i1 - i2;
+&nbsp;					}
+&nbsp;				});
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		public Array&lt;Page&gt; getPages () {
+&nbsp;			return pages;
+&nbsp;		}
+&nbsp;
+&nbsp;		public Array&lt;Region&gt; getRegions () {
+&nbsp;			return regions;
+&nbsp;		}
+&nbsp;
+&nbsp;		static private int readEntry (String[] entry, @Null String line) throws IOException {
+&nbsp;			if (line == null) return 0;
+&nbsp;			line = line.trim();
+&nbsp;			if (line.length() == 0) return 0;
+&nbsp;			int colon = line.indexOf(&#39;:&#39;);
+&nbsp;			if (colon == -1) return 0;
+&nbsp;			entry[0] = line.substring(0, colon).trim();
+&nbsp;			for (int i = 1, lastMatch = colon + 1;; i++) {
+&nbsp;				int comma = line.indexOf(&#39;,&#39;, lastMatch);
+&nbsp;				if (comma == -1) {
+&nbsp;					entry[i] = line.substring(lastMatch).trim();
+&nbsp;					return i;
+&nbsp;				}
+&nbsp;				entry[i] = line.substring(lastMatch, comma).trim();
+&nbsp;				lastMatch = comma + 1;
+&nbsp;				if (i == 4) return 4;
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		static private interface Field&lt;T&gt; {
+&nbsp;			public void parse (T object);
+&nbsp;		}
+&nbsp;
+&nbsp;		static public class Page {
+&nbsp;			/** May be null if this page isn&#39;t associated with a file. In that case, {@link #texture} must be set. */
+&nbsp;			public @Null FileHandle textureFile;
+&nbsp;			/** May be null if the texture is not yet loaded. */
+&nbsp;			public @Null Texture texture;
+&nbsp;			public float width, height;
+&nbsp;			public boolean useMipMaps;
+&nbsp;			public Format format = Format.RGBA8888;
+&nbsp;			public TextureFilter minFilter = TextureFilter.Nearest, magFilter = TextureFilter.Nearest;
+&nbsp;			public TextureWrap uWrap = TextureWrap.ClampToEdge, vWrap = TextureWrap.ClampToEdge;
+&nbsp;			public boolean pma;
+&nbsp;		}
+&nbsp;
+&nbsp;		static public class Region {
+&nbsp;			public Page page;
+&nbsp;			public String name;
+&nbsp;			public int left, top, width, height;
+&nbsp;			public float offsetX, offsetY;
+&nbsp;			public int originalWidth, originalHeight;
+&nbsp;			public int degrees;
+&nbsp;			public boolean rotate;
+&nbsp;			public int index = -1;
+&nbsp;			public @Null String[] names;
+&nbsp;			public @Null int[][] values;
+&nbsp;			public boolean flip;
+&nbsp;
+&nbsp;			public @Null int[] findValue (String name) {
+&nbsp;				if (names != null) {
+&nbsp;					for (int i = 0, n = names.length; i &lt; n; i++)
+&nbsp;						if (name.equals(names[i])) return values[i];
+&nbsp;				}
+&nbsp;				return null;
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Describes the region of a packed image and provides information about the original image before it was packed. */
+&nbsp;	static public class AtlasRegion extends TextureRegion {
+&nbsp;		/** The number at the end of the original image file name, or -1 if none.&lt;br&gt;
+&nbsp;		 * &lt;br&gt;
+&nbsp;		 * When sprites are packed, if the original file name ends with a number, it is stored as the index and is not considered as
+&nbsp;		 * part of the sprite&#39;s name. This is useful for keeping animation frames in order.
+&nbsp;		 * @see TextureAtlas#findRegions(String) */
+<b class="nc">&nbsp;		public int index = -1;</b>
+&nbsp;
+&nbsp;		/** The name of the original image file, without the file&#39;s extension.&lt;br&gt;
+&nbsp;		 * If the name ends with an underscore followed by only numbers, that part is excluded: underscores denote special
+&nbsp;		 * instructions to the texture packer. */
+&nbsp;		public String name;
+&nbsp;
+&nbsp;		/** The offset from the left of the original image to the left of the packed image, after whitespace was removed for
+&nbsp;		 * packing. */
+&nbsp;		public float offsetX;
+&nbsp;
+&nbsp;		/** The offset from the bottom of the original image to the bottom of the packed image, after whitespace was removed for
+&nbsp;		 * packing. */
+&nbsp;		public float offsetY;
+&nbsp;
+&nbsp;		/** The width of the image, after whitespace was removed for packing. */
+&nbsp;		public int packedWidth;
+&nbsp;
+&nbsp;		/** The height of the image, after whitespace was removed for packing. */
+&nbsp;		public int packedHeight;
+&nbsp;
+&nbsp;		/** The width of the image, before whitespace was removed and rotation was applied for packing. */
+&nbsp;		public int originalWidth;
+&nbsp;
+&nbsp;		/** The height of the image, before whitespace was removed for packing. */
+&nbsp;		public int originalHeight;
+&nbsp;
+&nbsp;		/** If true, the region has been rotated 90 degrees counter clockwise. */
+&nbsp;		public boolean rotate;
+&nbsp;
+&nbsp;		/** The degrees the region has been rotated, counter clockwise between 0 and 359. Most atlas region handling deals only with
+&nbsp;		 * 0 or 90 degree rotation (enough to handle rectangles). More advanced texture packing may support other rotations (eg, for
+&nbsp;		 * tightly packing polygons). */
+&nbsp;		public int degrees;
+&nbsp;
+&nbsp;		/** Names for name/value pairs other than the fields provided on this class, each entry corresponding to {@link #values}. */
+&nbsp;		public @Null String[] names;
+&nbsp;
+&nbsp;		/** Values for name/value pairs other than the fields provided on this class, each entry corresponding to {@link #names}. */
+&nbsp;		public @Null int[][] values;
+&nbsp;
+&nbsp;		public AtlasRegion (Texture texture, int x, int y, int width, int height) {
+<b class="nc">&nbsp;			super(texture, x, y, width, height);</b>
+<b class="nc">&nbsp;			originalWidth = width;</b>
+<b class="nc">&nbsp;			originalHeight = height;</b>
+<b class="nc">&nbsp;			packedWidth = width;</b>
+<b class="nc">&nbsp;			packedHeight = height;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		public AtlasRegion (AtlasRegion region) {</b>
+<b class="nc">&nbsp;			setRegion(region);</b>
+<b class="nc">&nbsp;			index = region.index;</b>
+<b class="nc">&nbsp;			name = region.name;</b>
+<b class="nc">&nbsp;			offsetX = region.offsetX;</b>
+<b class="nc">&nbsp;			offsetY = region.offsetY;</b>
+<b class="nc">&nbsp;			packedWidth = region.packedWidth;</b>
+<b class="nc">&nbsp;			packedHeight = region.packedHeight;</b>
+<b class="nc">&nbsp;			originalWidth = region.originalWidth;</b>
+<b class="nc">&nbsp;			originalHeight = region.originalHeight;</b>
+<b class="nc">&nbsp;			rotate = region.rotate;</b>
+<b class="nc">&nbsp;			degrees = region.degrees;</b>
+<b class="nc">&nbsp;			names = region.names;</b>
+<b class="nc">&nbsp;			values = region.values;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		public AtlasRegion (TextureRegion region) {</b>
+<b class="nc">&nbsp;			setRegion(region);</b>
+<b class="nc">&nbsp;			packedWidth = region.getRegionWidth();</b>
+<b class="nc">&nbsp;			packedHeight = region.getRegionHeight();</b>
+<b class="nc">&nbsp;			originalWidth = packedWidth;</b>
+<b class="nc">&nbsp;			originalHeight = packedHeight;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		@Override
+&nbsp;		/** Flips the region, adjusting the offset so the image appears to be flipped as if no whitespace has been removed for
+&nbsp;		 * packing. */
+&nbsp;		public void flip (boolean x, boolean y) {
+<b class="nc">&nbsp;			super.flip(x, y);</b>
+<b class="nc">&nbsp;			if (x) offsetX = originalWidth - offsetX - getRotatedPackedWidth();</b>
+<b class="nc">&nbsp;			if (y) offsetY = originalHeight - offsetY - getRotatedPackedHeight();</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		/** Returns the packed width considering the {@link #rotate} value, if it is true then it returns the packedHeight,
+&nbsp;		 * otherwise it returns the packedWidth. */
+&nbsp;		public float getRotatedPackedWidth () {
+<b class="nc">&nbsp;			return rotate ? packedHeight : packedWidth;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the packed height considering the {@link #rotate} value, if it is true then it returns the packedWidth,
+&nbsp;		 * otherwise it returns the packedHeight. */
+&nbsp;		public float getRotatedPackedHeight () {
+<b class="nc">&nbsp;			return rotate ? packedWidth : packedHeight;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public @Null int[] findValue (String name) {
+<b class="nc">&nbsp;			if (names != null) {</b>
+<b class="nc">&nbsp;				for (int i = 0, n = names.length; i &lt; n; i++)</b>
+<b class="nc">&nbsp;					if (name.equals(names[i])) return values[i];</b>
+&nbsp;			}
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public String toString () {
+<b class="nc">&nbsp;			return name;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** A sprite that, if whitespace was stripped from the region when it was packed, is automatically positioned as if whitespace
+&nbsp;	 * had not been stripped. */
+&nbsp;	static public class AtlasSprite extends Sprite {
+&nbsp;		final AtlasRegion region;
+&nbsp;		float originalOffsetX, originalOffsetY;
+&nbsp;
+&nbsp;		public AtlasSprite (AtlasRegion region) {
+&nbsp;			this.region = new AtlasRegion(region);
+&nbsp;			originalOffsetX = region.offsetX;
+&nbsp;			originalOffsetY = region.offsetY;
+&nbsp;			setRegion(region);
+&nbsp;			setOrigin(region.originalWidth / 2f, region.originalHeight / 2f);
+&nbsp;			int width = region.getRegionWidth();
+&nbsp;			int height = region.getRegionHeight();
+&nbsp;			if (region.rotate) {
+&nbsp;				super.rotate90(true);
+&nbsp;				super.setBounds(region.offsetX, region.offsetY, height, width);
+&nbsp;			} else
+&nbsp;				super.setBounds(region.offsetX, region.offsetY, width, height);
+&nbsp;			setColor(1, 1, 1, 1);
+&nbsp;		}
+&nbsp;
+&nbsp;		public AtlasSprite (AtlasSprite sprite) {
+&nbsp;			region = sprite.region;
+&nbsp;			this.originalOffsetX = sprite.originalOffsetX;
+&nbsp;			this.originalOffsetY = sprite.originalOffsetY;
+&nbsp;			set(sprite);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void setPosition (float x, float y) {
+&nbsp;			super.setPosition(x + region.offsetX, y + region.offsetY);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void setX (float x) {
+&nbsp;			super.setX(x + region.offsetX);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void setY (float y) {
+&nbsp;			super.setY(y + region.offsetY);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void setBounds (float x, float y, float width, float height) {
+&nbsp;			float widthRatio = width / region.originalWidth;
+&nbsp;			float heightRatio = height / region.originalHeight;
+&nbsp;			region.offsetX = originalOffsetX * widthRatio;
+&nbsp;			region.offsetY = originalOffsetY * heightRatio;
+&nbsp;			int packedWidth = region.rotate ? region.packedHeight : region.packedWidth;
+&nbsp;			int packedHeight = region.rotate ? region.packedWidth : region.packedHeight;
+&nbsp;			super.setBounds(x + region.offsetX, y + region.offsetY, packedWidth * widthRatio, packedHeight * heightRatio);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void setSize (float width, float height) {
+&nbsp;			setBounds(getX(), getY(), width, height);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void setOrigin (float originX, float originY) {
+&nbsp;			super.setOrigin(originX - region.offsetX, originY - region.offsetY);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void setOriginCenter () {
+&nbsp;			super.setOrigin(width / 2 - region.offsetX, height / 2 - region.offsetY);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void flip (boolean x, boolean y) {
+&nbsp;			// Flip texture.
+&nbsp;			if (region.rotate)
+&nbsp;				super.flip(y, x);
+&nbsp;			else
+&nbsp;				super.flip(x, y);
+&nbsp;
+&nbsp;			float oldOriginX = getOriginX();
+&nbsp;			float oldOriginY = getOriginY();
+&nbsp;			float oldOffsetX = region.offsetX;
+&nbsp;			float oldOffsetY = region.offsetY;
+&nbsp;
+&nbsp;			float widthRatio = getWidthRatio();
+&nbsp;			float heightRatio = getHeightRatio();
+&nbsp;
+&nbsp;			region.offsetX = originalOffsetX;
+&nbsp;			region.offsetY = originalOffsetY;
+&nbsp;			region.flip(x, y); // Updates x and y offsets.
+&nbsp;			originalOffsetX = region.offsetX;
+&nbsp;			originalOffsetY = region.offsetY;
+&nbsp;			region.offsetX *= widthRatio;
+&nbsp;			region.offsetY *= heightRatio;
+&nbsp;
+&nbsp;			// Update position and origin with new offsets.
+&nbsp;			translate(region.offsetX - oldOffsetX, region.offsetY - oldOffsetY);
+&nbsp;			setOrigin(oldOriginX, oldOriginY);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public void rotate90 (boolean clockwise) {
+&nbsp;			// Rotate texture.
+&nbsp;			super.rotate90(clockwise);
+&nbsp;
+&nbsp;			float oldOriginX = getOriginX();
+&nbsp;			float oldOriginY = getOriginY();
+&nbsp;			float oldOffsetX = region.offsetX;
+&nbsp;			float oldOffsetY = region.offsetY;
+&nbsp;
+&nbsp;			float widthRatio = getWidthRatio();
+&nbsp;			float heightRatio = getHeightRatio();
+&nbsp;
+&nbsp;			if (clockwise) {
+&nbsp;				region.offsetX = oldOffsetY;
+&nbsp;				region.offsetY = region.originalHeight * heightRatio - oldOffsetX - region.packedWidth * widthRatio;
+&nbsp;			} else {
+&nbsp;				region.offsetX = region.originalWidth * widthRatio - oldOffsetY - region.packedHeight * heightRatio;
+&nbsp;				region.offsetY = oldOffsetX;
+&nbsp;			}
+&nbsp;
+&nbsp;			// Update position and origin with new offsets.
+&nbsp;			translate(region.offsetX - oldOffsetX, region.offsetY - oldOffsetY);
+&nbsp;			setOrigin(oldOriginX, oldOriginY);
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public float getX () {
+&nbsp;			return super.getX() - region.offsetX;
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public float getY () {
+&nbsp;			return super.getY() - region.offsetY;
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public float getOriginX () {
+&nbsp;			return super.getOriginX() + region.offsetX;
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public float getOriginY () {
+&nbsp;			return super.getOriginY() + region.offsetY;
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public float getWidth () {
+&nbsp;			return super.getWidth() / region.getRotatedPackedWidth() * region.originalWidth;
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public float getHeight () {
+&nbsp;			return super.getHeight() / region.getRotatedPackedHeight() * region.originalHeight;
+&nbsp;		}
+&nbsp;
+&nbsp;		public float getWidthRatio () {
+&nbsp;			return super.getWidth() / region.getRotatedPackedWidth();
+&nbsp;		}
+&nbsp;
+&nbsp;		public float getHeightRatio () {
+&nbsp;			return super.getHeight() / region.getRotatedPackedHeight();
+&nbsp;		}
+&nbsp;
+&nbsp;		public AtlasRegion getAtlasRegion () {
+&nbsp;			return region;
+&nbsp;		}
+&nbsp;
+&nbsp;		public String toString () {
+&nbsp;			return region.toString();
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

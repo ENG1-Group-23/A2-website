@@ -1,0 +1,792 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MathUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: MathUtils (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MathUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.5%
+  </span>
+  <span class="absValue">
+    (2/57)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1%
+  </span>
+  <span class="absValue">
+    (1/96)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.8%
+  </span>
+  <span class="absValue">
+    (9/189)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;/** Utility and fast math functions.
+&nbsp; * &lt;p&gt;
+&nbsp; * Thanks to Riven on JavaGaming.org for the basis of sin/cos/floor/ceil.
+&nbsp; * @author Nathan Sweet */
+&nbsp;public final class MathUtils {
+&nbsp;
+<b class="nc">&nbsp;	private MathUtils () {</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	static public final float nanoToSec = 1 / 1000000000f;
+&nbsp;
+&nbsp;	// ---
+&nbsp;	static public final float FLOAT_ROUNDING_ERROR = 0.000001f; // 32 bits
+&nbsp;	static public final float PI = (float)Math.PI;
+&nbsp;	static public final float PI2 = PI * 2;
+&nbsp;	static public final float HALF_PI = PI / 2;
+&nbsp;
+&nbsp;	static public final float E = (float)Math.E;
+&nbsp;
+&nbsp;	static private final int SIN_BITS = 14; // 16KB. Adjust for accuracy.
+&nbsp;	static private final int SIN_MASK = ~(-1 &lt;&lt; SIN_BITS);
+&nbsp;	static private final int SIN_COUNT = SIN_MASK + 1;
+&nbsp;
+&nbsp;	static private final float radFull = PI2;
+&nbsp;	static private final float degFull = 360;
+&nbsp;	static private final float radToIndex = SIN_COUNT / radFull;
+&nbsp;	static private final float degToIndex = SIN_COUNT / degFull;
+&nbsp;
+&nbsp;	/** multiply by this to convert from radians to degrees */
+&nbsp;	static public final float radiansToDegrees = 180f / PI;
+&nbsp;	static public final float radDeg = radiansToDegrees;
+&nbsp;	/** multiply by this to convert from degrees to radians */
+&nbsp;	static public final float degreesToRadians = PI / 180;
+&nbsp;	static public final float degRad = degreesToRadians;
+&nbsp;
+&nbsp;	static private class Sin {
+&nbsp;		static final float[] table = new float[SIN_COUNT];
+&nbsp;
+&nbsp;		static {
+&nbsp;			for (int i = 0; i &lt; SIN_COUNT; i++)
+&nbsp;				table[i] = (float)Math.sin((i + 0.5f) / SIN_COUNT * radFull);
+&nbsp;			// The four right angles get extra-precise values, because they are
+&nbsp;			// the most likely to need to be correct.
+&nbsp;			table[0] = 0f;
+&nbsp;			table[(int)(90 * degToIndex) &amp; SIN_MASK] = 1f;
+&nbsp;			table[(int)(180 * degToIndex) &amp; SIN_MASK] = 0f;
+&nbsp;			table[(int)(270 * degToIndex) &amp; SIN_MASK] = -1f;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the sine in radians from a lookup table. For optimal precision, use radians between -PI2 and PI2 (both
+&nbsp;	 * inclusive). */
+&nbsp;	static public float sin (float radians) {
+<b class="nc">&nbsp;		return Sin.table[(int)(radians * radToIndex) &amp; SIN_MASK];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the cosine in radians from a lookup table. For optimal precision, use radians between -PI2 and PI2 (both
+&nbsp;	 * inclusive). */
+&nbsp;	static public float cos (float radians) {
+<b class="nc">&nbsp;		return Sin.table[(int)((radians + HALF_PI) * radToIndex) &amp; SIN_MASK];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the sine in degrees from a lookup table. For optimal precision, use degrees between -360 and 360 (both
+&nbsp;	 * inclusive). */
+&nbsp;	static public float sinDeg (float degrees) {
+<b class="nc">&nbsp;		return Sin.table[(int)(degrees * degToIndex) &amp; SIN_MASK];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the cosine in degrees from a lookup table. For optimal precision, use degrees between -360 and 360 (both
+&nbsp;	 * inclusive). */
+&nbsp;	static public float cosDeg (float degrees) {
+<b class="nc">&nbsp;		return Sin.table[(int)((degrees + 90) * degToIndex) &amp; SIN_MASK];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the tangent given an input in radians, using a Padé approximant. &lt;br&gt;
+&nbsp;	 * Padé approximants tend to be most accurate when they aren&#39;t producing results of extreme magnitude; in the tan() function,
+&nbsp;	 * those results occur on and near odd multiples of {@code PI/2}, and this method is least accurate when given inputs near
+&nbsp;	 * those multiples. &lt;br&gt;
+&nbsp;	 * For inputs between -1.57 to 1.57 (just inside half-pi), separated by 0x1p-20f, absolute error is 0.00890192, relative error
+&nbsp;	 * is 0.00000090, and the maximum error is 17.98901367 when given 1.56999838. The maximum error might seem concerning, but it&#39;s
+&nbsp;	 * the difference between the correct 1253.22167969 and the 1235.23266602 this returns, so for many purposes the difference
+&nbsp;	 * won&#39;t be noticeable. &lt;br&gt;
+&nbsp;	 * For inputs between -1.55 to 1.55 (getting less close to half-pi), separated by 0x1p-20f, absolute error is 0.00023368,
+&nbsp;	 * relative error is -0.00000009, and the maximum error is 0.02355957 when given -1.54996467. The maximum error is the
+&nbsp;	 * difference between the correct -47.99691010 and the -47.97335052 this returns. &lt;br&gt;
+&nbsp;	 * While you don&#39;t have to use a dedicated method for tan(), and you can use {@code sin(x)/cos(x)}, approximating tan() in that
+&nbsp;	 * way is very susceptible to error building up from any of sin(), cos() or the division. Where this tan() has a maximum error
+&nbsp;	 * in the -1.55 to 1.55 range of 0.02355957, that simpler division technique on the same range has a maximum error of
+&nbsp;	 * 1.25724030 (about 50 times worse), as well as larger absolute and relative errors. Casting the double result of
+&nbsp;	 * {@link Math#tan(double)} to float will get the highest precision, but can be anywhere from 2.5x to nearly 4x slower than
+&nbsp;	 * this, depending on JVM. &lt;br&gt;
+&nbsp;	 * Based on &lt;a href=&quot;https://math.stackexchange.com/a/4453027&quot;&gt;this Stack Exchange answer by Soonts&lt;/a&gt;.
+&nbsp;	 *
+&nbsp;	 * @param radians a float angle in radians, where 0 to {@link #PI2} is one rotation
+&nbsp;	 * @return a float approximation of tan() */
+&nbsp;	public static float tan (float radians) {
+<b class="nc">&nbsp;		radians /= PI;</b>
+<b class="nc">&nbsp;		radians += 0.5f;</b>
+<b class="nc">&nbsp;		radians -= Math.floor(radians);</b>
+<b class="nc">&nbsp;		radians -= 0.5f;</b>
+<b class="nc">&nbsp;		radians *= PI;</b>
+<b class="nc">&nbsp;		final float x2 = radians * radians, x4 = x2 * x2;</b>
+<b class="nc">&nbsp;		return radians * ((0.0010582010582010583f) * x4 - (0.1111111111111111f) * x2 + 1f)</b>
+&nbsp;			/ ((0.015873015873015872f) * x4 - (0.4444444444444444f) * x2 + 1f);
+&nbsp;		// How we calculated those long constants above (from Stack Exchange, by Soonts):
+&nbsp;// return x * ((1.0/945.0) * x4 - (1.0/9.0) * x2 + 1.0) / ((1.0/63.0) * x4 - (4.0/9.0) * x2 + 1.0);
+&nbsp;// Normally, it would be best to show the division steps, but if GWT isn&#39;t computing mathematical constants at
+&nbsp;// compile-time, which I don&#39;t know if it does, that would make the shown-division way slower by 4 divisions.
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the tangent given an input in degrees, using a Padé approximant. Based on
+&nbsp;	 * &lt;a href=&quot;https://math.stackexchange.com/a/4453027&quot;&gt;this Stack Exchange answer&lt;/a&gt;.
+&nbsp;	 *
+&nbsp;	 * @param degrees an angle in degrees, where 0 to 360 is one rotation
+&nbsp;	 * @return a float approximation of tan() */
+&nbsp;	public static float tanDeg (float degrees) {
+<b class="nc">&nbsp;		degrees *= (1f / 180f);</b>
+<b class="nc">&nbsp;		degrees += 0.5f;</b>
+<b class="nc">&nbsp;		degrees -= Math.floor(degrees);</b>
+<b class="nc">&nbsp;		degrees -= 0.5f;</b>
+<b class="nc">&nbsp;		degrees *= PI;</b>
+<b class="nc">&nbsp;		final float x2 = degrees * degrees, x4 = x2 * x2;</b>
+<b class="nc">&nbsp;		return degrees * ((0.0010582010582010583f) * x4 - (0.1111111111111111f) * x2 + 1f)</b>
+&nbsp;			/ ((0.015873015873015872f) * x4 - (0.4444444444444444f) * x2 + 1f);
+&nbsp;	}
+&nbsp;
+&nbsp;	// ---
+&nbsp;
+&nbsp;	/** A variant on {@link #atan(float)} that does not tolerate infinite inputs for speed reasons. This can be given a double
+&nbsp;	 * parameter, but is otherwise the same as atan(float), and returns a float like that method. It uses the same approximation,
+&nbsp;	 * from sheet 11 of &quot;Approximations for Digital Computers.&quot; This is mostly meant to be used inside
+&nbsp;	 * {@link #atan2(float, float)}, but it may be a tiny bit faster than atan(float) in other code.
+&nbsp;	 * @param i any finite double or float, but more commonly a float
+&nbsp;	 * @return an output from the inverse tangent function, from {@code -HALF_PI} to {@code HALF_PI} inclusive */
+&nbsp;	public static float atanUnchecked (double i) {
+&nbsp;		// We use double precision internally, because some constants need double precision.
+<b class="nc">&nbsp;		double n = Math.abs(i);</b>
+&nbsp;		// c uses the &quot;equally-good&quot; formulation that permits n to be from 0 to almost infinity.
+<b class="nc">&nbsp;		double c = (n - 1.0) / (n + 1.0);</b>
+&nbsp;		// The approximation needs 6 odd powers of c.
+<b class="nc">&nbsp;		double c2 = c * c;</b>
+<b class="nc">&nbsp;		double c3 = c * c2;</b>
+<b class="nc">&nbsp;		double c5 = c3 * c2;</b>
+<b class="nc">&nbsp;		double c7 = c5 * c2;</b>
+<b class="nc">&nbsp;		double c9 = c7 * c2;</b>
+<b class="nc">&nbsp;		double c11 = c9 * c2;</b>
+<b class="nc">&nbsp;		return (float)(Math.signum(i) * ((Math.PI * 0.25)</b>
+&nbsp;			+ (0.99997726 * c - 0.33262347 * c3 + 0.19354346 * c5 - 0.11643287 * c7 + 0.05265332 * c9 - 0.0117212 * c11)));
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Close approximation of the frequently-used trigonometric method atan2. Average error is 1.057E-6 radians; maximum error is
+&nbsp;	 * 1.922E-6. Takes y and x (in that unusual order) as floats, and returns the angle from the origin to that point in radians.
+&nbsp;	 * It is about 4 times faster than {@link Math#atan2(double, double)} (roughly 15 ns instead of roughly 60 ns for Math, on Java
+&nbsp;	 * 8 HotSpot). &lt;br&gt;
+&nbsp;	 * Credit for this goes to the 1955 research study &quot;Approximations for Digital Computers,&quot; by RAND Corporation. This is sheet
+&nbsp;	 * 11&#39;s algorithm, which is the fourth-fastest and fourth-least precise. The algorithms on sheets 8-10 are faster, but only by
+&nbsp;	 * a very small degree, and are considerably less precise. That study provides an {@link #atan(float)} method, and that cleanly
+&nbsp;	 * translates to atan2().
+&nbsp;	 * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
+&nbsp;	 * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
+&nbsp;	 * @return the angle to the given point, in radians as a float; ranges from {@code -PI} to {@code PI} */
+&nbsp;	public static float atan2 (final float y, float x) {
+<b class="nc">&nbsp;		float n = y / x;</b>
+<b class="nc">&nbsp;		if (n != n)</b>
+<b class="nc">&nbsp;			n = (y == x ? 1f : -1f); // if both y and x are infinite, n would be NaN</b>
+<b class="nc">&nbsp;		else if (n - n != n - n) x = 0f; // if n is infinite, y is infinitely larger than x.</b>
+<b class="nc">&nbsp;		if (x &gt; 0)</b>
+<b class="nc">&nbsp;			return atanUnchecked(n);</b>
+<b class="nc">&nbsp;		else if (x &lt; 0) {</b>
+<b class="nc">&nbsp;			if (y &gt;= 0) return atanUnchecked(n) + PI;</b>
+<b class="nc">&nbsp;			return atanUnchecked(n) - PI;</b>
+<b class="nc">&nbsp;		} else if (y &gt; 0)</b>
+<b class="nc">&nbsp;			return x + HALF_PI;</b>
+<b class="nc">&nbsp;		else if (y &lt; 0) return x - HALF_PI;</b>
+<b class="nc">&nbsp;		return x + y; // returns 0 for 0,0 or NaN if either y or x is NaN</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** A variant on {@link #atanDeg(float)} that does not tolerate infinite inputs for speed reasons. This can be given a double
+&nbsp;	 * parameter, but is otherwise the same as atanDeg(float), and returns a float like that method. It uses the same
+&nbsp;	 * approximation, from sheet 11 of &quot;Approximations for Digital Computers.&quot; This is mostly meant to be used inside
+&nbsp;	 * {@link #atan2(float, float)}, but it may be a tiny bit faster than atanDeg(float) in other code.
+&nbsp;	 * @param i any finite double or float, but more commonly a float
+&nbsp;	 * @return an output from the inverse tangent function in degrees, from {@code -90} to {@code 90} inclusive */
+&nbsp;	public static double atanUncheckedDeg (double i) {
+&nbsp;		// We use double precision internally, because some constants need double precision.
+<b class="nc">&nbsp;		double n = Math.abs(i);</b>
+&nbsp;		// c uses the &quot;equally-good&quot; formulation that permits n to be from 0 to almost infinity.
+<b class="nc">&nbsp;		double c = (n - 1.0) / (n + 1.0);</b>
+&nbsp;		// The approximation needs 6 odd powers of c.
+<b class="nc">&nbsp;		double c2 = c * c;</b>
+<b class="nc">&nbsp;		double c3 = c * c2;</b>
+<b class="nc">&nbsp;		double c5 = c3 * c2;</b>
+<b class="nc">&nbsp;		double c7 = c5 * c2;</b>
+<b class="nc">&nbsp;		double c9 = c7 * c2;</b>
+<b class="nc">&nbsp;		double c11 = c9 * c2;</b>
+<b class="nc">&nbsp;		return (Math.signum(i) * (45.0 + (57.2944766070562 * c - 19.05792099799635 * c3 + 11.089223410359068 * c5</b>
+&nbsp;			- 6.6711120475953765 * c7 + 3.016813013351768 * c9 - 0.6715752908287405 * c11)));
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Close approximation of the frequently-used trigonometric method atan2, using positive or negative degrees. Average absolute
+&nbsp;	 * error is 0.00006037 degrees; relative error is 0 degrees, maximum error is 0.00010396 degrees. Takes y and x (in that
+&nbsp;	 * unusual order) as floats, and returns the angle from the origin to that point in degrees. &lt;br&gt;
+&nbsp;	 * Credit for this goes to the 1955 research study &quot;Approximations for Digital Computers,&quot; by RAND Corporation. This is sheet
+&nbsp;	 * 11&#39;s algorithm, which is the fourth-fastest and fourth-least precise. The algorithms on sheets 8-10 are faster, but only by
+&nbsp;	 * a very small degree, and are considerably less precise. That study provides an {@link #atan(float)} method, and that cleanly
+&nbsp;	 * translates to atan2().
+&nbsp;	 * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
+&nbsp;	 * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
+&nbsp;	 * @return the angle to the given point, in degrees as a float; ranges from {@code -180} to {@code 180} */
+&nbsp;	public static float atan2Deg (final float y, float x) {
+<b class="nc">&nbsp;		float n = y / x;</b>
+<b class="nc">&nbsp;		if (n != n)</b>
+<b class="nc">&nbsp;			n = (y == x ? 1f : -1.0f); // if both y and x are infinite, n would be NaN</b>
+<b class="nc">&nbsp;		else if (n - n != n - n) x = 0f; // if n is infinite, y is infinitely larger than x.</b>
+<b class="nc">&nbsp;		if (x &gt; 0)</b>
+<b class="nc">&nbsp;			return (float)atanUncheckedDeg(n);</b>
+<b class="nc">&nbsp;		else if (x &lt; 0) {</b>
+<b class="nc">&nbsp;			if (y &gt;= 0) return (float)(atanUncheckedDeg(n) + 180.0);</b>
+<b class="nc">&nbsp;			return (float)(atanUncheckedDeg(n) - 180.0);</b>
+<b class="nc">&nbsp;		} else if (y &gt; 0)</b>
+<b class="nc">&nbsp;			return x + 90f;</b>
+<b class="nc">&nbsp;		else if (y &lt; 0) return x - 90f;</b>
+<b class="nc">&nbsp;		return x + y; // returns 0 for 0,0 or NaN if either y or x is NaN</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Close approximation of the frequently-used trigonometric method atan2, using non-negative degrees only. Average absolute
+&nbsp;	 * error is 0.00006045 degrees; relative error is 0 degrees; maximum error is 0.00011178 degrees. Takes y and x (in that
+&nbsp;	 * unusual order) as floats, and returns the angle from the origin to that point in degrees. &lt;br&gt;
+&nbsp;	 * This can be useful when a negative result from atan() would require extra work to handle. &lt;br&gt;
+&nbsp;	 * Credit for this goes to the 1955 research study &quot;Approximations for Digital Computers,&quot; by RAND Corporation. This is sheet
+&nbsp;	 * 11&#39;s algorithm, which is the fourth-fastest and fourth-least precise. The algorithms on sheets 8-10 are faster, but only by
+&nbsp;	 * a very small degree, and are considerably less precise. That study provides an {@link #atan(float)} method, and that cleanly
+&nbsp;	 * translates to atan2Deg360().
+&nbsp;	 * @param y y-component of the point to find the angle towards; note the parameter order is unusual by convention
+&nbsp;	 * @param x x-component of the point to find the angle towards; note the parameter order is unusual by convention
+&nbsp;	 * @return the angle to the given point, in degrees as a float; ranges from {@code 0} to {@code 360} */
+&nbsp;	public static float atan2Deg360 (final float y, float x) {
+<b class="nc">&nbsp;		float n = y / x;</b>
+<b class="nc">&nbsp;		if (n != n)</b>
+<b class="nc">&nbsp;			n = (y == x ? 1f : -1.0f); // if both y and x are infinite, n would be NaN</b>
+<b class="nc">&nbsp;		else if (n - n != n - n) x = 0f; // if n is infinite, y is infinitely larger than x.</b>
+<b class="nc">&nbsp;		if (x &gt; 0) {</b>
+<b class="nc">&nbsp;			if (y &gt;= 0)</b>
+<b class="nc">&nbsp;				return (float)atanUncheckedDeg(n);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return (float)(atanUncheckedDeg(n) + 360.0);</b>
+<b class="nc">&nbsp;		} else if (x &lt; 0) {</b>
+<b class="nc">&nbsp;			return (float)(atanUncheckedDeg(n) + 180.0);</b>
+<b class="nc">&nbsp;		} else if (y &gt; 0)</b>
+<b class="nc">&nbsp;			return x + 90f;</b>
+<b class="nc">&nbsp;		else if (y &lt; 0) return x + 270f;</b>
+<b class="nc">&nbsp;		return x + y; // returns 0 for 0,0 or NaN if either y or x is NaN</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns acos in radians; less accurate than Math.acos but may be faster. Average error of 0.00002845 radians (0.0016300649
+&nbsp;	 * degrees), largest error of 0.000067548 radians (0.0038702153 degrees). This implementation does not return NaN if given an
+&nbsp;	 * out-of-range input (Math.acos does return NaN), unless the input is NaN.
+&nbsp;	 * @param a acos is defined only when a is between -1f and 1f, inclusive
+&nbsp;	 * @return between {@code 0} and {@code PI} when a is in the defined range */
+&nbsp;	static public float acos (float a) {
+<b class="nc">&nbsp;		float a2 = a * a; // a squared</b>
+<b class="nc">&nbsp;		float a3 = a * a2; // a cubed</b>
+<b class="nc">&nbsp;		if (a &gt;= 0f) {</b>
+<b class="nc">&nbsp;			return (float)Math.sqrt(1f - a) * (1.5707288f - 0.2121144f * a + 0.0742610f * a2 - 0.0187293f * a3);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return 3.14159265358979323846f</b>
+<b class="nc">&nbsp;			- (float)Math.sqrt(1f + a) * (1.5707288f + 0.2121144f * a + 0.0742610f * a2 + 0.0187293f * a3);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns asin in radians; less accurate than Math.asin but may be faster. Average error of 0.000028447 radians (0.0016298931
+&nbsp;	 * degrees), largest error of 0.000067592 radians (0.0038727364 degrees). This implementation does not return NaN if given an
+&nbsp;	 * out-of-range input (Math.asin does return NaN), unless the input is NaN.
+&nbsp;	 * @param a asin is defined only when a is between -1f and 1f, inclusive
+&nbsp;	 * @return between {@code -HALF_PI} and {@code HALF_PI} when a is in the defined range */
+&nbsp;	static public float asin (float a) {
+<b class="nc">&nbsp;		float a2 = a * a; // a squared</b>
+<b class="nc">&nbsp;		float a3 = a * a2; // a cubed</b>
+<b class="nc">&nbsp;		if (a &gt;= 0f) {</b>
+<b class="nc">&nbsp;			return 1.5707963267948966f</b>
+<b class="nc">&nbsp;				- (float)Math.sqrt(1f - a) * (1.5707288f - 0.2121144f * a + 0.0742610f * a2 - 0.0187293f * a3);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return -1.5707963267948966f + (float)Math.sqrt(1f + a) * (1.5707288f + 0.2121144f * a + 0.0742610f * a2 + 0.0187293f * a3);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Arc tangent approximation with very low error, using an algorithm from the 1955 research study &quot;Approximations for Digital
+&nbsp;	 * Computers,&quot; by RAND Corporation (this is sheet 11&#39;s algorithm, which is the fourth-fastest and fourth-least precise). This
+&nbsp;	 * method is usually about 4x faster than {@link Math#atan(double)}, but is somewhat less precise than Math&#39;s implementation.
+&nbsp;	 * For finite inputs only, you may get a tiny speedup by using {@link #atanUnchecked(double)}, but this method will be correct
+&nbsp;	 * enough for infinite inputs, and atanUnchecked() will not be.
+&nbsp;	 * @param i an input to the inverse tangent function; any float is accepted
+&nbsp;	 * @return an output from the inverse tangent function, from {@code -HALF_PI} to {@code HALF_PI} inclusive
+&nbsp;	 * @see #atanUnchecked(double) If you know the input will be finite, you can use atanUnchecked() instead. */
+&nbsp;	public static float atan (float i) {
+&nbsp;		// We use double precision internally, because some constants need double precision.
+&nbsp;		// This clips infinite inputs at Double.MAX_VALUE, which still probably becomes infinite
+&nbsp;		// again when converted back to float.
+<b class="nc">&nbsp;		double n = Math.min(Math.abs(i), Double.MAX_VALUE);</b>
+&nbsp;		// c uses the &quot;equally-good&quot; formulation that permits n to be from 0 to almost infinity.
+<b class="nc">&nbsp;		double c = (n - 1.0) / (n + 1.0);</b>
+&nbsp;		// The approximation needs 6 odd powers of c.
+<b class="nc">&nbsp;		double c2 = c * c;</b>
+<b class="nc">&nbsp;		double c3 = c * c2;</b>
+<b class="nc">&nbsp;		double c5 = c3 * c2;</b>
+<b class="nc">&nbsp;		double c7 = c5 * c2;</b>
+<b class="nc">&nbsp;		double c9 = c7 * c2;</b>
+<b class="nc">&nbsp;		double c11 = c9 * c2;</b>
+<b class="nc">&nbsp;		return Math.signum(i) * (float)((Math.PI * 0.25)</b>
+&nbsp;			+ (0.99997726 * c - 0.33262347 * c3 + 0.19354346 * c5 - 0.11643287 * c7 + 0.05265332 * c9 - 0.0117212 * c11));
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns arcsine in degrees. This implementation does not return NaN if given an out-of-range input (Math.asin does return
+&nbsp;	 * NaN), unless the input is NaN.
+&nbsp;	 * @param a asin is defined only when a is between -1f and 1f, inclusive
+&nbsp;	 * @return between {@code -90} and {@code 90} when a is in the defined range */
+&nbsp;	public static float asinDeg (float a) {
+<b class="nc">&nbsp;		float a2 = a * a; // a squared</b>
+<b class="nc">&nbsp;		float a3 = a * a2; // a cubed</b>
+<b class="nc">&nbsp;		if (a &gt;= 0f) {</b>
+<b class="nc">&nbsp;			return 90f - (float)Math.sqrt(1f - a)</b>
+&nbsp;				* (89.99613099964837f - 12.153259893949748f * a + 4.2548418824210055f * a2 - 1.0731098432343729f * a3);
+&nbsp;		}
+<b class="nc">&nbsp;		return (float)Math.sqrt(1f + a)</b>
+&nbsp;			* (89.99613099964837f + 12.153259893949748f * a + 4.2548418824210055f * a2 + 1.0731098432343729f * a3) - 90f;
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns arccosine in degrees. This implementation does not return NaN if given an out-of-range input (Math.acos does return
+&nbsp;	 * NaN), unless the input is NaN.
+&nbsp;	 * @param a acos is defined only when a is between -1f and 1f, inclusive
+&nbsp;	 * @return between {@code 0} and {@code 180} when a is in the defined range */
+&nbsp;	public static float acosDeg (float a) {
+<b class="nc">&nbsp;		float a2 = a * a; // a squared</b>
+<b class="nc">&nbsp;		float a3 = a * a2; // a cubed</b>
+<b class="nc">&nbsp;		if (a &gt;= 0f) {</b>
+<b class="nc">&nbsp;			return (float)Math.sqrt(1f - a)</b>
+&nbsp;				* (89.99613099964837f - 12.153259533621753f * a + 4.254842010910525f * a2 - 1.0731098035209208f * a3);
+&nbsp;		}
+<b class="nc">&nbsp;		return 180f - (float)Math.sqrt(1f + a)</b>
+&nbsp;			* (89.99613099964837f + 12.153259533621753f * a + 4.254842010910525f * a2 + 1.0731098035209208f * a3);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Arc tangent approximation returning a value measured in positive or negative degrees, using an algorithm from the 1955
+&nbsp;	 * research study &quot;Approximations for Digital Computers,&quot; by RAND Corporation (this is sheet 11&#39;s algorithm, which is the
+&nbsp;	 * fourth-fastest and fourth-least precise). For finite inputs only, you may get a tiny speedup by using
+&nbsp;	 * {@link #atanUncheckedDeg(double)}, but this method will be correct enough for infinite inputs, and atanUnchecked() will not
+&nbsp;	 * be.
+&nbsp;	 * @param i an input to the inverse tangent function; any float is accepted
+&nbsp;	 * @return an output from the inverse tangent function in degrees, from {@code -90} to {@code 90} inclusive
+&nbsp;	 * @see #atanUncheckedDeg(double) If you know the input will be finite, you can use atanUncheckedDeg() instead. */
+&nbsp;	public static float atanDeg (float i) {
+&nbsp;		// We use double precision internally, because some constants need double precision.
+&nbsp;		// This clips infinite inputs at Double.MAX_VALUE, which still probably becomes infinite
+&nbsp;		// again when converted back to float.
+<b class="nc">&nbsp;		double n = Math.min(Math.abs(i), Double.MAX_VALUE);</b>
+&nbsp;		// c uses the &quot;equally-good&quot; formulation that permits n to be from 0 to almost infinity.
+<b class="nc">&nbsp;		double c = (n - 1.0) / (n + 1.0);</b>
+&nbsp;		// The approximation needs 6 odd powers of c.
+<b class="nc">&nbsp;		double c2 = c * c;</b>
+<b class="nc">&nbsp;		double c3 = c * c2;</b>
+<b class="nc">&nbsp;		double c5 = c3 * c2;</b>
+<b class="nc">&nbsp;		double c7 = c5 * c2;</b>
+<b class="nc">&nbsp;		double c9 = c7 * c2;</b>
+<b class="nc">&nbsp;		double c11 = c9 * c2;</b>
+<b class="nc">&nbsp;		return (float)(Math.signum(i) * (45.0 + (57.2944766070562 * c - 19.05792099799635 * c3 + 11.089223410359068 * c5</b>
+&nbsp;			- 6.6711120475953765 * c7 + 3.016813013351768 * c9 - 0.6715752908287405 * c11)));
+&nbsp;	}
+&nbsp;
+&nbsp;	// ---
+&nbsp;
+<b class="fc">&nbsp;	static public Random random = new RandomXS128();</b>
+&nbsp;
+&nbsp;	/** Returns a random number between 0 (inclusive) and the specified value (inclusive). */
+&nbsp;	static public int random (int range) {
+<b class="nc">&nbsp;		return random.nextInt(range + 1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a random number between start (inclusive) and end (inclusive). */
+&nbsp;	static public int random (int start, int end) {
+<b class="nc">&nbsp;		return start + random.nextInt(end - start + 1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a random number between 0 (inclusive) and the specified value (inclusive). */
+&nbsp;	static public long random (long range) {
+&nbsp;		// Uses the lower-bounded overload defined below, which is simpler and doesn&#39;t lose much optimization.
+<b class="nc">&nbsp;		return random(0L, range);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a random number between start (inclusive) and end (inclusive). */
+&nbsp;	static public long random (long start, long end) {
+<b class="nc">&nbsp;		final long rand = random.nextLong();</b>
+&nbsp;		// In order to get the range to go from start to end, instead of overflowing after end and going
+&nbsp;		// back around to start, start must be less than end.
+<b class="nc">&nbsp;		if (end &lt; start) {</b>
+<b class="nc">&nbsp;			long t = end;</b>
+<b class="nc">&nbsp;			end = start;</b>
+<b class="nc">&nbsp;			start = t;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		long bound = end - start + 1L; // inclusive on end</b>
+&nbsp;		// Credit to https://oroboro.com/large-random-in-range/ for the following technique
+&nbsp;		// It&#39;s a 128-bit-product where only the upper 64 of 128 bits are used.
+<b class="nc">&nbsp;		final long randLow = rand &amp; 0xFFFFFFFFL;</b>
+<b class="nc">&nbsp;		final long boundLow = bound &amp; 0xFFFFFFFFL;</b>
+<b class="nc">&nbsp;		final long randHigh = (rand &gt;&gt;&gt; 32);</b>
+<b class="nc">&nbsp;		final long boundHigh = (bound &gt;&gt;&gt; 32);</b>
+<b class="nc">&nbsp;		return start + (randHigh * boundLow &gt;&gt;&gt; 32) + (randLow * boundHigh &gt;&gt;&gt; 32) + randHigh * boundHigh;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a random boolean value. */
+&nbsp;	static public boolean randomBoolean () {
+<b class="nc">&nbsp;		return random.nextBoolean();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if a random value between 0 and 1 is less than the specified value. */
+&nbsp;	static public boolean randomBoolean (float chance) {
+<b class="nc">&nbsp;		return MathUtils.random() &lt; chance;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns random number between 0.0 (inclusive) and 1.0 (exclusive). */
+&nbsp;	static public float random () {
+<b class="nc">&nbsp;		return random.nextFloat();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a random number between 0 (inclusive) and the specified value (exclusive). */
+&nbsp;	static public float random (float range) {
+<b class="nc">&nbsp;		return random.nextFloat() * range;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a random number between start (inclusive) and end (exclusive). */
+&nbsp;	static public float random (float start, float end) {
+<b class="nc">&nbsp;		return start + random.nextFloat() * (end - start);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns -1 or 1, randomly. */
+&nbsp;	static public int randomSign () {
+<b class="nc">&nbsp;		return 1 | (random.nextInt() &gt;&gt; 31);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+&nbsp;	 * more likely.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This is an optimized version of {@link #randomTriangular(float, float, float) randomTriangular(-1, 1, 0)} */
+&nbsp;	public static float randomTriangular () {
+<b class="nc">&nbsp;		return random.nextFloat() - random.nextFloat();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
+&nbsp;	 * around zero are more likely.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This is an optimized version of {@link #randomTriangular(float, float, float) randomTriangular(-max, max, 0)}
+&nbsp;	 * @param max the upper limit */
+&nbsp;	public static float randomTriangular (float max) {
+<b class="nc">&nbsp;		return (random.nextFloat() - random.nextFloat()) * max;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
+&nbsp;	 * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This method is equivalent of {@link #randomTriangular(float, float, float) randomTriangular(min, max, (min + max) * 0.5f)}
+&nbsp;	 * @param min the lower limit
+&nbsp;	 * @param max the upper limit */
+&nbsp;	public static float randomTriangular (float min, float max) {
+<b class="nc">&nbsp;		return randomTriangular(min, max, (min + max) * 0.5f);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
+&nbsp;	 * around {@code mode} are more likely.
+&nbsp;	 * @param min the lower limit
+&nbsp;	 * @param max the upper limit
+&nbsp;	 * @param mode the point around which the values are more likely */
+&nbsp;	public static float randomTriangular (float min, float max, float mode) {
+<b class="nc">&nbsp;		float u = random.nextFloat();</b>
+<b class="nc">&nbsp;		float d = max - min;</b>
+<b class="nc">&nbsp;		if (u &lt;= (mode - min) / d) return min + (float)Math.sqrt(u * d * (mode - min));</b>
+<b class="nc">&nbsp;		return max - (float)Math.sqrt((1 - u) * d * (max - mode));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// ---
+&nbsp;
+&nbsp;	/** Returns the next power of two. Returns the specified value if the value is already a power of two. */
+&nbsp;	static public int nextPowerOfTwo (int value) {
+<b class="pc">&nbsp;		if (value == 0) return 1;</b>
+<b class="fc">&nbsp;		value--;</b>
+<b class="fc">&nbsp;		value |= value &gt;&gt; 1;</b>
+<b class="fc">&nbsp;		value |= value &gt;&gt; 2;</b>
+<b class="fc">&nbsp;		value |= value &gt;&gt; 4;</b>
+<b class="fc">&nbsp;		value |= value &gt;&gt; 8;</b>
+<b class="fc">&nbsp;		value |= value &gt;&gt; 16;</b>
+<b class="fc">&nbsp;		return value + 1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public boolean isPowerOfTwo (int value) {
+<b class="nc">&nbsp;		return value != 0 &amp;&amp; (value &amp; value - 1) == 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// ---
+&nbsp;
+&nbsp;	static public short clamp (short value, short min, short max) {
+<b class="nc">&nbsp;		if (value &lt; min) return min;</b>
+<b class="nc">&nbsp;		if (value &gt; max) return max;</b>
+<b class="nc">&nbsp;		return value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public int clamp (int value, int min, int max) {
+<b class="nc">&nbsp;		if (value &lt; min) return min;</b>
+<b class="nc">&nbsp;		if (value &gt; max) return max;</b>
+<b class="nc">&nbsp;		return value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public long clamp (long value, long min, long max) {
+<b class="nc">&nbsp;		if (value &lt; min) return min;</b>
+<b class="nc">&nbsp;		if (value &gt; max) return max;</b>
+<b class="nc">&nbsp;		return value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public float clamp (float value, float min, float max) {
+<b class="nc">&nbsp;		if (value &lt; min) return min;</b>
+<b class="nc">&nbsp;		if (value &gt; max) return max;</b>
+<b class="nc">&nbsp;		return value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public double clamp (double value, double min, double max) {
+<b class="nc">&nbsp;		if (value &lt; min) return min;</b>
+<b class="nc">&nbsp;		if (value &gt; max) return max;</b>
+<b class="nc">&nbsp;		return value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// ---
+&nbsp;
+&nbsp;	/** Linearly interpolates between fromValue to toValue on progress position. */
+&nbsp;	static public float lerp (float fromValue, float toValue, float progress) {
+<b class="nc">&nbsp;		return fromValue + (toValue - fromValue) * progress;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Linearly normalizes value from a range. Range must not be empty. This is the inverse of {@link #lerp(float, float, float)}.
+&nbsp;	 * @param rangeStart Range start normalized to 0
+&nbsp;	 * @param rangeEnd Range end normalized to 1
+&nbsp;	 * @param value Value to normalize
+&nbsp;	 * @return Normalized value. Values outside of the range are not clamped to 0 and 1 */
+&nbsp;	static public float norm (float rangeStart, float rangeEnd, float value) {
+<b class="nc">&nbsp;		return (value - rangeStart) / (rangeEnd - rangeStart);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Linearly map a value from one range to another. Input range must not be empty. This is the same as chaining
+&nbsp;	 * {@link #norm(float, float, float)} from input range and {@link #lerp(float, float, float)} to output range.
+&nbsp;	 * @param inRangeStart Input range start
+&nbsp;	 * @param inRangeEnd Input range end
+&nbsp;	 * @param outRangeStart Output range start
+&nbsp;	 * @param outRangeEnd Output range end
+&nbsp;	 * @param value Value to map
+&nbsp;	 * @return Mapped value. Values outside of the input range are not clamped to output range */
+&nbsp;	static public float map (float inRangeStart, float inRangeEnd, float outRangeStart, float outRangeEnd, float value) {
+<b class="nc">&nbsp;		return outRangeStart + (value - inRangeStart) * (outRangeEnd - outRangeStart) / (inRangeEnd - inRangeStart);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Linearly interpolates between two angles in radians. Takes into account that angles wrap at two pi and always takes the
+&nbsp;	 * direction with the smallest delta angle.
+&nbsp;	 * 
+&nbsp;	 * @param fromRadians start angle in radians
+&nbsp;	 * @param toRadians target angle in radians
+&nbsp;	 * @param progress interpolation value in the range [0, 1]
+&nbsp;	 * @return the interpolated angle in the range [0, PI2[ */
+&nbsp;	public static float lerpAngle (float fromRadians, float toRadians, float progress) {
+<b class="nc">&nbsp;		float delta = (((toRadians - fromRadians) % PI2 + PI2 + PI) % PI2) - PI;</b>
+<b class="nc">&nbsp;		return ((fromRadians + delta * progress) % PI2 + PI2) % PI2;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Linearly interpolates between two angles in degrees. Takes into account that angles wrap at 360 degrees and always takes
+&nbsp;	 * the direction with the smallest delta angle.
+&nbsp;	 * 
+&nbsp;	 * @param fromDegrees start angle in degrees
+&nbsp;	 * @param toDegrees target angle in degrees
+&nbsp;	 * @param progress interpolation value in the range [0, 1]
+&nbsp;	 * @return the interpolated angle in the range [0, 360[ */
+&nbsp;	public static float lerpAngleDeg (float fromDegrees, float toDegrees, float progress) {
+<b class="nc">&nbsp;		float delta = (((toDegrees - fromDegrees) % 360f + 360f + 180f) % 360f) - 180f;</b>
+<b class="nc">&nbsp;		return ((fromDegrees + delta * progress) % 360f + 360f) % 360f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// ---
+&nbsp;
+&nbsp;	static private final int BIG_ENOUGH_INT = 16 * 1024;
+&nbsp;	static private final double BIG_ENOUGH_FLOOR = BIG_ENOUGH_INT;
+&nbsp;	static private final double CEIL = 0.9999999;
+&nbsp;	static private final double BIG_ENOUGH_CEIL = 16384.999999999996;
+&nbsp;	static private final double BIG_ENOUGH_ROUND = BIG_ENOUGH_INT + 0.5f;
+&nbsp;
+&nbsp;	/** Returns the largest integer less than or equal to the specified float. This method will only properly floor floats from
+&nbsp;	 * -(2^14) to (Float.MAX_VALUE - 2^14). */
+&nbsp;	static public int floor (float value) {
+<b class="nc">&nbsp;		return (int)(value + BIG_ENOUGH_FLOOR) - BIG_ENOUGH_INT;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the largest integer less than or equal to the specified float. This method will only properly floor floats that are
+&nbsp;	 * positive. Note this method simply casts the float to int. */
+&nbsp;	static public int floorPositive (float value) {
+<b class="nc">&nbsp;		return (int)value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the smallest integer greater than or equal to the specified float. This method will only properly ceil floats from
+&nbsp;	 * -(2^14) to (Float.MAX_VALUE - 2^14). */
+&nbsp;	static public int ceil (float value) {
+<b class="nc">&nbsp;		return BIG_ENOUGH_INT - (int)(BIG_ENOUGH_FLOOR - value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the smallest integer greater than or equal to the specified float. This method will only properly ceil floats that
+&nbsp;	 * are positive. */
+&nbsp;	static public int ceilPositive (float value) {
+<b class="nc">&nbsp;		return (int)(value + CEIL);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the closest integer to the specified float. This method will only properly round floats from -(2^14) to
+&nbsp;	 * (Float.MAX_VALUE - 2^14). */
+&nbsp;	static public int round (float value) {
+<b class="nc">&nbsp;		return (int)(value + BIG_ENOUGH_ROUND) - BIG_ENOUGH_INT;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the closest integer to the specified float. This method will only properly round floats that are positive. */
+&nbsp;	static public int roundPositive (float value) {
+<b class="nc">&nbsp;		return (int)(value + 0.5f);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the value is zero (using the default tolerance as upper bound) */
+&nbsp;	static public boolean isZero (float value) {
+<b class="nc">&nbsp;		return Math.abs(value) &lt;= FLOAT_ROUNDING_ERROR;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the value is zero.
+&nbsp;	 * @param tolerance represent an upper bound below which the value is considered zero. */
+&nbsp;	static public boolean isZero (float value, float tolerance) {
+<b class="nc">&nbsp;		return Math.abs(value) &lt;= tolerance;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if a is nearly equal to b. The function uses the default floating error tolerance.
+&nbsp;	 * @param a the first value.
+&nbsp;	 * @param b the second value. */
+&nbsp;	static public boolean isEqual (float a, float b) {
+<b class="nc">&nbsp;		return Math.abs(a - b) &lt;= FLOAT_ROUNDING_ERROR;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if a is nearly equal to b.
+&nbsp;	 * @param a the first value.
+&nbsp;	 * @param b the second value.
+&nbsp;	 * @param tolerance represent an upper bound below which the two values are considered equal. */
+&nbsp;	static public boolean isEqual (float a, float b, float tolerance) {
+<b class="nc">&nbsp;		return Math.abs(a - b) &lt;= tolerance;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the logarithm of value with base a */
+&nbsp;	static public float log (float a, float value) {
+<b class="nc">&nbsp;		return (float)(Math.log(value) / Math.log(a));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the logarithm of value with base 2 */
+&nbsp;	static public float log2 (float value) {
+<b class="nc">&nbsp;		return log(2, value);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

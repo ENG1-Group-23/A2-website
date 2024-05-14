@@ -1,0 +1,225 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MovementTests</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle</a>
+</div>
+
+<h1>Coverage Summary for Class: MovementTests (bytemusketeers.heslingtonhustle)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MovementTests</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (65/65)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.entity.Player;
+&nbsp;import bytemusketeers.heslingtonhustle.map.GameMap;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.CollisionHandler;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.GameData;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.graphics.OrthographicCamera;
+&nbsp;import com.badlogic.gdx.maps.tiled.TiledMap;
+&nbsp;import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+&nbsp;import com.badlogic.gdx.math.Vector2;
+&nbsp;import org.junit.Before;
+&nbsp;import org.junit.Test;
+&nbsp;import org.junit.runner.RunWith;
+&nbsp;
+&nbsp;import static org.junit.Assert.assertEquals;
+&nbsp;
+&nbsp;@RunWith(GdxTestRunner.class)
+<b class="fc">&nbsp;public class MovementTests {</b>
+&nbsp;    private Player player;
+&nbsp;    private CollisionHandler collisionHandler;
+&nbsp;
+&nbsp;    @Before
+&nbsp;    public void setUp() {
+<b class="fc">&nbsp;        OrthographicCamera camera = new OrthographicCamera();</b>
+<b class="fc">&nbsp;        HeslingtonHustle game = new HeslingtonHustle();</b>
+<b class="fc">&nbsp;        game.gameData = new GameData();</b>
+<b class="fc">&nbsp;        TiledMap tiledMap = new TmxMapLoader().load(&quot;map/MainMap.tmx&quot;);</b>
+<b class="fc">&nbsp;        GameMap gameMap = new GameMap(camera, null, tiledMap);</b>
+<b class="fc">&nbsp;        this.player = new Player(game, gameMap, camera);</b>
+<b class="fc">&nbsp;        this.collisionHandler = player.getCollisionHandler();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testMoveLeft() {
+&nbsp;        // Simulating Player initialisation
+<b class="fc">&nbsp;        HeslingtonHustle game = new HeslingtonHustle();</b>
+<b class="fc">&nbsp;        float worldX = (float) game.screenWidth / 2 - (float) game.screenHeight / 2;</b>
+<b class="fc">&nbsp;        float worldY = 500;</b>
+<b class="fc">&nbsp;        double normalizedSpeed = 200;</b>
+<b class="fc">&nbsp;        TiledMap gameMap = new TmxMapLoader().load(&quot;map/MainMap.tmx&quot;);</b>
+<b class="fc">&nbsp;        int tileSize = 16;</b>
+<b class="fc">&nbsp;        int spriteX = 24;</b>
+<b class="fc">&nbsp;        int spriteY = 38;</b>
+<b class="fc">&nbsp;        CollisionHandler collisionHandler = new CollisionHandler(gameMap, tileSize, tileSize, spriteX, spriteY * 0.5f, 0.7f, 0.7f);</b>
+&nbsp;
+&nbsp;        // Calculating target coordinates when simulating movement
+<b class="fc">&nbsp;        float targX = player.worldX - (player.speed * Gdx.graphics.getDeltaTime());</b>
+<b class="fc">&nbsp;        float targY = player.worldY;</b>
+&nbsp;
+&nbsp;        // Using a player&#39;s collision handler to derive the new position of a player after moving left
+<b class="fc">&nbsp;        Vector2 newPos = collisionHandler.adjustPos(player.worldX, player.worldY, targX, targY);</b>
+<b class="fc">&nbsp;        assertEquals(targX, newPos.x, 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testMoveRight() {
+&nbsp;        // Simulating Player initialisation
+<b class="fc">&nbsp;        HeslingtonHustle game = new HeslingtonHustle();</b>
+<b class="fc">&nbsp;        float worldX = (float) game.screenWidth / 2 - (float) game.screenHeight / 2;</b>
+<b class="fc">&nbsp;        float worldY = 500;</b>
+<b class="fc">&nbsp;        double normalizedSpeed = 200;</b>
+<b class="fc">&nbsp;        TiledMap gameMap = new TmxMapLoader().load(&quot;map/MainMap.tmx&quot;);</b>
+<b class="fc">&nbsp;        int tileSize = 16;</b>
+<b class="fc">&nbsp;        int spriteX = 24;</b>
+<b class="fc">&nbsp;        int spriteY = 38;</b>
+<b class="fc">&nbsp;        CollisionHandler collisionHandler = new CollisionHandler(gameMap, tileSize, tileSize, spriteX, spriteY * 0.5f, 0.7f, 0.7f);</b>
+&nbsp;
+&nbsp;        // Calculating target coordinates when simulating movement
+<b class="fc">&nbsp;        float targX = player.worldX + (player.speed * Gdx.graphics.getDeltaTime());</b>
+<b class="fc">&nbsp;        float targY = player.worldY;</b>
+&nbsp;
+&nbsp;        // Using a player&#39;s collision handler to derive the new position of a player after moving left
+<b class="fc">&nbsp;        Vector2 newPos = collisionHandler.adjustPos(player.worldX, player.worldY, targX, targY);</b>
+<b class="fc">&nbsp;        assertEquals(targX, newPos.x, 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testMoveUp() {
+&nbsp;        // Simulating Player initialisation
+<b class="fc">&nbsp;        HeslingtonHustle game = new HeslingtonHustle();</b>
+<b class="fc">&nbsp;        float worldX = (float) game.screenWidth / 2 - (float) game.screenHeight / 2;</b>
+<b class="fc">&nbsp;        float worldY = 500;</b>
+<b class="fc">&nbsp;        double normalizedSpeed = 200;</b>
+<b class="fc">&nbsp;        TiledMap gameMap = new TmxMapLoader().load(&quot;map/MainMap.tmx&quot;);</b>
+<b class="fc">&nbsp;        int tileSize = 16;</b>
+<b class="fc">&nbsp;        int spriteX = 24;</b>
+<b class="fc">&nbsp;        int spriteY = 38;</b>
+<b class="fc">&nbsp;        CollisionHandler collisionHandler = new CollisionHandler(gameMap, tileSize, tileSize, spriteX, spriteY * 0.5f, 0.7f, 0.7f);</b>
+&nbsp;
+&nbsp;        // Calculating target coordinates when simulating movement
+<b class="fc">&nbsp;        float targX = player.worldX;</b>
+<b class="fc">&nbsp;        float targY = player.worldY + (player.speed * Gdx.graphics.getDeltaTime());</b>
+&nbsp;
+&nbsp;        // Using a player&#39;s collision handler to derive the new position of a player after moving left
+<b class="fc">&nbsp;        Vector2 newPos = collisionHandler.adjustPos(player.worldX, player.worldY, targX, targY);</b>
+<b class="fc">&nbsp;        assertEquals(targX, newPos.x, 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testMoveDown() {
+&nbsp;        // Simulating Player initialisation
+<b class="fc">&nbsp;        HeslingtonHustle game = new HeslingtonHustle();</b>
+<b class="fc">&nbsp;        float worldX = (float) game.screenWidth / 2 - (float) game.screenHeight / 2;</b>
+<b class="fc">&nbsp;        float worldY = 500;</b>
+<b class="fc">&nbsp;        double normalizedSpeed = 200;</b>
+<b class="fc">&nbsp;        TiledMap gameMap = new TmxMapLoader().load(&quot;map/MainMap.tmx&quot;);</b>
+<b class="fc">&nbsp;        int tileSize = 16;</b>
+<b class="fc">&nbsp;        int spriteX = 24;</b>
+<b class="fc">&nbsp;        int spriteY = 38;</b>
+<b class="fc">&nbsp;        CollisionHandler collisionHandler = new CollisionHandler(gameMap, tileSize, tileSize, spriteX, spriteY * 0.5f, 0.7f, 0.7f);</b>
+&nbsp;
+&nbsp;        // Calculating target coordinates when simulating movement
+<b class="fc">&nbsp;        float targX = player.worldX;</b>
+<b class="fc">&nbsp;        float targY = player.worldY - (player.speed * Gdx.graphics.getDeltaTime());</b>
+&nbsp;
+&nbsp;        // Using a player&#39;s collision handler to derive the new position of a player after moving left
+<b class="fc">&nbsp;        Vector2 newPos = collisionHandler.adjustPos(player.worldX, player.worldY, targX, targY);</b>
+<b class="fc">&nbsp;        assertEquals(targX, newPos.x, 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

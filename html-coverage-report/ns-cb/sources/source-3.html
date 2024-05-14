@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Sound</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.audio</a>
+</div>
+
+<h1>Coverage Summary for Class: Sound (com.badlogic.gdx.audio)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Sound</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.audio;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Audio;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.utils.Disposable;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * A Sound is a short audio clip that can be played numerous times in parallel. It&#39;s completely loaded into memory so only load
+&nbsp; * small audio files. Call the {@link #dispose()} method when you&#39;re done using the Sound.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Sound instances are created via a call to {@link Audio#newSound(FileHandle)}.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Calling the {@link #play()} or {@link #play(float)} method will return a long which is an id to that instance of the sound. You
+&nbsp; * can use this id to modify the playback of that sound instance.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;b&gt;Note&lt;/b&gt;: any values provided will not be clamped, it is the developer&#39;s responsibility to do so
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public interface Sound extends Disposable {
+&nbsp;	/** Plays the sound. If the sound is already playing, it will be played again, concurrently.
+&nbsp;	 * @return the id of the sound instance if successful, or -1 on failure. */
+&nbsp;	public long play ();
+&nbsp;
+&nbsp;	/** Plays the sound. If the sound is already playing, it will be played again, concurrently.
+&nbsp;	 * @param volume the volume in the range [0,1]
+&nbsp;	 * @return the id of the sound instance if successful, or -1 on failure. */
+&nbsp;	public long play (float volume);
+&nbsp;
+&nbsp;	/** Plays the sound. If the sound is already playing, it will be played again, concurrently.
+&nbsp;	 * @param volume the volume in the range [0,1]
+&nbsp;	 * @param pitch the pitch multiplier, 1 == default, &gt;1 == faster, &lt;1 == slower, the value has to be between 0.5 and 2.0
+&nbsp;	 * @param pan panning in the range -1 (full left) to 1 (full right). 0 is center position.
+&nbsp;	 * @return the id of the sound instance if successful, or -1 on failure. */
+&nbsp;	public long play (float volume, float pitch, float pan);
+&nbsp;
+&nbsp;	/** Plays the sound, looping. If the sound is already playing, it will be played again, concurrently.
+&nbsp;	 * @return the id of the sound instance if successful, or -1 on failure. */
+&nbsp;	public long loop ();
+&nbsp;
+&nbsp;	/** Plays the sound, looping. If the sound is already playing, it will be played again, concurrently. You need to stop the
+&nbsp;	 * sound via a call to {@link #stop(long)} using the returned id.
+&nbsp;	 * @param volume the volume in the range [0, 1]
+&nbsp;	 * @return the id of the sound instance if successful, or -1 on failure. */
+&nbsp;	public long loop (float volume);
+&nbsp;
+&nbsp;	/** Plays the sound, looping. If the sound is already playing, it will be played again, concurrently. You need to stop the
+&nbsp;	 * sound via a call to {@link #stop(long)} using the returned id.
+&nbsp;	 * @param volume the volume in the range [0,1]
+&nbsp;	 * @param pitch the pitch multiplier, 1 == default, &gt;1 == faster, &lt;1 == slower, the value has to be between 0.5 and 2.0
+&nbsp;	 * @param pan panning in the range -1 (full left) to 1 (full right). 0 is center position.
+&nbsp;	 * @return the id of the sound instance if successful, or -1 on failure. */
+&nbsp;	public long loop (float volume, float pitch, float pan);
+&nbsp;
+&nbsp;	/** Stops playing all instances of this sound. */
+&nbsp;	public void stop ();
+&nbsp;
+&nbsp;	/** Pauses all instances of this sound. */
+&nbsp;	public void pause ();
+&nbsp;
+&nbsp;	/** Resumes all paused instances of this sound. */
+&nbsp;	public void resume ();
+&nbsp;
+&nbsp;	/** Releases all the resources. */
+&nbsp;	public void dispose ();
+&nbsp;
+&nbsp;	/** Stops the sound instance with the given id as returned by {@link #play()} or {@link #play(float)}. If the sound is no
+&nbsp;	 * longer playing, this has no effect.
+&nbsp;	 * @param soundId the sound id */
+&nbsp;	public void stop (long soundId);
+&nbsp;
+&nbsp;	/** Pauses the sound instance with the given id as returned by {@link #play()} or {@link #play(float)}. If the sound is no
+&nbsp;	 * longer playing, this has no effect.
+&nbsp;	 * @param soundId the sound id */
+&nbsp;	public void pause (long soundId);
+&nbsp;
+&nbsp;	/** Resumes the sound instance with the given id as returned by {@link #play()} or {@link #play(float)}. If the sound is not
+&nbsp;	 * paused, this has no effect.
+&nbsp;	 * @param soundId the sound id */
+&nbsp;	public void resume (long soundId);
+&nbsp;
+&nbsp;	/** Sets the sound instance with the given id to be looping. If the sound is no longer playing this has no effect.s
+&nbsp;	 * @param soundId the sound id
+&nbsp;	 * @param looping whether to loop or not. */
+&nbsp;	public void setLooping (long soundId, boolean looping);
+&nbsp;
+&nbsp;	/** Changes the pitch multiplier of the sound instance with the given id as returned by {@link #play()} or
+&nbsp;	 * {@link #play(float)}. If the sound is no longer playing, this has no effect.
+&nbsp;	 * @param soundId the sound id
+&nbsp;	 * @param pitch the pitch multiplier, 1 == default, &gt;1 == faster, &lt;1 == slower, the value has to be between 0.5 and 2.0 */
+&nbsp;	public void setPitch (long soundId, float pitch);
+&nbsp;
+&nbsp;	/** Changes the volume of the sound instance with the given id as returned by {@link #play()} or {@link #play(float)}. If the
+&nbsp;	 * sound is no longer playing, this has no effect.
+&nbsp;	 * @param soundId the sound id
+&nbsp;	 * @param volume the volume in the range 0 (silent) to 1 (max volume). */
+&nbsp;	public void setVolume (long soundId, float volume);
+&nbsp;
+&nbsp;	/** Sets the panning and volume of the sound instance with the given id as returned by {@link #play()} or {@link #play(float)}.
+&nbsp;	 * If the sound is no longer playing, this has no effect. Note that panning only works for mono sounds, not for stereo sounds!
+&nbsp;	 * @param soundId the sound id
+&nbsp;	 * @param pan panning in the range -1 (full left) to 1 (full right). 0 is center position.
+&nbsp;	 * @param volume the volume in the range [0,1]. */
+&nbsp;	public void setPan (long soundId, float pan, float volume);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

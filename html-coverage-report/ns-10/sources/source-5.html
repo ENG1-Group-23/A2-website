@@ -1,0 +1,680 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Pixmap</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics</a>
+</div>
+
+<h1>Coverage Summary for Class: Pixmap (com.badlogic.gdx.graphics)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Pixmap</td>
+<td class="coverageStat">
+  <span class="percent">
+    26.3%
+  </span>
+  <span class="absValue">
+    (10/38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (2/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (19/95)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Pixmap$Blending</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Pixmap$Filter</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Pixmap$Format</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (2/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26.9%
+  </span>
+  <span class="absValue">
+    (7/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.1%
+  </span>
+  <span class="absValue">
+    (8/19)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    31.1%
+  </span>
+  <span class="absValue">
+    (14/45)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23.7%
+  </span>
+  <span class="absValue">
+    (9/38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26.3%
+  </span>
+  <span class="absValue">
+    (31/118)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.Net;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
+&nbsp;import com.badlogic.gdx.utils.BufferUtils;
+&nbsp;import com.badlogic.gdx.utils.Disposable;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.nio.ByteBuffer;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * A Pixmap represents an image in memory. It has a width and height expressed in pixels as well as a {@link Format} specifying
+&nbsp; * the number and order of color components per pixel. Coordinates of pixels are specified with respect to the top left corner of
+&nbsp; * the image, with the x-axis pointing to the right and the y-axis pointing downwards.
+&nbsp; * &lt;p&gt;
+&nbsp; * By default all methods use blending. You can disable blending with {@link Pixmap#setBlending(Blending)}, which may reduce
+&nbsp; * blitting time by ~30%. The {@link Pixmap#drawPixmap(Pixmap, int, int, int, int, int, int, int, int)} method will scale and
+&nbsp; * stretch the source image to a target image. There either nearest neighbour or bilinear filtering can be used.
+&nbsp; * &lt;p&gt;
+&nbsp; * A Pixmap stores its data in native heap memory. It is mandatory to call {@link Pixmap#dispose()} when the pixmap is no longer
+&nbsp; * needed, otherwise memory leaks will result
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public class Pixmap implements Disposable {
+&nbsp;	/** Different pixel formats.
+&nbsp;	 * 
+&nbsp;	 * @author mzechner */
+<b class="fc">&nbsp;	public enum Format {</b>
+<b class="fc">&nbsp;		Alpha, Intensity, LuminanceAlpha, RGB565, RGBA4444, RGB888, RGBA8888;</b>
+&nbsp;
+&nbsp;		public static int toGdx2DPixmapFormat (Format format) {
+<b class="nc">&nbsp;			if (format == Alpha) return Gdx2DPixmap.GDX2D_FORMAT_ALPHA;</b>
+<b class="nc">&nbsp;			if (format == Intensity) return Gdx2DPixmap.GDX2D_FORMAT_ALPHA;</b>
+<b class="nc">&nbsp;			if (format == LuminanceAlpha) return Gdx2DPixmap.GDX2D_FORMAT_LUMINANCE_ALPHA;</b>
+<b class="nc">&nbsp;			if (format == RGB565) return Gdx2DPixmap.GDX2D_FORMAT_RGB565;</b>
+<b class="nc">&nbsp;			if (format == RGBA4444) return Gdx2DPixmap.GDX2D_FORMAT_RGBA4444;</b>
+<b class="nc">&nbsp;			if (format == RGB888) return Gdx2DPixmap.GDX2D_FORMAT_RGB888;</b>
+<b class="nc">&nbsp;			if (format == RGBA8888) return Gdx2DPixmap.GDX2D_FORMAT_RGBA8888;</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Unknown Format: &quot; + format);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public static Format fromGdx2DPixmapFormat (int format) {
+<b class="pc">&nbsp;			if (format == Gdx2DPixmap.GDX2D_FORMAT_ALPHA) return Alpha;</b>
+<b class="pc">&nbsp;			if (format == Gdx2DPixmap.GDX2D_FORMAT_LUMINANCE_ALPHA) return LuminanceAlpha;</b>
+<b class="pc">&nbsp;			if (format == Gdx2DPixmap.GDX2D_FORMAT_RGB565) return RGB565;</b>
+<b class="pc">&nbsp;			if (format == Gdx2DPixmap.GDX2D_FORMAT_RGBA4444) return RGBA4444;</b>
+<b class="fc">&nbsp;			if (format == Gdx2DPixmap.GDX2D_FORMAT_RGB888) return RGB888;</b>
+<b class="pc">&nbsp;			if (format == Gdx2DPixmap.GDX2D_FORMAT_RGBA8888) return RGBA8888;</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Unknown Gdx2DPixmap Format: &quot; + format);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public static int toGlFormat (Format format) {
+<b class="nc">&nbsp;			return Gdx2DPixmap.toGlFormat(toGdx2DPixmapFormat(format));</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public static int toGlType (Format format) {
+<b class="nc">&nbsp;			return Gdx2DPixmap.toGlType(toGdx2DPixmapFormat(format));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Blending functions to be set with {@link Pixmap#setBlending}.
+&nbsp;	 * @author mzechner */
+<b class="fc">&nbsp;	public enum Blending {</b>
+<b class="fc">&nbsp;		None, SourceOver</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Filters to be used with {@link Pixmap#drawPixmap(Pixmap, int, int, int, int, int, int, int, int)}.
+&nbsp;	 * 
+&nbsp;	 * @author mzechner */
+<b class="fc">&nbsp;	public enum Filter {</b>
+<b class="fc">&nbsp;		NearestNeighbour, BiLinear</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates a Pixmap from a part of the current framebuffer.
+&nbsp;	 * @param x framebuffer region x
+&nbsp;	 * @param y framebuffer region y
+&nbsp;	 * @param w framebuffer region width
+&nbsp;	 * @param h framebuffer region height
+&nbsp;	 * @return the pixmap */
+&nbsp;	public static Pixmap createFromFrameBuffer (int x, int y, int w, int h) {
+<b class="nc">&nbsp;		Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);</b>
+&nbsp;
+<b class="nc">&nbsp;		final Pixmap pixmap = new Pixmap(w, h, Format.RGBA8888);</b>
+<b class="nc">&nbsp;		ByteBuffer pixels = pixmap.getPixels();</b>
+<b class="nc">&nbsp;		Gdx.gl.glReadPixels(x, y, w, h, GL20.GL_RGBA, GL20.GL_UNSIGNED_BYTE, pixels);</b>
+&nbsp;
+<b class="nc">&nbsp;		return pixmap;</b>
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	private Blending blending = Blending.SourceOver;</b>
+<b class="fc">&nbsp;	private Filter filter = Filter.BiLinear;</b>
+&nbsp;
+&nbsp;	final Gdx2DPixmap pixmap;
+<b class="fc">&nbsp;	int color = 0;</b>
+&nbsp;
+&nbsp;	private boolean disposed;
+&nbsp;
+&nbsp;	/** Sets the type of {@link Blending} to be used for all operations. Default is {@link Blending#SourceOver}.
+&nbsp;	 * @param blending the blending type */
+&nbsp;	public void setBlending (Blending blending) {
+<b class="nc">&nbsp;		this.blending = blending;</b>
+<b class="nc">&nbsp;		pixmap.setBlend(blending == Blending.None ? 0 : 1);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the type of interpolation {@link Filter} to be used in conjunction with
+&nbsp;	 * {@link Pixmap#drawPixmap(Pixmap, int, int, int, int, int, int, int, int)}.
+&nbsp;	 * @param filter the filter. */
+&nbsp;	public void setFilter (Filter filter) {
+<b class="nc">&nbsp;		this.filter = filter;</b>
+<b class="nc">&nbsp;		pixmap.setScale(filter == Filter.NearestNeighbour ? Gdx2DPixmap.GDX2D_SCALE_NEAREST : Gdx2DPixmap.GDX2D_SCALE_LINEAR);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new Pixmap instance with the given width, height and format.
+&nbsp;	 * @param width the width in pixels
+&nbsp;	 * @param height the height in pixels
+&nbsp;	 * @param format the {@link Format} */
+<b class="nc">&nbsp;	public Pixmap (int width, int height, Format format) {</b>
+<b class="nc">&nbsp;		pixmap = new Gdx2DPixmap(width, height, Format.toGdx2DPixmapFormat(format));</b>
+<b class="nc">&nbsp;		setColor(0, 0, 0, 0);</b>
+<b class="nc">&nbsp;		fill();</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new Pixmap instance from the given encoded image data. The image can be encoded as JPEG, PNG or BMP. Not
+&nbsp;	 * available on GWT backend.
+&nbsp;	 *
+&nbsp;	 * @param encodedData the encoded image data
+&nbsp;	 * @param offset the offset
+&nbsp;	 * @param len the length */
+<b class="nc">&nbsp;	public Pixmap (byte[] encodedData, int offset, int len) {</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			pixmap = new Gdx2DPixmap(encodedData, offset, len, 0);</b>
+<b class="nc">&nbsp;		} catch (IOException e) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Couldn&#39;t load pixmap from image data&quot;, e);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new Pixmap instance from the given encoded image data. The image can be encoded as JPEG, PNG or BMP. Not
+&nbsp;	 * available on GWT backend.
+&nbsp;	 *
+&nbsp;	 * @param encodedData the encoded image data
+&nbsp;	 * @param offset the offset relative to the base address of encodedData
+&nbsp;	 * @param len the length */
+<b class="nc">&nbsp;	public Pixmap (ByteBuffer encodedData, int offset, int len) {</b>
+<b class="nc">&nbsp;		if (!encodedData.isDirect()) throw new GdxRuntimeException(&quot;Couldn&#39;t load pixmap from non-direct ByteBuffer&quot;);</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			pixmap = new Gdx2DPixmap(encodedData, offset, len, 0);</b>
+<b class="nc">&nbsp;		} catch (IOException e) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Couldn&#39;t load pixmap from image data&quot;, e);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new Pixmap instance from the given encoded image data. The image can be encoded as JPEG, PNG or BMP. Not
+&nbsp;	 * available on GWT backend.
+&nbsp;	 *
+&nbsp;	 * Offset is based on the position of the buffer. Length is based on the remaining bytes of the buffer.
+&nbsp;	 *
+&nbsp;	 * @param encodedData the encoded image data */
+&nbsp;	public Pixmap (ByteBuffer encodedData) {
+<b class="nc">&nbsp;		this(encodedData, encodedData.position(), encodedData.remaining());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new Pixmap instance from the given file. The file must be a Png, Jpeg or Bitmap. Paletted formats are not
+&nbsp;	 * supported.
+&nbsp;	 * 
+&nbsp;	 * @param file the {@link FileHandle} */
+<b class="fc">&nbsp;	public Pixmap (FileHandle file) {</b>
+&nbsp;		try {
+<b class="fc">&nbsp;			byte[] bytes = file.readBytes();</b>
+<b class="fc">&nbsp;			pixmap = new Gdx2DPixmap(bytes, 0, bytes.length, 0);</b>
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;Couldn&#39;t load file: &quot; + file, e);</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new Pixmap from a {@link Gdx2DPixmap}.
+&nbsp;	 * @param pixmap */
+<b class="nc">&nbsp;	public Pixmap (Gdx2DPixmap pixmap) {</b>
+<b class="nc">&nbsp;		this.pixmap = pixmap;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Downloads an image from http(s) url and passes it as a {@link Pixmap} to the specified
+&nbsp;	 * {@link DownloadPixmapResponseListener}
+&nbsp;	 *
+&nbsp;	 * @param url http url to download the image from
+&nbsp;	 * @param responseListener the listener to call once the image is available as a {@link Pixmap} */
+&nbsp;	public static void downloadFromUrl (String url, final DownloadPixmapResponseListener responseListener) {
+<b class="nc">&nbsp;		Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);</b>
+<b class="nc">&nbsp;		request.setUrl(url);</b>
+<b class="nc">&nbsp;		Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {</b>
+&nbsp;			@Override
+&nbsp;			public void handleHttpResponse (Net.HttpResponse httpResponse) {
+&nbsp;				final byte[] result = httpResponse.getResult();
+&nbsp;				Gdx.app.postRunnable(new Runnable() {
+&nbsp;					@Override
+&nbsp;					public void run () {
+&nbsp;						try {
+&nbsp;							Pixmap pixmap = new Pixmap(result, 0, result.length);
+&nbsp;							responseListener.downloadComplete(pixmap);
+&nbsp;						} catch (Throwable t) {
+&nbsp;							failed(t);
+&nbsp;						}
+&nbsp;					}
+&nbsp;				});
+&nbsp;			}
+&nbsp;
+&nbsp;			@Override
+&nbsp;			public void failed (Throwable t) {
+&nbsp;				responseListener.downloadFailed(t);
+&nbsp;			}
+&nbsp;
+&nbsp;			@Override
+&nbsp;			public void cancelled () {
+&nbsp;				// no way to cancel, will never get called
+&nbsp;			}
+&nbsp;		});
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the color for the following drawing operations
+&nbsp;	 * @param color the color, encoded as RGBA8888 */
+&nbsp;	public void setColor (int color) {
+<b class="nc">&nbsp;		this.color = color;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the color for the following drawing operations.
+&nbsp;	 * 
+&nbsp;	 * @param r The red component.
+&nbsp;	 * @param g The green component.
+&nbsp;	 * @param b The blue component.
+&nbsp;	 * @param a The alpha component. */
+&nbsp;	public void setColor (float r, float g, float b, float a) {
+<b class="nc">&nbsp;		color = Color.rgba8888(r, g, b, a);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the color for the following drawing operations.
+&nbsp;	 * @param color The color. */
+&nbsp;	public void setColor (Color color) {
+<b class="nc">&nbsp;		this.color = Color.rgba8888(color.r, color.g, color.b, color.a);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Fills the complete bitmap with the currently set color. */
+&nbsp;	public void fill () {
+<b class="nc">&nbsp;		pixmap.clear(color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;// /**
+&nbsp;// * Sets the width in pixels of strokes.
+&nbsp;// *
+&nbsp;// * @param width The stroke width in pixels.
+&nbsp;// */
+&nbsp;// public void setStrokeWidth (int width);
+&nbsp;
+&nbsp;	/** Draws a line between the given coordinates using the currently set color.
+&nbsp;	 * 
+&nbsp;	 * @param x The x-coodinate of the first point
+&nbsp;	 * @param y The y-coordinate of the first point
+&nbsp;	 * @param x2 The x-coordinate of the first point
+&nbsp;	 * @param y2 The y-coordinate of the first point */
+&nbsp;	public void drawLine (int x, int y, int x2, int y2) {
+<b class="nc">&nbsp;		pixmap.drawLine(x, y, x2, y2, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws a rectangle outline starting at x, y extending by width to the right and by height downwards (y-axis points
+&nbsp;	 * downwards) using the current color.
+&nbsp;	 * 
+&nbsp;	 * @param x The x coordinate
+&nbsp;	 * @param y The y coordinate
+&nbsp;	 * @param width The width in pixels
+&nbsp;	 * @param height The height in pixels */
+&nbsp;	public void drawRectangle (int x, int y, int width, int height) {
+<b class="nc">&nbsp;		pixmap.drawRect(x, y, width, height, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws an area from another Pixmap to this Pixmap.
+&nbsp;	 * 
+&nbsp;	 * @param pixmap The other Pixmap
+&nbsp;	 * @param x The target x-coordinate (top left corner)
+&nbsp;	 * @param y The target y-coordinate (top left corner) */
+&nbsp;	public void drawPixmap (Pixmap pixmap, int x, int y) {
+<b class="nc">&nbsp;		drawPixmap(pixmap, x, y, 0, 0, pixmap.getWidth(), pixmap.getHeight());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws an area from another Pixmap to this Pixmap.
+&nbsp;	 * 
+&nbsp;	 * @param pixmap The other Pixmap
+&nbsp;	 * @param x The target x-coordinate (top left corner)
+&nbsp;	 * @param y The target y-coordinate (top left corner)
+&nbsp;	 * @param srcx The source x-coordinate (top left corner)
+&nbsp;	 * @param srcy The source y-coordinate (top left corner);
+&nbsp;	 * @param srcWidth The width of the area from the other Pixmap in pixels
+&nbsp;	 * @param srcHeight The height of the area from the other Pixmap in pixels */
+&nbsp;	public void drawPixmap (Pixmap pixmap, int x, int y, int srcx, int srcy, int srcWidth, int srcHeight) {
+<b class="nc">&nbsp;		this.pixmap.drawPixmap(pixmap.pixmap, srcx, srcy, x, y, srcWidth, srcHeight);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws an area from another Pixmap to this Pixmap. This will automatically scale and stretch the source image to the
+&nbsp;	 * specified target rectangle. Use {@link Pixmap#setFilter(Filter)} to specify the type of filtering to be used (nearest
+&nbsp;	 * neighbour or bilinear).
+&nbsp;	 * 
+&nbsp;	 * @param pixmap The other Pixmap
+&nbsp;	 * @param srcx The source x-coordinate (top left corner)
+&nbsp;	 * @param srcy The source y-coordinate (top left corner);
+&nbsp;	 * @param srcWidth The width of the area from the other Pixmap in pixels
+&nbsp;	 * @param srcHeight The height of the area from the other Pixmap in pixels
+&nbsp;	 * @param dstx The target x-coordinate (top left corner)
+&nbsp;	 * @param dsty The target y-coordinate (top left corner)
+&nbsp;	 * @param dstWidth The target width
+&nbsp;	 * @param dstHeight the target height */
+&nbsp;	public void drawPixmap (Pixmap pixmap, int srcx, int srcy, int srcWidth, int srcHeight, int dstx, int dsty, int dstWidth,
+&nbsp;		int dstHeight) {
+<b class="nc">&nbsp;		this.pixmap.drawPixmap(pixmap.pixmap, srcx, srcy, srcWidth, srcHeight, dstx, dsty, dstWidth, dstHeight);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Fills a rectangle starting at x, y extending by width to the right and by height downwards (y-axis points downwards) using
+&nbsp;	 * the current color.
+&nbsp;	 * 
+&nbsp;	 * @param x The x coordinate
+&nbsp;	 * @param y The y coordinate
+&nbsp;	 * @param width The width in pixels
+&nbsp;	 * @param height The height in pixels */
+&nbsp;	public void fillRectangle (int x, int y, int width, int height) {
+<b class="nc">&nbsp;		pixmap.fillRect(x, y, width, height, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws a circle outline with the center at x,y and a radius using the current color and stroke width.
+&nbsp;	 * 
+&nbsp;	 * @param x The x-coordinate of the center
+&nbsp;	 * @param y The y-coordinate of the center
+&nbsp;	 * @param radius The radius in pixels */
+&nbsp;	public void drawCircle (int x, int y, int radius) {
+<b class="nc">&nbsp;		pixmap.drawCircle(x, y, radius, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Fills a circle with the center at x,y and a radius using the current color.
+&nbsp;	 * 
+&nbsp;	 * @param x The x-coordinate of the center
+&nbsp;	 * @param y The y-coordinate of the center
+&nbsp;	 * @param radius The radius in pixels */
+&nbsp;	public void fillCircle (int x, int y, int radius) {
+<b class="nc">&nbsp;		pixmap.fillCircle(x, y, radius, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Fills a triangle with vertices at x1,y1 and x2,y2 and x3,y3 using the current color.
+&nbsp;	 * 
+&nbsp;	 * @param x1 The x-coordinate of vertex 1
+&nbsp;	 * @param y1 The y-coordinate of vertex 1
+&nbsp;	 * @param x2 The x-coordinate of vertex 2
+&nbsp;	 * @param y2 The y-coordinate of vertex 2
+&nbsp;	 * @param x3 The x-coordinate of vertex 3
+&nbsp;	 * @param y3 The y-coordinate of vertex 3 */
+&nbsp;	public void fillTriangle (int x1, int y1, int x2, int y2, int x3, int y3) {
+<b class="nc">&nbsp;		pixmap.fillTriangle(x1, y1, x2, y2, x3, y3, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the 32-bit RGBA8888 value of the pixel at x, y. For Alpha formats the RGB components will be one.
+&nbsp;	 * 
+&nbsp;	 * @param x The x-coordinate
+&nbsp;	 * @param y The y-coordinate
+&nbsp;	 * @return The pixel color in RGBA8888 format. */
+&nbsp;	public int getPixel (int x, int y) {
+<b class="nc">&nbsp;		return pixmap.getPixel(x, y);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The width of the Pixmap in pixels. */
+&nbsp;	public int getWidth () {
+<b class="fc">&nbsp;		return pixmap.getWidth();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return The height of the Pixmap in pixels. */
+&nbsp;	public int getHeight () {
+<b class="fc">&nbsp;		return pixmap.getHeight();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Releases all resources associated with this Pixmap. */
+&nbsp;	public void dispose () {
+<b class="pc">&nbsp;		if (disposed) throw new GdxRuntimeException(&quot;Pixmap already disposed!&quot;);</b>
+<b class="fc">&nbsp;		pixmap.dispose();</b>
+<b class="fc">&nbsp;		disposed = true;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public boolean isDisposed () {
+<b class="nc">&nbsp;		return disposed;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Draws a pixel at the given location with the current color.
+&nbsp;	 * 
+&nbsp;	 * @param x the x-coordinate
+&nbsp;	 * @param y the y-coordinate */
+&nbsp;	public void drawPixel (int x, int y) {
+<b class="nc">&nbsp;		pixmap.setPixel(x, y, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws a pixel at the given location with the given color.
+&nbsp;	 * 
+&nbsp;	 * @param x the x-coordinate
+&nbsp;	 * @param y the y-coordinate
+&nbsp;	 * @param color the color in RGBA8888 format. */
+&nbsp;	public void drawPixel (int x, int y, int color) {
+<b class="nc">&nbsp;		pixmap.setPixel(x, y, color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the OpenGL ES format of this Pixmap. Used as the seventh parameter to
+&nbsp;	 * {@link GL20#glTexImage2D(int, int, int, int, int, int, int, int, java.nio.Buffer)}.
+&nbsp;	 * @return one of GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, or GL_LUMINANCE_ALPHA. */
+&nbsp;	public int getGLFormat () {
+<b class="fc">&nbsp;		return pixmap.getGLFormat();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the OpenGL ES format of this Pixmap. Used as the third parameter to
+&nbsp;	 * {@link GL20#glTexImage2D(int, int, int, int, int, int, int, int, java.nio.Buffer)}.
+&nbsp;	 * @return one of GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, or GL_LUMINANCE_ALPHA. */
+&nbsp;	public int getGLInternalFormat () {
+<b class="fc">&nbsp;		return pixmap.getGLInternalFormat();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the OpenGL ES type of this Pixmap. Used as the eighth parameter to
+&nbsp;	 * {@link GL20#glTexImage2D(int, int, int, int, int, int, int, int, java.nio.Buffer)}.
+&nbsp;	 * @return one of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4 */
+&nbsp;	public int getGLType () {
+<b class="fc">&nbsp;		return pixmap.getGLType();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the direct ByteBuffer holding the pixel data. For the format Alpha each value is encoded as a byte. For the format
+&nbsp;	 * LuminanceAlpha the luminance is the first byte and the alpha is the second byte of the pixel. For the formats RGB888 and
+&nbsp;	 * RGBA8888 the color components are stored in a single byte each in the order red, green, blue (alpha). For the formats RGB565
+&nbsp;	 * and RGBA4444 the pixel colors are stored in shorts in machine dependent order.
+&nbsp;	 * @return the direct {@link ByteBuffer} holding the pixel data. */
+&nbsp;	public ByteBuffer getPixels () {
+<b class="pc">&nbsp;		if (disposed) throw new GdxRuntimeException(&quot;Pixmap already disposed&quot;);</b>
+<b class="fc">&nbsp;		return pixmap.getPixels();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets pixels from a provided direct byte buffer.
+&nbsp;	 * @param pixels Pixels to copy from, should be a direct ByteBuffer and match Pixmap data size (see {@link #getPixels()}). */
+&nbsp;	public void setPixels (ByteBuffer pixels) {
+<b class="nc">&nbsp;		if (!pixels.isDirect()) throw new GdxRuntimeException(&quot;Couldn&#39;t setPixels from non-direct ByteBuffer&quot;);</b>
+<b class="nc">&nbsp;		ByteBuffer dst = pixmap.getPixels();</b>
+<b class="nc">&nbsp;		BufferUtils.copy(pixels, dst, dst.limit());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return the {@link Format} of this Pixmap. */
+&nbsp;	public Format getFormat () {
+<b class="fc">&nbsp;		return Format.fromGdx2DPixmapFormat(pixmap.getFormat());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the currently set {@link Blending} */
+&nbsp;	public Blending getBlending () {
+<b class="nc">&nbsp;		return blending;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the currently set {@link Filter} */
+&nbsp;	public Filter getFilter () {
+<b class="nc">&nbsp;		return filter;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Response listener for {@link #downloadFromUrl(String, DownloadPixmapResponseListener)} */
+&nbsp;	public interface DownloadPixmapResponseListener {
+&nbsp;
+&nbsp;		/** Called on the render thread when image was downloaded successfully.
+&nbsp;		 * @param pixmap */
+&nbsp;		void downloadComplete (Pixmap pixmap);
+&nbsp;
+&nbsp;		/** Called when image download failed. This might get called on a background thread. */
+&nbsp;		void downloadFailed (Throwable t);
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

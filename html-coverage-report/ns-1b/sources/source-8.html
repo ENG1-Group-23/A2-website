@@ -1,0 +1,556 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ObjectSet</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: ObjectSet (com.badlogic.gdx.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ObjectSet</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.2%
+  </span>
+  <span class="absValue">
+    (1/31)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2%
+  </span>
+  <span class="absValue">
+    (2/98)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.6%
+  </span>
+  <span class="absValue">
+    (4/156)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; *
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.utils;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.Iterator;
+&nbsp;import java.util.NoSuchElementException;
+&nbsp;
+&nbsp;import com.badlogic.gdx.math.MathUtils;
+&nbsp;
+&nbsp;/** An unordered set where the keys are objects. Null keys are not allowed. No allocation is done except when growing the table
+&nbsp; * size.
+&nbsp; * &lt;p&gt;
+&nbsp; * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
+&nbsp; * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
+&nbsp; * greater than 0.91 greatly increase the chances to resize to the next higher POT size.
+&nbsp; * &lt;p&gt;
+&nbsp; * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
+&nbsp; * OrderedMap.
+&nbsp; * &lt;p&gt;
+&nbsp; * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
+&nbsp; * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see &lt;a href=
+&nbsp; * &quot;https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/&quot;&gt;Malte
+&nbsp; * Skarupke&#39;s blog post&lt;/a&gt;). Linear probing continues to work even when all hashCodes collide, just more slowly.
+&nbsp; * @author Nathan Sweet
+&nbsp; * @author Tommy Ettinger */
+&nbsp;public class ObjectSet&lt;T&gt; implements Iterable&lt;T&gt; {
+&nbsp;	public int size;
+&nbsp;
+&nbsp;	T[] keyTable;
+&nbsp;
+&nbsp;	float loadFactor;
+&nbsp;	int threshold;
+&nbsp;
+&nbsp;	/** Used by {@link #place(Object)} to bit shift the upper bits of a {@code long} into a usable range (&amp;gt;= 0 and &amp;lt;=
+&nbsp;	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
+&nbsp;	 * number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &amp;gt; 32 and &amp;lt; 64,
+&nbsp;	 * which if used with an int will still move the upper bits of an int to the lower bits due to Java&#39;s implicit modulus on
+&nbsp;	 * shifts.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
+&nbsp;	 * {@link #place(Object)} is overridden. */
+&nbsp;	protected int shift;
+&nbsp;
+&nbsp;	/** A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+&nbsp;	 * minus 1. If {@link #place(Object)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
+&nbsp;	 * hash. */
+&nbsp;	protected int mask;
+&nbsp;
+&nbsp;	private transient ObjectSetIterator iterator1, iterator2;
+&nbsp;
+&nbsp;	/** Creates a new set with an initial capacity of 51 and a load factor of 0.8. */
+&nbsp;	public ObjectSet () {
+<b class="nc">&nbsp;		this(51, 0.8f);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new set with a load factor of 0.8.
+&nbsp;	 * @param initialCapacity The backing array size is initialCapacity / loadFactor, increased to the next power of two. */
+&nbsp;	public ObjectSet (int initialCapacity) {
+<b class="nc">&nbsp;		this(initialCapacity, 0.8f);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+&nbsp;	 * growing the backing table.
+&nbsp;	 * @param initialCapacity The backing array size is initialCapacity / loadFactor, increased to the next power of two. */
+<b class="nc">&nbsp;	public ObjectSet (int initialCapacity, float loadFactor) {</b>
+<b class="nc">&nbsp;		if (loadFactor &lt;= 0f || loadFactor &gt;= 1f)</b>
+<b class="nc">&nbsp;			throw new IllegalArgumentException(&quot;loadFactor must be &gt; 0 and &lt; 1: &quot; + loadFactor);</b>
+<b class="nc">&nbsp;		this.loadFactor = loadFactor;</b>
+&nbsp;
+<b class="nc">&nbsp;		int tableSize = tableSize(initialCapacity, loadFactor);</b>
+<b class="nc">&nbsp;		threshold = (int)(tableSize * loadFactor);</b>
+<b class="nc">&nbsp;		mask = tableSize - 1;</b>
+<b class="nc">&nbsp;		shift = Long.numberOfLeadingZeros(mask);</b>
+&nbsp;
+<b class="nc">&nbsp;		keyTable = (T[])new Object[tableSize];</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new set identical to the specified set. */
+&nbsp;	public ObjectSet (ObjectSet&lt;? extends T&gt; set) {
+<b class="nc">&nbsp;		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);</b>
+<b class="nc">&nbsp;		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);</b>
+<b class="nc">&nbsp;		size = set.size;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The default implementation uses Fibonacci hashing on the item&#39;s {@link Object#hashCode()}: the hashcode is multiplied by a
+&nbsp;	 * long constant (2 to the 64th, divided by the golden ratio) then the uppermost bits are shifted into the lowest positions to
+&nbsp;	 * obtain an index in the desired range. Multiplication by a long may be slower than int (eg on GWT) but greatly improves
+&nbsp;	 * rehashing, allowing even very poor hashcodes, such as those that only differ in their upper bits, to be used without high
+&nbsp;	 * collision rates. Fibonacci hashing has increased collision rates when all or most hashcodes are multiples of larger
+&nbsp;	 * Fibonacci numbers (see &lt;a href=
+&nbsp;	 * &quot;https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/&quot;&gt;Malte
+&nbsp;	 * Skarupke&#39;s blog post&lt;/a&gt;).
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This method can be overriden to customizing hashing. This may be useful eg in the unlikely event that most hashcodes are
+&nbsp;	 * Fibonacci numbers, if keys provide poor or incorrect hashcodes, or to simplify hashing if keys provide high quality
+&nbsp;	 * hashcodes and don&#39;t need Fibonacci hashing: {@code return item.hashCode() &amp; mask;} */
+&nbsp;	protected int place (T item) {
+<b class="nc">&nbsp;		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L &gt;&gt;&gt; shift);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the index of the key if already present, else -(index + 1) for the next empty index. This can be overridden in this
+&nbsp;	 * pacakge to compare for equality differently than {@link Object#equals(Object)}. */
+&nbsp;	int locateKey (T key) {
+<b class="nc">&nbsp;		if (key == null) throw new IllegalArgumentException(&quot;key cannot be null.&quot;);</b>
+<b class="nc">&nbsp;		T[] keyTable = this.keyTable;</b>
+<b class="nc">&nbsp;		for (int i = place(key);; i = i + 1 &amp; mask) {</b>
+<b class="nc">&nbsp;			T other = keyTable[i];</b>
+<b class="nc">&nbsp;			if (other == null) return -(i + 1); // Empty space is available.</b>
+<b class="nc">&nbsp;			if (other.equals(key)) return i; // Same key was found.</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the key was added to the set or false if it was already in the set. If this set already contains the key,
+&nbsp;	 * the call leaves the set unchanged and returns false. */
+&nbsp;	public boolean add (T key) {
+<b class="nc">&nbsp;		int i = locateKey(key);</b>
+<b class="nc">&nbsp;		if (i &gt;= 0) return false; // Existing key was found.</b>
+<b class="nc">&nbsp;		i = -(i + 1); // Empty space was found.</b>
+<b class="nc">&nbsp;		keyTable[i] = key;</b>
+<b class="nc">&nbsp;		if (++size &gt;= threshold) resize(keyTable.length &lt;&lt; 1);</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addAll (Array&lt;? extends T&gt; array) {
+<b class="nc">&nbsp;		addAll(array.items, 0, array.size);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void addAll (Array&lt;? extends T&gt; array, int offset, int length) {
+<b class="nc">&nbsp;		if (offset + length &gt; array.size)</b>
+<b class="nc">&nbsp;			throw new IllegalArgumentException(&quot;offset + length must be &lt;= size: &quot; + offset + &quot; + &quot; + length + &quot; &lt;= &quot; + array.size);</b>
+<b class="nc">&nbsp;		addAll(array.items, offset, length);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public boolean addAll (T... array) {
+<b class="nc">&nbsp;		return addAll(array, 0, array.length);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean addAll (T[] array, int offset, int length) {
+<b class="nc">&nbsp;		ensureCapacity(length);</b>
+<b class="nc">&nbsp;		int oldSize = size;</b>
+<b class="nc">&nbsp;		for (int i = offset, n = i + length; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			add(array[i]);</b>
+<b class="nc">&nbsp;		return oldSize != size;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addAll (ObjectSet&lt;T&gt; set) {
+<b class="nc">&nbsp;		ensureCapacity(set.size);</b>
+<b class="nc">&nbsp;		T[] keyTable = set.keyTable;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = keyTable.length; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			T key = keyTable[i];</b>
+<b class="nc">&nbsp;			if (key != null) add(key);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Skips checks for existing keys, doesn&#39;t increment size. */
+&nbsp;	private void addResize (T key) {
+<b class="nc">&nbsp;		T[] keyTable = this.keyTable;</b>
+<b class="nc">&nbsp;		for (int i = place(key);; i = (i + 1) &amp; mask) {</b>
+<b class="nc">&nbsp;			if (keyTable[i] == null) {</b>
+<b class="nc">&nbsp;				keyTable[i] = key;</b>
+<b class="nc">&nbsp;				return;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the key was removed. */
+&nbsp;	public boolean remove (T key) {
+<b class="nc">&nbsp;		int i = locateKey(key);</b>
+<b class="nc">&nbsp;		if (i &lt; 0) return false;</b>
+<b class="nc">&nbsp;		T[] keyTable = this.keyTable;</b>
+<b class="nc">&nbsp;		int mask = this.mask, next = i + 1 &amp; mask;</b>
+<b class="nc">&nbsp;		while ((key = keyTable[next]) != null) {</b>
+<b class="nc">&nbsp;			int placement = place(key);</b>
+<b class="nc">&nbsp;			if ((next - placement &amp; mask) &gt; (i - placement &amp; mask)) {</b>
+<b class="nc">&nbsp;				keyTable[i] = key;</b>
+<b class="nc">&nbsp;				i = next;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			next = next + 1 &amp; mask;</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		keyTable[i] = null;</b>
+<b class="nc">&nbsp;		size--;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the set has one or more items. */
+&nbsp;	public boolean notEmpty () {
+<b class="nc">&nbsp;		return size &gt; 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the set is empty. */
+&nbsp;	public boolean isEmpty () {
+<b class="nc">&nbsp;		return size == 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less. If the capacity is already less,
+&nbsp;	 * nothing is done. If the set contains more items than the specified capacity, the next highest power of two capacity is used
+&nbsp;	 * instead. */
+&nbsp;	public void shrink (int maximumCapacity) {
+<b class="nc">&nbsp;		if (maximumCapacity &lt; 0) throw new IllegalArgumentException(&quot;maximumCapacity must be &gt;= 0: &quot; + maximumCapacity);</b>
+<b class="nc">&nbsp;		int tableSize = tableSize(maximumCapacity, loadFactor);</b>
+<b class="nc">&nbsp;		if (keyTable.length &gt; tableSize) resize(tableSize);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Clears the set and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
+&nbsp;	 * The reduction is done by allocating new arrays, though for large arrays this can be faster than clearing the existing
+&nbsp;	 * array. */
+&nbsp;	public void clear (int maximumCapacity) {
+<b class="nc">&nbsp;		int tableSize = tableSize(maximumCapacity, loadFactor);</b>
+<b class="nc">&nbsp;		if (keyTable.length &lt;= tableSize) {</b>
+<b class="nc">&nbsp;			clear();</b>
+<b class="nc">&nbsp;			return;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		size = 0;</b>
+<b class="nc">&nbsp;		resize(tableSize);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Clears the set, leaving the backing arrays at the current capacity. When the capacity is high and the population is low,
+&nbsp;	 * iteration can be unnecessarily slow. {@link #clear(int)} can be used to reduce the capacity. */
+&nbsp;	public void clear () {
+<b class="nc">&nbsp;		if (size == 0) return;</b>
+<b class="nc">&nbsp;		size = 0;</b>
+<b class="nc">&nbsp;		Arrays.fill(keyTable, null);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public boolean contains (T key) {
+<b class="nc">&nbsp;		return locateKey(key) &gt;= 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public @Null T get (T key) {
+<b class="nc">&nbsp;		int i = locateKey(key);</b>
+<b class="nc">&nbsp;		return i &lt; 0 ? null : keyTable[i];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public T first () {
+<b class="nc">&nbsp;		T[] keyTable = this.keyTable;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = keyTable.length; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			if (keyTable[i] != null) return keyTable[i];</b>
+<b class="nc">&nbsp;		throw new IllegalStateException(&quot;ObjectSet is empty.&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
+&nbsp;	 * adding many items to avoid multiple backing array resizes. */
+&nbsp;	public void ensureCapacity (int additionalCapacity) {
+<b class="nc">&nbsp;		int tableSize = tableSize(size + additionalCapacity, loadFactor);</b>
+<b class="nc">&nbsp;		if (keyTable.length &lt; tableSize) resize(tableSize);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	private void resize (int newSize) {
+<b class="nc">&nbsp;		int oldCapacity = keyTable.length;</b>
+<b class="nc">&nbsp;		threshold = (int)(newSize * loadFactor);</b>
+<b class="nc">&nbsp;		mask = newSize - 1;</b>
+<b class="nc">&nbsp;		shift = Long.numberOfLeadingZeros(mask);</b>
+<b class="nc">&nbsp;		T[] oldKeyTable = keyTable;</b>
+&nbsp;
+<b class="nc">&nbsp;		keyTable = (T[])(new Object[newSize]);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (size &gt; 0) {</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; oldCapacity; i++) {</b>
+<b class="nc">&nbsp;				T key = oldKeyTable[i];</b>
+<b class="nc">&nbsp;				if (key != null) addResize(key);</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		int h = size;</b>
+<b class="nc">&nbsp;		T[] keyTable = this.keyTable;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = keyTable.length; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			T key = keyTable[i];</b>
+<b class="nc">&nbsp;			if (key != null) h += key.hashCode();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return h;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean equals (Object obj) {
+<b class="nc">&nbsp;		if (!(obj instanceof ObjectSet)) return false;</b>
+<b class="nc">&nbsp;		ObjectSet other = (ObjectSet)obj;</b>
+<b class="nc">&nbsp;		if (other.size != size) return false;</b>
+<b class="nc">&nbsp;		T[] keyTable = this.keyTable;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = keyTable.length; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			if (keyTable[i] != null &amp;&amp; !other.contains(keyTable[i])) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return &#39;{&#39; + toString(&quot;, &quot;) + &#39;}&#39;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString (String separator) {
+<b class="nc">&nbsp;		if (size == 0) return &quot;&quot;;</b>
+<b class="nc">&nbsp;		java.lang.StringBuilder buffer = new java.lang.StringBuilder(32);</b>
+<b class="nc">&nbsp;		T[] keyTable = this.keyTable;</b>
+<b class="nc">&nbsp;		int i = keyTable.length;</b>
+<b class="nc">&nbsp;		while (i-- &gt; 0) {</b>
+<b class="nc">&nbsp;			T key = keyTable[i];</b>
+<b class="nc">&nbsp;			if (key == null) continue;</b>
+<b class="nc">&nbsp;			buffer.append(key == this ? &quot;(this)&quot; : key);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		while (i-- &gt; 0) {</b>
+<b class="nc">&nbsp;			T key = keyTable[i];</b>
+<b class="nc">&nbsp;			if (key == null) continue;</b>
+<b class="nc">&nbsp;			buffer.append(separator);</b>
+<b class="nc">&nbsp;			buffer.append(key == this ? &quot;(this)&quot; : key);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return buffer.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an iterator for the keys in the set. Remove is supported.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * If {@link Collections#allocateIterators} is false, the same iterator instance is returned each time this method is called.
+&nbsp;	 * Use the {@link ObjectSetIterator} constructor for nested or multithreaded iteration. */
+&nbsp;	public ObjectSetIterator&lt;T&gt; iterator () {
+<b class="nc">&nbsp;		if (Collections.allocateIterators) return new ObjectSetIterator(this);</b>
+<b class="nc">&nbsp;		if (iterator1 == null) {</b>
+<b class="nc">&nbsp;			iterator1 = new ObjectSetIterator(this);</b>
+<b class="nc">&nbsp;			iterator2 = new ObjectSetIterator(this);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (!iterator1.valid) {</b>
+<b class="nc">&nbsp;			iterator1.reset();</b>
+<b class="nc">&nbsp;			iterator1.valid = true;</b>
+<b class="nc">&nbsp;			iterator2.valid = false;</b>
+<b class="nc">&nbsp;			return iterator1;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		iterator2.reset();</b>
+<b class="nc">&nbsp;		iterator2.valid = true;</b>
+<b class="nc">&nbsp;		iterator1.valid = false;</b>
+<b class="nc">&nbsp;		return iterator2;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public &lt;T&gt; ObjectSet&lt;T&gt; with (T... array) {
+<b class="nc">&nbsp;		ObjectSet&lt;T&gt; set = new ObjectSet&lt;T&gt;();</b>
+<b class="nc">&nbsp;		set.addAll(array);</b>
+<b class="nc">&nbsp;		return set;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static int tableSize (int capacity, float loadFactor) {
+<b class="pc">&nbsp;		if (capacity &lt; 0) throw new IllegalArgumentException(&quot;capacity must be &gt;= 0: &quot; + capacity);</b>
+<b class="fc">&nbsp;		int tableSize = MathUtils.nextPowerOfTwo(Math.max(2, (int)Math.ceil(capacity / loadFactor)));</b>
+<b class="pc">&nbsp;		if (tableSize &gt; 1 &lt;&lt; 30) throw new IllegalArgumentException(&quot;The required capacity is too large: &quot; + capacity);</b>
+<b class="fc">&nbsp;		return tableSize;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public class ObjectSetIterator&lt;K&gt; implements Iterable&lt;K&gt;, Iterator&lt;K&gt; {
+&nbsp;		public boolean hasNext;
+&nbsp;
+&nbsp;		final ObjectSet&lt;K&gt; set;
+&nbsp;		int nextIndex, currentIndex;
+&nbsp;		boolean valid = true;
+&nbsp;
+&nbsp;		public ObjectSetIterator (ObjectSet&lt;K&gt; set) {
+&nbsp;			this.set = set;
+&nbsp;			reset();
+&nbsp;		}
+&nbsp;
+&nbsp;		public void reset () {
+&nbsp;			currentIndex = -1;
+&nbsp;			nextIndex = -1;
+&nbsp;			findNextIndex();
+&nbsp;		}
+&nbsp;
+&nbsp;		private void findNextIndex () {
+&nbsp;			K[] keyTable = set.keyTable;
+&nbsp;			for (int n = set.keyTable.length; ++nextIndex &lt; n;) {
+&nbsp;				if (keyTable[nextIndex] != null) {
+&nbsp;					hasNext = true;
+&nbsp;					return;
+&nbsp;				}
+&nbsp;			}
+&nbsp;			hasNext = false;
+&nbsp;		}
+&nbsp;
+&nbsp;		public void remove () {
+&nbsp;			int i = currentIndex;
+&nbsp;			if (i &lt; 0) throw new IllegalStateException(&quot;next must be called before remove.&quot;);
+&nbsp;			K[] keyTable = set.keyTable;
+&nbsp;			int mask = set.mask, next = i + 1 &amp; mask;
+&nbsp;			K key;
+&nbsp;			while ((key = keyTable[next]) != null) {
+&nbsp;				int placement = set.place(key);
+&nbsp;				if ((next - placement &amp; mask) &gt; (i - placement &amp; mask)) {
+&nbsp;					keyTable[i] = key;
+&nbsp;					i = next;
+&nbsp;				}
+&nbsp;				next = next + 1 &amp; mask;
+&nbsp;			}
+&nbsp;			keyTable[i] = null;
+&nbsp;			set.size--;
+&nbsp;			if (i != currentIndex) --nextIndex;
+&nbsp;			currentIndex = -1;
+&nbsp;		}
+&nbsp;
+&nbsp;		public boolean hasNext () {
+&nbsp;			if (!valid) throw new GdxRuntimeException(&quot;#iterator() cannot be used nested.&quot;);
+&nbsp;			return hasNext;
+&nbsp;		}
+&nbsp;
+&nbsp;		public K next () {
+&nbsp;			if (!hasNext) throw new NoSuchElementException();
+&nbsp;			if (!valid) throw new GdxRuntimeException(&quot;#iterator() cannot be used nested.&quot;);
+&nbsp;			K key = set.keyTable[nextIndex];
+&nbsp;			currentIndex = nextIndex;
+&nbsp;			findNextIndex();
+&nbsp;			return key;
+&nbsp;		}
+&nbsp;
+&nbsp;		public ObjectSetIterator&lt;K&gt; iterator () {
+&nbsp;			return this;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Adds the remaining values to the array. */
+&nbsp;		public Array&lt;K&gt; toArray (Array&lt;K&gt; array) {
+&nbsp;			while (hasNext)
+&nbsp;				array.add(next());
+&nbsp;			return array;
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns a new array containing the remaining values. */
+&nbsp;		public Array&lt;K&gt; toArray () {
+&nbsp;			return toArray(new Array&lt;K&gt;(true, set.size));
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

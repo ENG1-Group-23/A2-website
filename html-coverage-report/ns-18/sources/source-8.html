@@ -1,0 +1,723 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Vector2</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math</a>
+</div>
+
+<h1>Coverage Summary for Class: Vector2 (com.badlogic.gdx.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Vector2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.5%
+  </span>
+  <span class="absValue">
+    (2/81)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/80)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.7%
+  </span>
+  <span class="absValue">
+    (7/188)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; *
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;import com.badlogic.gdx.utils.NumberUtils;
+&nbsp;
+&nbsp;/** Encapsulates a 2D vector. Allows chaining methods by returning a reference to itself
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public class Vector2 implements Serializable, Vector&lt;Vector2&gt; {
+&nbsp;	private static final long serialVersionUID = 913902788239530931L;
+&nbsp;
+<b class="fc">&nbsp;	public final static Vector2 X = new Vector2(1, 0);</b>
+<b class="fc">&nbsp;	public final static Vector2 Y = new Vector2(0, 1);</b>
+<b class="fc">&nbsp;	public final static Vector2 Zero = new Vector2(0, 0);</b>
+&nbsp;
+&nbsp;	/** the x-component of this vector **/
+&nbsp;	public float x;
+&nbsp;	/** the y-component of this vector **/
+&nbsp;	public float y;
+&nbsp;
+&nbsp;	/** Constructs a new vector at (0,0) */
+<b class="nc">&nbsp;	public Vector2 () {</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a vector with the given components
+&nbsp;	 * @param x The x-component
+&nbsp;	 * @param y The y-component */
+<b class="fc">&nbsp;	public Vector2 (float x, float y) {</b>
+<b class="fc">&nbsp;		this.x = x;</b>
+<b class="fc">&nbsp;		this.y = y;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a vector from the given vector
+&nbsp;	 * @param v The vector */
+<b class="nc">&nbsp;	public Vector2 (Vector2 v) {</b>
+<b class="nc">&nbsp;		set(v);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 cpy () {
+<b class="nc">&nbsp;		return new Vector2(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static float len (float x, float y) {
+<b class="nc">&nbsp;		return (float)Math.sqrt(x * x + y * y);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public float len () {
+<b class="nc">&nbsp;		return (float)Math.sqrt(x * x + y * y);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static float len2 (float x, float y) {
+<b class="nc">&nbsp;		return x * x + y * y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public float len2 () {
+<b class="nc">&nbsp;		return x * x + y * y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 set (Vector2 v) {
+<b class="nc">&nbsp;		x = v.x;</b>
+<b class="nc">&nbsp;		y = v.y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the components of this vector
+&nbsp;	 * @param x The x-component
+&nbsp;	 * @param y The y-component
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	public Vector2 set (float x, float y) {
+<b class="nc">&nbsp;		this.x = x;</b>
+<b class="nc">&nbsp;		this.y = y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 sub (Vector2 v) {
+<b class="nc">&nbsp;		x -= v.x;</b>
+<b class="nc">&nbsp;		y -= v.y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Subtracts the other vector from this vector.
+&nbsp;	 * @param x The x-component of the other vector
+&nbsp;	 * @param y The y-component of the other vector
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	public Vector2 sub (float x, float y) {
+<b class="nc">&nbsp;		this.x -= x;</b>
+<b class="nc">&nbsp;		this.y -= y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 nor () {
+<b class="nc">&nbsp;		float len = len();</b>
+<b class="nc">&nbsp;		if (len != 0) {</b>
+<b class="nc">&nbsp;			x /= len;</b>
+<b class="nc">&nbsp;			y /= len;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 add (Vector2 v) {
+<b class="nc">&nbsp;		x += v.x;</b>
+<b class="nc">&nbsp;		y += v.y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Adds the given components to this vector
+&nbsp;	 * @param x The x-component
+&nbsp;	 * @param y The y-component
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	public Vector2 add (float x, float y) {
+<b class="nc">&nbsp;		this.x += x;</b>
+<b class="nc">&nbsp;		this.y += y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static float dot (float x1, float y1, float x2, float y2) {
+<b class="nc">&nbsp;		return x1 * x2 + y1 * y2;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public float dot (Vector2 v) {
+<b class="nc">&nbsp;		return x * v.x + y * v.y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public float dot (float ox, float oy) {
+<b class="nc">&nbsp;		return x * ox + y * oy;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 scl (float scalar) {
+<b class="nc">&nbsp;		x *= scalar;</b>
+<b class="nc">&nbsp;		y *= scalar;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Multiplies this vector by a scalar
+&nbsp;	 * @return This vector for chaining */
+&nbsp;	public Vector2 scl (float x, float y) {
+<b class="nc">&nbsp;		this.x *= x;</b>
+<b class="nc">&nbsp;		this.y *= y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 scl (Vector2 v) {
+<b class="nc">&nbsp;		this.x *= v.x;</b>
+<b class="nc">&nbsp;		this.y *= v.y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 mulAdd (Vector2 vec, float scalar) {
+<b class="nc">&nbsp;		this.x += vec.x * scalar;</b>
+<b class="nc">&nbsp;		this.y += vec.y * scalar;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 mulAdd (Vector2 vec, Vector2 mulVec) {
+<b class="nc">&nbsp;		this.x += vec.x * mulVec.x;</b>
+<b class="nc">&nbsp;		this.y += vec.y * mulVec.y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if this vector and the vector parameter have identical components.
+&nbsp;	 * @param vector The other vector
+&nbsp;	 * @return Whether this and the other vector are equal with exact precision */
+&nbsp;	public boolean idt (final Vector2 vector) {
+<b class="nc">&nbsp;		return x == vector.x &amp;&amp; y == vector.y;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static float dst (float x1, float y1, float x2, float y2) {
+<b class="nc">&nbsp;		final float x_d = x2 - x1;</b>
+<b class="nc">&nbsp;		final float y_d = y2 - y1;</b>
+<b class="nc">&nbsp;		return (float)Math.sqrt(x_d * x_d + y_d * y_d);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public float dst (Vector2 v) {
+<b class="nc">&nbsp;		final float x_d = v.x - x;</b>
+<b class="nc">&nbsp;		final float y_d = v.y - y;</b>
+<b class="nc">&nbsp;		return (float)Math.sqrt(x_d * x_d + y_d * y_d);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param x The x-component of the other vector
+&nbsp;	 * @param y The y-component of the other vector
+&nbsp;	 * @return the distance between this and the other vector */
+&nbsp;	public float dst (float x, float y) {
+<b class="nc">&nbsp;		final float x_d = x - this.x;</b>
+<b class="nc">&nbsp;		final float y_d = y - this.y;</b>
+<b class="nc">&nbsp;		return (float)Math.sqrt(x_d * x_d + y_d * y_d);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static float dst2 (float x1, float y1, float x2, float y2) {
+<b class="nc">&nbsp;		final float x_d = x2 - x1;</b>
+<b class="nc">&nbsp;		final float y_d = y2 - y1;</b>
+<b class="nc">&nbsp;		return x_d * x_d + y_d * y_d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public float dst2 (Vector2 v) {
+<b class="nc">&nbsp;		final float x_d = v.x - x;</b>
+<b class="nc">&nbsp;		final float y_d = v.y - y;</b>
+<b class="nc">&nbsp;		return x_d * x_d + y_d * y_d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param x The x-component of the other vector
+&nbsp;	 * @param y The y-component of the other vector
+&nbsp;	 * @return the squared distance between this and the other vector */
+&nbsp;	public float dst2 (float x, float y) {
+<b class="nc">&nbsp;		final float x_d = x - this.x;</b>
+<b class="nc">&nbsp;		final float y_d = y - this.y;</b>
+<b class="nc">&nbsp;		return x_d * x_d + y_d * y_d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 limit (float limit) {
+<b class="nc">&nbsp;		return limit2(limit * limit);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 limit2 (float limit2) {
+<b class="nc">&nbsp;		float len2 = len2();</b>
+<b class="nc">&nbsp;		if (len2 &gt; limit2) {</b>
+<b class="nc">&nbsp;			return scl((float)Math.sqrt(limit2 / len2));</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 clamp (float min, float max) {
+<b class="nc">&nbsp;		final float len2 = len2();</b>
+<b class="nc">&nbsp;		if (len2 == 0f) return this;</b>
+<b class="nc">&nbsp;		float max2 = max * max;</b>
+<b class="nc">&nbsp;		if (len2 &gt; max2) return scl((float)Math.sqrt(max2 / len2));</b>
+<b class="nc">&nbsp;		float min2 = min * min;</b>
+<b class="nc">&nbsp;		if (len2 &lt; min2) return scl((float)Math.sqrt(min2 / len2));</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 setLength (float len) {
+<b class="nc">&nbsp;		return setLength2(len * len);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 setLength2 (float len2) {
+<b class="nc">&nbsp;		float oldLen2 = len2();</b>
+<b class="nc">&nbsp;		return (oldLen2 == 0 || oldLen2 == len2) ? this : scl((float)Math.sqrt(len2 / oldLen2));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Converts this {@code Vector2} to a string in the format {@code (x,y)}.
+&nbsp;	 * @return a string representation of this object. */
+&nbsp;	@Override
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return &quot;(&quot; + x + &quot;,&quot; + y + &quot;)&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this {@code Vector2} to the value represented by the specified string according to the format of {@link #toString()}.
+&nbsp;	 * @param v the string.
+&nbsp;	 * @return this vector for chaining */
+&nbsp;	public Vector2 fromString (String v) {
+<b class="nc">&nbsp;		int s = v.indexOf(&#39;,&#39;, 1);</b>
+<b class="nc">&nbsp;		if (s != -1 &amp;&amp; v.charAt(0) == &#39;(&#39; &amp;&amp; v.charAt(v.length() - 1) == &#39;)&#39;) {</b>
+&nbsp;			try {
+<b class="nc">&nbsp;				float x = Float.parseFloat(v.substring(1, s));</b>
+<b class="nc">&nbsp;				float y = Float.parseFloat(v.substring(s + 1, v.length() - 1));</b>
+<b class="nc">&nbsp;				return this.set(x, y);</b>
+<b class="nc">&nbsp;			} catch (NumberFormatException ex) {</b>
+&nbsp;				// Throw a GdxRuntimeException
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		throw new GdxRuntimeException(&quot;Malformed Vector2: &quot; + v);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Left-multiplies this vector by the given matrix
+&nbsp;	 * @param mat the matrix
+&nbsp;	 * @return this vector */
+&nbsp;	public Vector2 mul (Matrix3 mat) {
+<b class="nc">&nbsp;		float x = this.x * mat.val[0] + this.y * mat.val[3] + mat.val[6];</b>
+<b class="nc">&nbsp;		float y = this.x * mat.val[1] + this.y * mat.val[4] + mat.val[7];</b>
+<b class="nc">&nbsp;		this.x = x;</b>
+<b class="nc">&nbsp;		this.y = y;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calculates the 2D cross product between this and the given vector.
+&nbsp;	 * @param v the other vector
+&nbsp;	 * @return the cross product */
+&nbsp;	public float crs (Vector2 v) {
+<b class="nc">&nbsp;		return this.x * v.y - this.y * v.x;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calculates the 2D cross product between this and the given vector.
+&nbsp;	 * @param x the x-coordinate of the other vector
+&nbsp;	 * @param y the y-coordinate of the other vector
+&nbsp;	 * @return the cross product */
+&nbsp;	public float crs (float x, float y) {
+<b class="nc">&nbsp;		return this.x * y - this.y * x;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the angle in degrees of this vector (point) relative to the x-axis. Angles are towards the positive y-axis
+&nbsp;	 *         (typically counter-clockwise) and between 0 and 360.
+&nbsp;	 * @deprecated use {@link #angleDeg()} instead. */
+&nbsp;	@Deprecated
+&nbsp;	public float angle () {
+<b class="nc">&nbsp;		float angle = (float)Math.atan2(y, x) * MathUtils.radiansToDegrees;</b>
+<b class="nc">&nbsp;		if (angle &lt; 0) angle += 360;</b>
+<b class="nc">&nbsp;		return angle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the angle in degrees of this vector (point) relative to the given vector. Angles are towards the negative y-axis
+&nbsp;	 *         (typically clockwise) between -180 and +180
+&nbsp;	 * @deprecated use {@link #angleDeg(Vector2)} instead. Beware of the changes in returned angle to counter-clockwise and the
+&nbsp;	 *             range. */
+&nbsp;	@Deprecated
+&nbsp;	public float angle (Vector2 reference) {
+<b class="nc">&nbsp;		return (float)Math.atan2(crs(reference), dot(reference)) * MathUtils.radiansToDegrees;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the angle in degrees of this vector (point) relative to the x-axis. Angles are towards the positive y-axis
+&nbsp;	 *         (typically counter-clockwise) and in the [0, 360) range. */
+&nbsp;	public float angleDeg () {
+<b class="nc">&nbsp;		float angle = (float)Math.atan2(y, x) * MathUtils.radiansToDegrees;</b>
+<b class="nc">&nbsp;		if (angle &lt; 0) angle += 360;</b>
+<b class="nc">&nbsp;		return angle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the angle in degrees of this vector (point) relative to the given vector. Angles are towards the positive y-axis
+&nbsp;	 *         (typically counter-clockwise.) in the [0, 360) range */
+&nbsp;	public float angleDeg (Vector2 reference) {
+<b class="nc">&nbsp;		float angle = (float)Math.atan2(reference.crs(this), reference.dot(this)) * MathUtils.radiansToDegrees;</b>
+<b class="nc">&nbsp;		if (angle &lt; 0) angle += 360;</b>
+<b class="nc">&nbsp;		return angle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the angle in radians of this vector (point) relative to the x-axis. Angles are towards the positive y-axis.
+&nbsp;	 *         (typically counter-clockwise) */
+&nbsp;	public float angleRad () {
+<b class="nc">&nbsp;		return (float)Math.atan2(y, x);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the angle in radians of this vector (point) relative to the given vector. Angles are towards the positive y-axis.
+&nbsp;	 *         (typically counter-clockwise.) */
+&nbsp;	public float angleRad (Vector2 reference) {
+<b class="nc">&nbsp;		return (float)Math.atan2(reference.crs(this), reference.dot(this));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the angle of the vector in degrees relative to the x-axis, towards the positive y-axis (typically counter-clockwise).
+&nbsp;	 * @param degrees The angle in degrees to set.
+&nbsp;	 * @deprecated use {@link #setAngleDeg(float)} instead. */
+&nbsp;	@Deprecated
+&nbsp;	public Vector2 setAngle (float degrees) {
+<b class="nc">&nbsp;		return setAngleRad(degrees * MathUtils.degreesToRadians);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the angle of the vector in degrees relative to the x-axis, towards the positive y-axis (typically counter-clockwise).
+&nbsp;	 * @param degrees The angle in degrees to set. */
+&nbsp;	public Vector2 setAngleDeg (float degrees) {
+<b class="nc">&nbsp;		return setAngleRad(degrees * MathUtils.degreesToRadians);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the angle of the vector in radians relative to the x-axis, towards the positive y-axis (typically counter-clockwise).
+&nbsp;	 * @param radians The angle in radians to set. */
+&nbsp;	public Vector2 setAngleRad (float radians) {
+<b class="nc">&nbsp;		this.set(len(), 0f);</b>
+<b class="nc">&nbsp;		this.rotateRad(radians);</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Rotates the Vector2 by the given angle, counter-clockwise assuming the y-axis points up.
+&nbsp;	 * @param degrees the angle in degrees
+&nbsp;	 * @deprecated use {@link #rotateDeg(float)} instead. */
+&nbsp;	@Deprecated
+&nbsp;	public Vector2 rotate (float degrees) {
+<b class="nc">&nbsp;		return rotateRad(degrees * MathUtils.degreesToRadians);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Rotates the Vector2 by the given angle around reference vector, counter-clockwise assuming the y-axis points up.
+&nbsp;	 * @param degrees the angle in degrees
+&nbsp;	 * @param reference center Vector2
+&nbsp;	 * @deprecated use {@link #rotateAroundDeg(Vector2, float)} instead. */
+&nbsp;	@Deprecated
+&nbsp;	public Vector2 rotateAround (Vector2 reference, float degrees) {
+<b class="nc">&nbsp;		return this.sub(reference).rotateDeg(degrees).add(reference);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Rotates the Vector2 by the given angle, counter-clockwise assuming the y-axis points up.
+&nbsp;	 * @param degrees the angle in degrees */
+&nbsp;	public Vector2 rotateDeg (float degrees) {
+<b class="nc">&nbsp;		return rotateRad(degrees * MathUtils.degreesToRadians);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Rotates the Vector2 by the given angle, counter-clockwise assuming the y-axis points up.
+&nbsp;	 * @param radians the angle in radians */
+&nbsp;	public Vector2 rotateRad (float radians) {
+<b class="nc">&nbsp;		float cos = (float)Math.cos(radians);</b>
+<b class="nc">&nbsp;		float sin = (float)Math.sin(radians);</b>
+&nbsp;
+<b class="nc">&nbsp;		float newX = this.x * cos - this.y * sin;</b>
+<b class="nc">&nbsp;		float newY = this.x * sin + this.y * cos;</b>
+&nbsp;
+<b class="nc">&nbsp;		this.x = newX;</b>
+<b class="nc">&nbsp;		this.y = newY;</b>
+&nbsp;
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Rotates the Vector2 by the given angle around reference vector, counter-clockwise assuming the y-axis points up.
+&nbsp;	 * @param degrees the angle in degrees
+&nbsp;	 * @param reference center Vector2 */
+&nbsp;	public Vector2 rotateAroundDeg (Vector2 reference, float degrees) {
+<b class="nc">&nbsp;		return this.sub(reference).rotateDeg(degrees).add(reference);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Rotates the Vector2 by the given angle around reference vector, counter-clockwise assuming the y-axis points up.
+&nbsp;	 * @param radians the angle in radians
+&nbsp;	 * @param reference center Vector2 */
+&nbsp;	public Vector2 rotateAroundRad (Vector2 reference, float radians) {
+<b class="nc">&nbsp;		return this.sub(reference).rotateRad(radians).add(reference);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Rotates the Vector2 by 90 degrees in the specified direction, where &gt;= 0 is counter-clockwise and &lt; 0 is clockwise. */
+&nbsp;	public Vector2 rotate90 (int dir) {
+<b class="nc">&nbsp;		float x = this.x;</b>
+<b class="nc">&nbsp;		if (dir &gt;= 0) {</b>
+<b class="nc">&nbsp;			this.x = -y;</b>
+<b class="nc">&nbsp;			y = x;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			this.x = y;</b>
+<b class="nc">&nbsp;			y = -x;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 lerp (Vector2 target, float alpha) {
+<b class="nc">&nbsp;		final float invAlpha = 1.0f - alpha;</b>
+<b class="nc">&nbsp;		this.x = (x * invAlpha) + (target.x * alpha);</b>
+<b class="nc">&nbsp;		this.y = (y * invAlpha) + (target.y * alpha);</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 interpolate (Vector2 target, float alpha, Interpolation interpolation) {
+<b class="nc">&nbsp;		return lerp(target, interpolation.apply(alpha));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 setToRandomDirection () {
+<b class="nc">&nbsp;		float theta = MathUtils.random(0f, MathUtils.PI2);</b>
+<b class="nc">&nbsp;		return this.set(MathUtils.cos(theta), MathUtils.sin(theta));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		final int prime = 31;</b>
+<b class="nc">&nbsp;		int result = 1;</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToIntBits(x);</b>
+<b class="nc">&nbsp;		result = prime * result + NumberUtils.floatToIntBits(y);</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean equals (Object obj) {
+<b class="nc">&nbsp;		if (this == obj) return true;</b>
+<b class="nc">&nbsp;		if (obj == null) return false;</b>
+<b class="nc">&nbsp;		if (getClass() != obj.getClass()) return false;</b>
+<b class="nc">&nbsp;		Vector2 other = (Vector2)obj;</b>
+<b class="nc">&nbsp;		if (NumberUtils.floatToIntBits(x) != NumberUtils.floatToIntBits(other.x)) return false;</b>
+<b class="nc">&nbsp;		if (NumberUtils.floatToIntBits(y) != NumberUtils.floatToIntBits(other.y)) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean epsilonEquals (Vector2 other, float epsilon) {
+<b class="nc">&nbsp;		if (other == null) return false;</b>
+<b class="nc">&nbsp;		if (Math.abs(other.x - x) &gt; epsilon) return false;</b>
+<b class="nc">&nbsp;		if (Math.abs(other.y - y) &gt; epsilon) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Compares this vector with the other vector, using the supplied epsilon for fuzzy equality testing.
+&nbsp;	 * @return whether the vectors are the same. */
+&nbsp;	public boolean epsilonEquals (float x, float y, float epsilon) {
+<b class="nc">&nbsp;		if (Math.abs(x - this.x) &gt; epsilon) return false;</b>
+<b class="nc">&nbsp;		if (Math.abs(y - this.y) &gt; epsilon) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Compares this vector with the other vector using MathUtils.FLOAT_ROUNDING_ERROR for fuzzy equality testing
+&nbsp;	 * @param other other vector to compare
+&nbsp;	 * @return true if vector are equal, otherwise false */
+&nbsp;	public boolean epsilonEquals (final Vector2 other) {
+<b class="nc">&nbsp;		return epsilonEquals(other, MathUtils.FLOAT_ROUNDING_ERROR);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Compares this vector with the other vector using MathUtils.FLOAT_ROUNDING_ERROR for fuzzy equality testing
+&nbsp;	 * @param x x component of the other vector to compare
+&nbsp;	 * @param y y component of the other vector to compare
+&nbsp;	 * @return true if vector are equal, otherwise false */
+&nbsp;	public boolean epsilonEquals (float x, float y) {
+<b class="nc">&nbsp;		return epsilonEquals(x, y, MathUtils.FLOAT_ROUNDING_ERROR);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isUnit () {
+<b class="nc">&nbsp;		return isUnit(0.000000001f);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isUnit (final float margin) {
+<b class="nc">&nbsp;		return Math.abs(len2() - 1f) &lt; margin;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isZero () {
+<b class="nc">&nbsp;		return x == 0 &amp;&amp; y == 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isZero (final float margin) {
+<b class="nc">&nbsp;		return len2() &lt; margin;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isOnLine (Vector2 other) {
+<b class="nc">&nbsp;		return MathUtils.isZero(x * other.y - y * other.x);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isOnLine (Vector2 other, float epsilon) {
+<b class="nc">&nbsp;		return MathUtils.isZero(x * other.y - y * other.x, epsilon);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isCollinear (Vector2 other, float epsilon) {
+<b class="nc">&nbsp;		return isOnLine(other, epsilon) &amp;&amp; dot(other) &gt; 0f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isCollinear (Vector2 other) {
+<b class="nc">&nbsp;		return isOnLine(other) &amp;&amp; dot(other) &gt; 0f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isCollinearOpposite (Vector2 other, float epsilon) {
+<b class="nc">&nbsp;		return isOnLine(other, epsilon) &amp;&amp; dot(other) &lt; 0f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isCollinearOpposite (Vector2 other) {
+<b class="nc">&nbsp;		return isOnLine(other) &amp;&amp; dot(other) &lt; 0f;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isPerpendicular (Vector2 vector) {
+<b class="nc">&nbsp;		return MathUtils.isZero(dot(vector));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isPerpendicular (Vector2 vector, float epsilon) {
+<b class="nc">&nbsp;		return MathUtils.isZero(dot(vector), epsilon);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean hasSameDirection (Vector2 vector) {
+<b class="nc">&nbsp;		return dot(vector) &gt; 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean hasOppositeDirection (Vector2 vector) {
+<b class="nc">&nbsp;		return dot(vector) &lt; 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Vector2 setZero () {
+<b class="nc">&nbsp;		this.x = 0;</b>
+<b class="nc">&nbsp;		this.y = 0;</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

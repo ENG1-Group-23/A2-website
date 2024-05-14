@@ -1,0 +1,244 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Ray</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.math.collision</a>
+</div>
+
+<h1>Coverage Summary for Class: Ray (com.badlogic.gdx.math.collision)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Ray</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (3/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (7/35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.math.collision;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;import com.badlogic.gdx.math.Matrix4;
+&nbsp;import com.badlogic.gdx.math.Vector3;
+&nbsp;
+&nbsp;/** Encapsulates a ray having a starting position and a unit length direction.
+&nbsp; * 
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public class Ray implements Serializable {
+&nbsp;	private static final long serialVersionUID = -620692054835390878L;
+<b class="fc">&nbsp;	public final Vector3 origin = new Vector3();</b>
+<b class="fc">&nbsp;	public final Vector3 direction = new Vector3();</b>
+&nbsp;
+<b class="nc">&nbsp;	public Ray () {</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructor, sets the starting position of the ray and the direction.
+&nbsp;	 * 
+&nbsp;	 * @param origin The starting position
+&nbsp;	 * @param direction The direction */
+<b class="fc">&nbsp;	public Ray (Vector3 origin, Vector3 direction) {</b>
+<b class="fc">&nbsp;		this.origin.set(origin);</b>
+<b class="fc">&nbsp;		this.direction.set(direction).nor();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return a copy of this ray. */
+&nbsp;	public Ray cpy () {
+<b class="nc">&nbsp;		return new Ray(this.origin, this.direction);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the endpoint given the distance. This is calculated as startpoint + distance * direction.
+&nbsp;	 * @param out The vector to set to the result
+&nbsp;	 * @param distance The distance from the end point to the start point.
+&nbsp;	 * @return The out param */
+&nbsp;	public Vector3 getEndPoint (final Vector3 out, final float distance) {
+<b class="nc">&nbsp;		return out.set(direction).scl(distance).add(origin);</b>
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	static Vector3 tmp = new Vector3();</b>
+&nbsp;
+&nbsp;	/** Multiplies the ray by the given matrix. Use this to transform a ray into another coordinate system.
+&nbsp;	 * 
+&nbsp;	 * @param matrix The matrix
+&nbsp;	 * @return This ray for chaining. */
+&nbsp;	public Ray mul (Matrix4 matrix) {
+<b class="nc">&nbsp;		tmp.set(origin).add(direction);</b>
+<b class="nc">&nbsp;		tmp.mul(matrix);</b>
+<b class="nc">&nbsp;		origin.mul(matrix);</b>
+<b class="nc">&nbsp;		direction.set(tmp.sub(origin)).nor();</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** {@inheritDoc} */
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return &quot;ray [&quot; + origin + &quot;:&quot; + direction + &quot;]&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the starting position and the direction of this ray.
+&nbsp;	 * 
+&nbsp;	 * @param origin The starting position
+&nbsp;	 * @param direction The direction
+&nbsp;	 * @return this ray for chaining */
+&nbsp;	public Ray set (Vector3 origin, Vector3 direction) {
+<b class="nc">&nbsp;		this.origin.set(origin);</b>
+<b class="nc">&nbsp;		this.direction.set(direction).nor();</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets this ray from the given starting position and direction.
+&nbsp;	 * 
+&nbsp;	 * @param x The x-component of the starting position
+&nbsp;	 * @param y The y-component of the starting position
+&nbsp;	 * @param z The z-component of the starting position
+&nbsp;	 * @param dx The x-component of the direction
+&nbsp;	 * @param dy The y-component of the direction
+&nbsp;	 * @param dz The z-component of the direction
+&nbsp;	 * @return this ray for chaining */
+&nbsp;	public Ray set (float x, float y, float z, float dx, float dy, float dz) {
+<b class="nc">&nbsp;		this.origin.set(x, y, z);</b>
+<b class="nc">&nbsp;		this.direction.set(dx, dy, dz).nor();</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the starting position and direction from the given ray
+&nbsp;	 * 
+&nbsp;	 * @param ray The ray
+&nbsp;	 * @return This ray for chaining */
+&nbsp;	public Ray set (Ray ray) {
+<b class="nc">&nbsp;		this.origin.set(ray.origin);</b>
+<b class="nc">&nbsp;		this.direction.set(ray.direction).nor();</b>
+<b class="nc">&nbsp;		return this;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean equals (Object o) {
+<b class="nc">&nbsp;		if (o == this) return true;</b>
+<b class="nc">&nbsp;		if (o == null || o.getClass() != this.getClass()) return false;</b>
+<b class="nc">&nbsp;		Ray r = (Ray)o;</b>
+<b class="nc">&nbsp;		return this.direction.equals(r.direction) &amp;&amp; this.origin.equals(r.origin);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		final int prime = 73;</b>
+<b class="nc">&nbsp;		int result = 1;</b>
+<b class="nc">&nbsp;		result = prime * result + this.direction.hashCode();</b>
+<b class="nc">&nbsp;		result = prime * result + this.origin.hashCode();</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

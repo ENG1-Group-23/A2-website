@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Files</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx</a>
+</div>
+
+<h1>Coverage Summary for Class: Files (com.badlogic.gdx)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+  <tr>
+    <td class="name">Files$FileType</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx;
+&nbsp;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;
+&nbsp;/** Provides standard access to the filesystem, classpath, Android app storage (internal and external), and Android assets
+&nbsp; * directory.
+&nbsp; * @author mzechner
+&nbsp; * @author Nathan Sweet */
+&nbsp;public interface Files {
+&nbsp;	/** Indicates how to resolve a path to a file.
+&nbsp;	 * @author mzechner
+&nbsp;	 * @author Nathan Sweet */
+<b class="fc">&nbsp;	public enum FileType {</b>
+&nbsp;		/** Path relative to the root of the classpath. Classpath files are always readonly. Note that classpath files are not
+&nbsp;		 * compatible with some functionality on Android, such as {@link Audio#newSound(FileHandle)} and
+&nbsp;		 * {@link Audio#newMusic(FileHandle)}. */
+<b class="fc">&nbsp;		Classpath,</b>
+&nbsp;
+&nbsp;		/** Path relative to the asset directory on Android and to the application&#39;s root directory on the desktop. On the desktop,
+&nbsp;		 * if the file is not found, then the classpath is checked. This enables files to be found when using JWS or applets.
+&nbsp;		 * Internal files are always readonly. */
+<b class="fc">&nbsp;		Internal,</b>
+&nbsp;
+&nbsp;		/** Path relative to the root of the app external storage on Android and to the home directory of the current user on the
+&nbsp;		 * desktop. */
+<b class="fc">&nbsp;		External,</b>
+&nbsp;
+&nbsp;		/** Path that is a fully qualified, absolute filesystem path. To ensure portability across platforms use absolute files only
+&nbsp;		 * when absolutely (heh) necessary. */
+<b class="fc">&nbsp;		Absolute,</b>
+&nbsp;
+&nbsp;		/** Path relative to the private files directory on Android and to the application&#39;s root directory on the desktop. */
+<b class="fc">&nbsp;		Local;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a handle representing a file or directory.
+&nbsp;	 * @param type Determines how the path is resolved.
+&nbsp;	 * @throws GdxRuntimeException if the type is classpath or internal and the file does not exist.
+&nbsp;	 * @see FileType */
+&nbsp;	public FileHandle getFileHandle (String path, FileType type);
+&nbsp;
+&nbsp;	/** Convenience method that returns a {@link FileType#Classpath} file handle. */
+&nbsp;	public FileHandle classpath (String path);
+&nbsp;
+&nbsp;	/** Convenience method that returns a {@link FileType#Internal} file handle. */
+&nbsp;	public FileHandle internal (String path);
+&nbsp;
+&nbsp;	/** Convenience method that returns a {@link FileType#External} file handle. */
+&nbsp;	public FileHandle external (String path);
+&nbsp;
+&nbsp;	/** Convenience method that returns a {@link FileType#Absolute} file handle. */
+&nbsp;	public FileHandle absolute (String path);
+&nbsp;
+&nbsp;	/** Convenience method that returns a {@link FileType#Local} file handle. */
+&nbsp;	public FileHandle local (String path);
+&nbsp;
+&nbsp;	/** Returns the external storage path directory. This is the app external storage on Android and the home directory of the
+&nbsp;	 * current user on the desktop. */
+&nbsp;	public String getExternalStoragePath ();
+&nbsp;
+&nbsp;	/** Returns true if the external storage is ready for file IO. */
+&nbsp;	public boolean isExternalStorageAvailable ();
+&nbsp;
+&nbsp;	/** Returns the local storage path directory. This is the private files directory on Android and the directory of the jar on
+&nbsp;	 * the desktop. */
+&nbsp;	public String getLocalStoragePath ();
+&nbsp;
+&nbsp;	/** Returns true if the local storage is ready for file IO. */
+&nbsp;	public boolean isLocalStorageAvailable ();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

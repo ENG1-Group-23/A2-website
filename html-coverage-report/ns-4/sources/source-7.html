@@ -1,0 +1,396 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TappingGame</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.screens</a>
+</div>
+
+<h1>Coverage Summary for Class: TappingGame (bytemusketeers.heslingtonhustle.screens)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TappingGame</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/83)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TappingGame$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/85)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.screens;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.HeslingtonHustle;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.ScreenType;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.ScreenAdapter;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.g2d.BitmapFont;
+&nbsp;import com.badlogic.gdx.utils.Align;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;import com.badlogic.gdx.utils.Timer;
+&nbsp;
+&nbsp;/**
+&nbsp; * The TypingGame class implements a mini-game for the player to increase their study hours.
+&nbsp; * Players are shown a number that they need to memorize and then type it correctly to succeed.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class TappingGame extends ScreenAdapter implements Screen, InputProcessor {
+&nbsp;    private final HeslingtonHustle game;
+&nbsp;    private final int studyDuration;
+&nbsp;    private final Texture guessButton;
+&nbsp;    private final Texture title;
+<b class="nc">&nbsp;    Boolean acceptInput = false, displayCorrect = false, displayWrong = false;</b>
+&nbsp;    BitmapFont displayText;
+&nbsp;    String gameObjective;
+<b class="nc">&nbsp;    private int attempts = 1;</b>
+<b class="nc">&nbsp;    private int currentNumber = 0;</b>
+<b class="nc">&nbsp;    private int correct = 0;</b>
+<b class="nc">&nbsp;    private String userGuess = &quot;&quot;;</b>
+&nbsp;    private float displayTextY, displayTextHeight;
+&nbsp;    private float gameObjectiveY;
+&nbsp;    private float guessButtonX, guessButtonY, guessButtonWidth, guessButtonHeight;
+&nbsp;    private float titleX, titleY, titleWidth, titleHeight;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructs a TypingGame screen with the game instance and study duration.
+&nbsp;     *
+&nbsp;     * @param game          The main game instance.
+&nbsp;     * @param studyDuration The duration of the study session in attempts.
+&nbsp;     */
+<b class="nc">&nbsp;    public TappingGame(HeslingtonHustle game, int studyDuration) {</b>
+<b class="nc">&nbsp;        this.game = game;</b>
+<b class="nc">&nbsp;        displayText = new BitmapFont(Gdx.files.internal(&quot;font/WhitePeaberry.fnt&quot;));</b>
+<b class="nc">&nbsp;        guessButton = new Texture(&quot;mini_games/guess_button.png&quot;);</b>
+<b class="nc">&nbsp;        title = new Texture(&quot;mini_games/number_memoriser_label.png&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        calculateDimensions();</b>
+<b class="nc">&nbsp;        calculatePositions();</b>
+&nbsp;
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(this);</b>
+<b class="nc">&nbsp;        this.studyDuration = studyDuration;</b>
+&nbsp;
+<b class="nc">&nbsp;        gameObjective = &quot;Tap the space-bar as many times as you can in the given time&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        playGame();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Begins a new challenge by generating a number for the player to memorize.
+&nbsp;     * Handles the logic for correct and incorrect guesses and progresses the game.
+&nbsp;     */
+&nbsp;    private void calculateDimensions() {
+<b class="nc">&nbsp;        displayText.getData().setScale(3f * game.scaleFactorX, 3f * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        displayTextHeight = 100 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        gameObjectiveY = game.screenHeight - 280 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        guessButtonWidth = 156 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        guessButtonHeight = 84 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        titleWidth = title.getWidth() * game.scaleFactorX * 11;</b>
+<b class="nc">&nbsp;        titleHeight = title.getHeight() * game.scaleFactorY * 11;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void calculatePositions() {
+<b class="nc">&nbsp;        displayTextY = game.screenHeight / 2f - displayTextHeight;</b>
+<b class="nc">&nbsp;        guessButtonX = (game.screenWidth - guessButtonWidth) / 2f;</b>
+<b class="nc">&nbsp;        guessButtonY = (game.screenHeight - guessButtonHeight) / 2f - 300 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        titleX = (game.screenWidth - titleWidth) / 2f;</b>
+<b class="nc">&nbsp;        titleY = (game.screenHeight - titleHeight) / 2f + 400 * game.scaleFactorY;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Begins a new challenge by generating a number for the player to memorize.
+&nbsp;     * Handles the logic for correct and incorrect guesses and progresses the game.
+&nbsp;     */
+&nbsp;    public void playGame() {
+<b class="nc">&nbsp;        userGuess = &quot;&quot;;</b>
+<b class="nc">&nbsp;        displayWrong = false;</b>
+<b class="nc">&nbsp;        displayCorrect = false;</b>
+<b class="nc">&nbsp;        if (attempts - 1 &lt; studyDuration) {</b>
+<b class="nc">&nbsp;            currentNumber = generateNumber();</b>
+<b class="nc">&nbsp;            delay(5, this::makeUserGuess);</b>
+&nbsp;        } else
+<b class="nc">&nbsp;            game.screenManager.setScreen(ScreenType.GAME_SCREEN);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Allows the player to input their guess after a short delay.
+&nbsp;     */
+&nbsp;    public void makeUserGuess() {
+<b class="nc">&nbsp;        acceptInput = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Implements a delay before executing a given runnable task.
+&nbsp;     *
+&nbsp;     * @param seconds  The delay in seconds before running the task.
+&nbsp;     * @param runnable The task to execute after the delay.
+&nbsp;     */
+&nbsp;    public void delay(int seconds, Runnable runnable) {
+<b class="nc">&nbsp;        Timer.schedule(new Timer.Task() {</b>
+&nbsp;            @Override
+&nbsp;            public void run() {
+<b class="nc">&nbsp;                runnable.run();</b>
+&nbsp;            }
+&nbsp;        }, seconds);
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void show() {
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void render(float delta) {
+<b class="nc">&nbsp;        ScreenUtils.clear(0.3f, 0.55f, 0.7f, 1);</b>
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+&nbsp;
+<b class="nc">&nbsp;        game.batch.begin();</b>
+<b class="nc">&nbsp;        game.batch.draw(title, titleX, titleY, titleWidth, titleHeight);</b>
+&nbsp;
+<b class="nc">&nbsp;        displayText.draw(game.batch, gameObjective, 0, gameObjectiveY, game.screenWidth, Align.center, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (acceptInput) {</b>
+<b class="nc">&nbsp;            displayText.draw(game.batch, userGuess, 0, displayTextY, game.screenWidth, Align.center, false);</b>
+<b class="nc">&nbsp;            game.batch.draw(guessButton, guessButtonX, guessButtonY, guessButtonWidth, guessButtonHeight);</b>
+<b class="nc">&nbsp;        } else if (displayCorrect)</b>
+<b class="nc">&nbsp;            displayText.draw(game.batch, &quot;Correct well done.&quot;, 0, displayTextY, game.screenWidth, Align.center,</b>
+&nbsp;                    false);
+<b class="nc">&nbsp;        else if (displayWrong)</b>
+<b class="nc">&nbsp;            displayText.draw(game.batch, &quot;Incorrect. Answer: &quot; + currentNumber, 0, displayTextY,</b>
+&nbsp;                    game.screenWidth, Align.center, false);
+&nbsp;        else
+<b class="nc">&nbsp;            displayText.draw(game.batch, String.valueOf(currentNumber), 0, displayTextY, game.screenWidth,</b>
+&nbsp;                    Align.center, false);
+&nbsp;
+<b class="nc">&nbsp;        game.batch.end();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Generates a random number for the player to memorize.
+&nbsp;     *
+&nbsp;     * @return The generated number.
+&nbsp;     */
+&nbsp;    public int generateNumber() {
+<b class="nc">&nbsp;        int num = 15 * attempts;</b>
+<b class="nc">&nbsp;        attempts++;</b>
+&nbsp;
+<b class="nc">&nbsp;        return num;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        calculateDimensions();</b>
+<b class="nc">&nbsp;        calculatePositions();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        guessButton.dispose();</b>
+<b class="nc">&nbsp;        title.dispose();</b>
+<b class="nc">&nbsp;        displayText.dispose();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyDown(int keycode) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyUp(int keycode) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyTyped(char character) {
+<b class="nc">&nbsp;        if (acceptInput) {</b>
+<b class="nc">&nbsp;            if (character == &#39; &#39; &amp;&amp; !userGuess.isEmpty()) { // Handles backspace</b>
+<b class="nc">&nbsp;                userGuess = userGuess.substring(0, userGuess.length() - 1);</b>
+<b class="nc">&nbsp;            } else if (Character.isDigit(character) &amp;&amp; userGuess.length() &lt; String.valueOf(currentNumber).length()) {</b>
+<b class="nc">&nbsp;                userGuess += character;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchDown(int worldX, int worldY, int pointer, int button) {
+<b class="nc">&nbsp;        worldY = game.screenHeight - worldY;</b>
+&nbsp;
+<b class="nc">&nbsp;        if (worldX &gt;= guessButtonX &amp;&amp; worldX &lt;= guessButtonX + guessButtonWidth &amp;&amp;</b>
+&nbsp;                worldY &gt;= guessButtonY &amp;&amp; worldY &lt;= guessButtonY + guessButtonHeight) {
+&nbsp;
+<b class="nc">&nbsp;            if (!userGuess.isEmpty()) {</b>
+<b class="nc">&nbsp;                acceptInput = false;</b>
+<b class="nc">&nbsp;                if (Integer.parseInt(userGuess) == currentNumber) {</b>
+<b class="nc">&nbsp;                    correct = correct + 1;</b>
+<b class="nc">&nbsp;                    displayCorrect = true;</b>
+&nbsp;                } else
+<b class="nc">&nbsp;                    displayWrong = true;</b>
+&nbsp;
+<b class="nc">&nbsp;                delay(2, this::playGame);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchDragged(int screenX, int screenY, int pointer) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean mouseMoved(int screenX, int screenY) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean scrolled(float amountX, float amountY) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

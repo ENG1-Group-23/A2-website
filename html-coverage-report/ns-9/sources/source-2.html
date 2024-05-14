@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AsynchronousAssetLoader</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.assets.loaders</a>
+</div>
+
+<h1>Coverage Summary for Class: AsynchronousAssetLoader (com.badlogic.gdx.assets.loaders)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AsynchronousAssetLoader</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.assets.loaders;
+&nbsp;
+&nbsp;import com.badlogic.gdx.assets.AssetLoaderParameters;
+&nbsp;import com.badlogic.gdx.assets.AssetManager;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;
+&nbsp;/** Base class for asynchronous {@link AssetLoader} instances. Such loaders try to load parts of an OpenGL resource, like the
+&nbsp; * Pixmap, on a separate thread to then load the actual resource on the thread the OpenGL context is active on.
+&nbsp; * @author mzechner
+&nbsp; * 
+&nbsp; * @param &lt;T&gt;
+&nbsp; * @param &lt;P&gt; */
+&nbsp;public abstract class AsynchronousAssetLoader&lt;T, P extends AssetLoaderParameters&lt;T&gt;&gt; extends AssetLoader&lt;T, P&gt; {
+&nbsp;
+&nbsp;	public AsynchronousAssetLoader (FileHandleResolver resolver) {
+<b class="fc">&nbsp;		super(resolver);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Loads the non-OpenGL part of the asset and injects any dependencies of the asset into the AssetManager.
+&nbsp;	 * @param manager
+&nbsp;	 * @param fileName the name of the asset to load
+&nbsp;	 * @param file the resolved file to load
+&nbsp;	 * @param parameter the parameters to use for loading the asset */
+&nbsp;	public abstract void loadAsync (AssetManager manager, String fileName, FileHandle file, P parameter);
+&nbsp;
+&nbsp;	/** Called if this task is unloaded before {@link #loadSync(AssetManager, String, FileHandle, AssetLoaderParameters) loadSync}
+&nbsp;	 * is called. This method may be invoked on any thread, but will not be invoked during or after
+&nbsp;	 * {@link #loadSync(AssetManager, String, FileHandle, AssetLoaderParameters) loadSync}. This method is not invoked when a task
+&nbsp;	 * is cancelled because it threw an exception, only when the asset is unloaded before loading is complete.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The default implementation does nothing. Subclasses should release any resources acquired in
+&nbsp;	 * {@link #loadAsync(AssetManager, String, FileHandle, AssetLoaderParameters) loadAsync}, which may or may not have been called
+&nbsp;	 * before this method, but never during or after this method. Note that
+&nbsp;	 * {@link #loadAsync(AssetManager, String, FileHandle, AssetLoaderParameters) loadAsync} may still be executing when this
+&nbsp;	 * method is called and must release any resources it allocated. */
+&nbsp;	public void unloadAsync (AssetManager manager, String fileName, FileHandle file, P parameter) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Loads the OpenGL part of the asset.
+&nbsp;	 * @param manager
+&nbsp;	 * @param fileName
+&nbsp;	 * @param file the resolved file to load
+&nbsp;	 * @param parameter */
+&nbsp;	public abstract T loadSync (AssetManager manager, String fileName, FileHandle file, P parameter);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

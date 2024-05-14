@@ -1,0 +1,525 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MainSettingsScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.screens</a>
+</div>
+
+<h1>Coverage Summary for Class: MainSettingsScreen (bytemusketeers.heslingtonhustle.screens)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainSettingsScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/82)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/187)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.screens;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.HeslingtonHustle;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.ScreenType;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.ScreenAdapter;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the settings screen in the game, allowing players to adjust game settings like music and sound levels,
+&nbsp; * and the character&#39;s gender.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class MainSettingsScreen extends ScreenAdapter implements Screen, InputProcessor {
+&nbsp;    private final Texture backButton;
+&nbsp;    private final Texture settingsLabel;
+&nbsp;    private final Texture musicUpButton;
+&nbsp;    private final Texture musicDownButton;
+&nbsp;    private final Texture musicLabel;
+&nbsp;    private final Texture soundUpButton;
+&nbsp;    private final Texture soundLabel;
+&nbsp;    private final Texture soundDownButton;
+&nbsp;    private final Texture backgroundImage;
+&nbsp;    HeslingtonHustle game;
+&nbsp;    boolean gender;
+&nbsp;    private Texture musicBar;
+&nbsp;    private Texture soundBar;
+&nbsp;    private Texture boyButton;
+&nbsp;    private Texture girlButton;
+&nbsp;    // X and Y coordinates for each button and label
+&nbsp;    private float backButtonX;
+&nbsp;    private float settingsLabelX;
+&nbsp;    private float musicUpButtonX;
+&nbsp;    private float musicDownButtonX;
+&nbsp;    private float musicLabelX;
+&nbsp;    private float musicBarX;
+&nbsp;    private float soundUpButtonX;
+&nbsp;    private float soundLabelX;
+&nbsp;    private float soundDownButtonX;
+&nbsp;    private float soundBarX;
+&nbsp;    private float boyButtonX;
+&nbsp;    private float girlButtonX;
+&nbsp;    // Y coordinates for each button and label
+&nbsp;    private float backButtonY;
+&nbsp;    private float settingsLabelY;
+&nbsp;    private float musicUpButtonY;
+&nbsp;    private float musicDownButtonY;
+&nbsp;    private float musicLabelY;
+&nbsp;    private float musicBarY;
+&nbsp;    private float soundUpButtonY;
+&nbsp;    private float soundLabelY;
+&nbsp;    private float soundDownButtonY;
+&nbsp;    private float soundBarY;
+&nbsp;    private float boyButtonY;
+&nbsp;    private float girlButtonY;
+&nbsp;
+&nbsp;    // Button and label dimensions
+<b class="nc">&nbsp;    private float backButtonWidth = 200;</b>
+<b class="nc">&nbsp;    private float settingsLabelWidth = 500;</b>
+<b class="nc">&nbsp;    private float musicUpButtonWidth = 75;</b>
+<b class="nc">&nbsp;    private float musicDownButtonWidth = 75;</b>
+<b class="nc">&nbsp;    private float musicLabelWidth = 200;</b>
+<b class="nc">&nbsp;    private float musicBarWidth = 250;</b>
+<b class="nc">&nbsp;    private float soundUpButtonWidth = 75;</b>
+<b class="nc">&nbsp;    private float soundLabelWidth = 200;</b>
+<b class="nc">&nbsp;    private float soundDownButtonWidth = 75;</b>
+<b class="nc">&nbsp;    private float soundBarWidth = 250;</b>
+<b class="nc">&nbsp;    private float boyButtonWidth = 150;</b>
+<b class="nc">&nbsp;    private float girlButtonWidth = 150;</b>
+<b class="nc">&nbsp;    private float backButtonHeight = 100;</b>
+<b class="nc">&nbsp;    private float settingsLabelHeight = 130;</b>
+<b class="nc">&nbsp;    private float musicUpButtonHeight = 75;</b>
+<b class="nc">&nbsp;    private float musicDownButtonHeight = 75;</b>
+<b class="nc">&nbsp;    private float musicLabelHeight = 50;</b>
+<b class="nc">&nbsp;    private float musicBarHeight = 50;</b>
+<b class="nc">&nbsp;    private float soundUpButtonHeight = 75;</b>
+<b class="nc">&nbsp;    private float soundLabelHeight = 50;</b>
+<b class="nc">&nbsp;    private float soundDownButtonHeight = 75;</b>
+<b class="nc">&nbsp;    private float soundBarHeight = 50;</b>
+<b class="nc">&nbsp;    private float boyButtonHeight = 150;</b>
+<b class="nc">&nbsp;    private float girlButtonHeight = 150;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructs the settings screen with references to main game object and initializes UI components.
+&nbsp;     *
+&nbsp;     * @param game The main game object for accessing global properties and methods.
+&nbsp;     */
+<b class="nc">&nbsp;    public MainSettingsScreen(HeslingtonHustle game) {</b>
+<b class="nc">&nbsp;        this.game = game;</b>
+<b class="nc">&nbsp;        gender = game.gameData.getGender();</b>
+&nbsp;
+<b class="nc">&nbsp;        backButton = new Texture(&quot;settings_gui/back_button.png&quot;);</b>
+<b class="nc">&nbsp;        settingsLabel = new Texture(&quot;settings_gui/settings_label.png&quot;);</b>
+<b class="nc">&nbsp;        musicUpButton = new Texture(&quot;settings_gui/arrow_right_button.png&quot;);</b>
+<b class="nc">&nbsp;        musicDownButton = new Texture(&quot;settings_gui/arrow_left_button.png&quot;);</b>
+<b class="nc">&nbsp;        musicLabel = new Texture(&quot;settings_gui/music_label.png&quot;);</b>
+<b class="nc">&nbsp;        musicBar = new Texture(&quot;settings_gui/bar_&quot; + 25 * game.gameData.getMusicLevel() + &quot;.png&quot;);</b>
+<b class="nc">&nbsp;        soundUpButton = new Texture(&quot;settings_gui/arrow_right_button.png&quot;);</b>
+<b class="nc">&nbsp;        soundLabel = new Texture(&quot;settings_gui/sound_label.png&quot;);</b>
+<b class="nc">&nbsp;        soundDownButton = new Texture(&quot;settings_gui/arrow_left_button.png&quot;);</b>
+<b class="nc">&nbsp;        soundBar = new Texture(&quot;settings_gui/bar_&quot; + 25 * game.gameData.getSoundLevel() + &quot;.png&quot;);</b>
+<b class="nc">&nbsp;        backgroundImage = new Texture(&quot;menu_gui/new_background_dark.png&quot;);</b>
+<b class="nc">&nbsp;        if (gender) {</b>
+<b class="nc">&nbsp;            boyButton = new Texture(&quot;settings_gui/boy_button_indented.png&quot;);</b>
+<b class="nc">&nbsp;            girlButton = new Texture(&quot;settings_gui/girl_button.png&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            girlButton = new Texture(&quot;settings_gui/girl_button_indented.png&quot;);</b>
+<b class="nc">&nbsp;            boyButton = new Texture(&quot;settings_gui/boy_button.png&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        calculateDimensions();</b>
+&nbsp;
+<b class="nc">&nbsp;        calculatePosition();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void calculateDimensions() {
+<b class="nc">&nbsp;        backButtonWidth = 200 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        settingsLabelWidth = 500 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        musicUpButtonWidth = 75 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        musicDownButtonWidth = 75 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        musicLabelWidth = 200 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        musicBarWidth = 250 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        soundUpButtonWidth = 75 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        soundLabelWidth = 200 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        soundDownButtonWidth = 75 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        soundBarWidth = 250 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        boyButtonWidth = 150 * game.scaleFactorX;</b>
+<b class="nc">&nbsp;        girlButtonWidth = 150 * game.scaleFactorX;</b>
+&nbsp;
+<b class="nc">&nbsp;        backButtonHeight = 100 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        settingsLabelHeight = 130 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        musicUpButtonHeight = 75 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        musicDownButtonHeight = 75 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        musicLabelHeight = 50 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        musicBarHeight = 50 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        soundUpButtonHeight = 75 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        soundLabelHeight = 50 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        soundDownButtonHeight = 75 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        soundBarHeight = 50 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        boyButtonHeight = 150 * game.scaleFactorY;</b>
+<b class="nc">&nbsp;        girlButtonHeight = 150 * game.scaleFactorY;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void calculatePosition() {
+<b class="nc">&nbsp;        backButtonX = (game.screenWidth - backButtonWidth) / 2;</b>
+<b class="nc">&nbsp;        backButtonY = (float) game.screenHeight / 6 - (100 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        settingsLabelX = (game.screenWidth - settingsLabelWidth) / 2;</b>
+<b class="nc">&nbsp;        settingsLabelY = game.screenHeight - (settingsLabelHeight * 2);</b>
+<b class="nc">&nbsp;        musicUpButtonX = (game.screenWidth - musicUpButtonWidth) / 2 + (200 * game.scaleFactorX);</b>
+<b class="nc">&nbsp;        musicUpButtonY = game.screenHeight - musicUpButtonHeight - (350 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        musicDownButtonX = (game.screenWidth - musicUpButtonWidth) / 2 - (200 * game.scaleFactorX);</b>
+<b class="nc">&nbsp;        musicDownButtonY = game.screenHeight - musicUpButtonHeight - (350 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        musicLabelX = (game.screenWidth - musicLabelWidth) / 2;</b>
+<b class="nc">&nbsp;        musicLabelY = game.screenHeight - musicLabelHeight - (290 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        musicBarX = (game.screenWidth - musicBarWidth) / 2;</b>
+<b class="nc">&nbsp;        musicBarY = game.screenHeight - musicBarHeight - (375 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        soundUpButtonX = (game.screenWidth - soundUpButtonWidth) / 2 + (200 * game.scaleFactorX);</b>
+<b class="nc">&nbsp;        soundUpButtonY = game.screenHeight - soundUpButtonHeight - (530 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        soundLabelX = (game.screenWidth - soundLabelWidth) / 2;</b>
+<b class="nc">&nbsp;        soundLabelY = game.screenHeight - soundLabelHeight - (470 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        soundDownButtonX = (game.screenWidth - soundDownButtonWidth) / 2 - (200 * game.scaleFactorX);</b>
+<b class="nc">&nbsp;        soundDownButtonY = game.screenHeight - soundDownButtonHeight - (530 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        soundBarX = (game.screenWidth - soundBarWidth) / 2;</b>
+<b class="nc">&nbsp;        soundBarY = game.screenHeight - soundBarHeight - (555 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        boyButtonX = (game.screenWidth - boyButtonWidth) / 2 - (100 * game.scaleFactorX);</b>
+<b class="nc">&nbsp;        boyButtonY = game.screenHeight - boyButtonHeight - (650 * game.scaleFactorY);</b>
+<b class="nc">&nbsp;        girlButtonX = (game.screenWidth - boyButtonWidth) / 2 + (100 * game.scaleFactorX);</b>
+<b class="nc">&nbsp;        girlButtonY = game.screenHeight - boyButtonHeight - (650 * game.scaleFactorY);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void show() {
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(this);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void render(float delta) {
+<b class="nc">&nbsp;        ScreenUtils.clear(0f, 0f, 0f, 1);</b>
+<b class="nc">&nbsp;        game.batch.setProjectionMatrix(game.defaultCamera.combined);</b>
+<b class="nc">&nbsp;        game.batch.begin();</b>
+<b class="nc">&nbsp;        game.batch.draw(backgroundImage, 0, 0, game.screenWidth, game.screenHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(backButton, backButtonX, backButtonY, backButtonWidth, backButtonHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(settingsLabel, settingsLabelX, settingsLabelY, settingsLabelWidth, settingsLabelHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(musicUpButton, musicUpButtonX, musicUpButtonY, musicUpButtonWidth, musicUpButtonHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(musicDownButton, musicDownButtonX, musicDownButtonY, musicDownButtonWidth,</b>
+&nbsp;                musicDownButtonHeight);
+<b class="nc">&nbsp;        game.batch.draw(musicLabel, musicLabelX, musicLabelY, musicLabelWidth, musicLabelHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(musicBar, musicBarX, musicBarY, musicBarWidth, musicBarHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(soundUpButton, soundUpButtonX, soundUpButtonY, soundUpButtonWidth, soundUpButtonHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(soundLabel, soundLabelX, soundLabelY, soundLabelWidth, soundLabelHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(soundDownButton, soundDownButtonX, soundDownButtonY, soundDownButtonWidth,</b>
+&nbsp;                soundDownButtonHeight);
+<b class="nc">&nbsp;        game.batch.draw(soundBar, soundBarX, soundBarY, soundBarWidth, soundBarHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(boyButton, boyButtonX, boyButtonY, boyButtonWidth, boyButtonHeight);</b>
+<b class="nc">&nbsp;        game.batch.draw(girlButton, girlButtonX, girlButtonY, girlButtonWidth, girlButtonHeight);</b>
+<b class="nc">&nbsp;        game.batch.end();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when a key was pressed
+&nbsp;     *
+&nbsp;     * @param keycode one of the constants in {@link com.badlogic.gdx.Input.Keys}
+&nbsp;     * @return whether the input was processed
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean keyDown(int keycode) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when a key was released
+&nbsp;     *
+&nbsp;     * @param keycode one of the constants in {@link com.badlogic.gdx.Input.Keys}
+&nbsp;     * @return whether the input was processed
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean keyUp(int keycode) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when a key was typed
+&nbsp;     *
+&nbsp;     * @param character The character
+&nbsp;     * @return whether the input was processed
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean keyTyped(char character) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles touch input for interactive elements on the screen.
+&nbsp;     *
+&nbsp;     * @param worldX  The x-coordinate of the touch.
+&nbsp;     * @param worldY  The y-coordinate of the touch.
+&nbsp;     * @param pointer The pointer for the event.
+&nbsp;     * @param button  The button that was touched.
+&nbsp;     * @return true if the input was processed.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchDown(int worldX, int worldY, int pointer, int button) {
+<b class="nc">&nbsp;        worldY = game.screenHeight - worldY;</b>
+&nbsp;
+<b class="nc">&nbsp;        if (worldX &gt;= backButtonX &amp;&amp; worldX &lt;= backButtonX + backButtonWidth</b>
+&nbsp;                &amp;&amp; worldY &gt;= backButtonY &amp;&amp; worldY &lt;= backButtonY + backButtonHeight) {
+<b class="nc">&nbsp;            game.gameData.buttonClickedSoundActivate();</b>
+<b class="nc">&nbsp;            game.screenManager.setScreen(ScreenType.MAIN_MENU);</b>
+<b class="nc">&nbsp;        } else if (worldX &gt;= musicUpButtonX &amp;&amp; worldX &lt;= musicUpButtonX + musicUpButtonWidth</b>
+&nbsp;                &amp;&amp; worldY &gt;= musicUpButtonY &amp;&amp; worldY &lt;= musicUpButtonY + musicUpButtonHeight) {
+<b class="nc">&nbsp;            if (game.gameData.getMusicLevel() &lt;= 3) {</b>
+<b class="nc">&nbsp;                game.gameData.incrementMusicLevel();</b>
+<b class="nc">&nbsp;                game.gameData.upSoundActivate();</b>
+<b class="nc">&nbsp;                if (musicBar != null)</b>
+<b class="nc">&nbsp;                    musicBar.dispose();</b>
+<b class="nc">&nbsp;                musicBar = new Texture(&quot;settings_gui/bar_&quot; + 25 * game.gameData.getMusicLevel() + &quot;.png&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else if (worldX &gt;= musicDownButtonX &amp;&amp; worldX &lt;= musicDownButtonX + musicDownButtonWidth</b>
+&nbsp;                &amp;&amp; worldY &gt;= musicDownButtonY &amp;&amp; worldY &lt;= musicDownButtonY + musicDownButtonHeight) {
+<b class="nc">&nbsp;            if (game.gameData.getMusicLevel() &gt;= 1) {</b>
+<b class="nc">&nbsp;                game.gameData.decrementMusicLevel();</b>
+<b class="nc">&nbsp;                game.gameData.downSoundActivate();</b>
+<b class="nc">&nbsp;                if (musicBar != null)</b>
+<b class="nc">&nbsp;                    musicBar.dispose();</b>
+<b class="nc">&nbsp;                musicBar = new Texture(&quot;settings_gui/bar_&quot; + 25 * game.gameData.getMusicLevel() + &quot;.png&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else if (worldX &gt;= soundUpButtonX &amp;&amp; worldX &lt;= soundUpButtonX + soundUpButtonWidth</b>
+&nbsp;                &amp;&amp; worldY &gt;= soundUpButtonY &amp;&amp; worldY &lt;= soundUpButtonY + soundUpButtonHeight) {
+<b class="nc">&nbsp;            if (game.gameData.getSoundLevel() &lt;= 3) {</b>
+<b class="nc">&nbsp;                game.gameData.incrementSoundLevel();</b>
+<b class="nc">&nbsp;                game.gameData.upSoundActivate();</b>
+<b class="nc">&nbsp;                if (soundBar != null)</b>
+<b class="nc">&nbsp;                    soundBar.dispose();</b>
+<b class="nc">&nbsp;                soundBar = new Texture(&quot;settings_gui/bar_&quot; + 25 * game.gameData.getSoundLevel() + &quot;.png&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else if (worldX &gt;= soundDownButtonX &amp;&amp; worldX &lt;= soundDownButtonX + soundDownButtonWidth</b>
+&nbsp;                &amp;&amp; worldY &gt;= soundDownButtonY &amp;&amp; worldY &lt;= soundDownButtonY + soundDownButtonHeight) {
+<b class="nc">&nbsp;            if (game.gameData.getSoundLevel() &gt;= 1) {</b>
+<b class="nc">&nbsp;                game.gameData.decrementSoundLevel();</b>
+<b class="nc">&nbsp;                game.gameData.downSoundActivate();</b>
+<b class="nc">&nbsp;                if (soundBar != null)</b>
+<b class="nc">&nbsp;                    soundBar.dispose();</b>
+<b class="nc">&nbsp;                soundBar = new Texture(&quot;settings_gui/bar_&quot; + 25 * game.gameData.getSoundLevel() + &quot;.png&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else if (worldX &gt;= boyButtonX &amp;&amp; worldX &lt;= boyButtonX + boyButtonWidth</b>
+&nbsp;                &amp;&amp; worldY &gt;= boyButtonY &amp;&amp; worldY &lt;= boyButtonY + boyButtonHeight) {
+<b class="nc">&nbsp;            gender = true;</b>
+<b class="nc">&nbsp;            game.gameData.buttonClickedSoundActivate();</b>
+<b class="nc">&nbsp;            if (boyButton != null)</b>
+<b class="nc">&nbsp;                boyButton.dispose();</b>
+<b class="nc">&nbsp;            if (girlButton != null)</b>
+<b class="nc">&nbsp;                girlButton.dispose();</b>
+<b class="nc">&nbsp;            boyButton = new Texture(&quot;settings_gui/boy_button_indented.png&quot;);</b>
+<b class="nc">&nbsp;            girlButton = new Texture(&quot;settings_gui/girl_button.png&quot;);</b>
+<b class="nc">&nbsp;        } else if (worldX &gt;= girlButtonX &amp;&amp; worldX &lt;= girlButtonX + girlButtonWidth</b>
+&nbsp;                &amp;&amp; worldY &gt;= girlButtonY &amp;&amp; worldY &lt;= girlButtonY + girlButtonHeight) {
+<b class="nc">&nbsp;            gender = false;</b>
+<b class="nc">&nbsp;            game.gameData.buttonClickedSoundActivate();</b>
+<b class="nc">&nbsp;            if (boyButton != null)</b>
+<b class="nc">&nbsp;                boyButton.dispose();</b>
+<b class="nc">&nbsp;            if (girlButton != null)</b>
+<b class="nc">&nbsp;                girlButton.dispose();</b>
+<b class="nc">&nbsp;            girlButton = new Texture(&quot;settings_gui/girl_button_indented.png&quot;);</b>
+<b class="nc">&nbsp;            boyButton = new Texture(&quot;settings_gui/boy_button.png&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        game.gameData.setGender(gender);</b>
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when a finger was lifted or a mouse button was released. The button parameter will be
+&nbsp;     * {@link com.badlogic.gdx.Input.Buttons#LEFT} on iOS.
+&nbsp;     *
+&nbsp;     * @param screenX The {@link Screen} X position
+&nbsp;     * @param screenY The {@link Screen} Y position
+&nbsp;     * @param pointer the pointer for the event.
+&nbsp;     * @param button  the button
+&nbsp;     * @return whether the input was processed
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when the touch gesture is cancelled. Reason may be from OS interruption to touch becoming a large surface
+&nbsp;     * (such as the user cheek). Relevant on Android and iOS only. The button parameter will be
+&nbsp;     * {@link com.badlogic.gdx.Input.Buttons#LEFT} on iOS.
+&nbsp;     *
+&nbsp;     * @param screenX The {@link Screen} X position
+&nbsp;     * @param screenY The {@link Screen} Y position
+&nbsp;     * @param pointer the pointer for the event.
+&nbsp;     * @param button  the button
+&nbsp;     * @return whether the input was processed
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when a finger or the mouse was dragged.
+&nbsp;     *
+&nbsp;     * @param screenX The {@link Screen} X position
+&nbsp;     * @param screenY The {@link Screen} Y position
+&nbsp;     * @param pointer the pointer for the event.
+&nbsp;     * @return whether the input was processed
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchDragged(int screenX, int screenY, int pointer) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when the mouse was moved without any buttons being pressed. Will not be called on iOS.
+&nbsp;     *
+&nbsp;     * @param screenX The {@link Screen} X position
+&nbsp;     * @param screenY The {@link Screen} Y position
+&nbsp;     * @return whether the input was processed
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean mouseMoved(int screenX, int screenY) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Called when the mouse wheel was scrolled. Will not be called on iOS.
+&nbsp;     *
+&nbsp;     * @param amountX the horizontal scroll amount, negative or positive depending on the direction the wheel was
+&nbsp;     *                scrolled.
+&nbsp;     * @param amountY the vertical scroll amount, negative or positive depending on the direction the wheel was
+&nbsp;     *                scrolled.
+&nbsp;     * @return whether the input was processed.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean scrolled(float amountX, float amountY) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        calculateDimensions();</b>
+<b class="nc">&nbsp;        calculatePosition();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        backButton.dispose();</b>
+<b class="nc">&nbsp;        settingsLabel.dispose();</b>
+<b class="nc">&nbsp;        musicUpButton.dispose();</b>
+<b class="nc">&nbsp;        musicDownButton.dispose();</b>
+<b class="nc">&nbsp;        musicLabel.dispose();</b>
+<b class="nc">&nbsp;        musicBar.dispose();</b>
+<b class="nc">&nbsp;        soundUpButton.dispose();</b>
+<b class="nc">&nbsp;        soundLabel.dispose();</b>
+<b class="nc">&nbsp;        soundDownButton.dispose();</b>
+<b class="nc">&nbsp;        soundBar.dispose();</b>
+<b class="nc">&nbsp;        boyButton.dispose();</b>
+<b class="nc">&nbsp;        girlButton.dispose();</b>
+<b class="nc">&nbsp;        backgroundImage.dispose();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

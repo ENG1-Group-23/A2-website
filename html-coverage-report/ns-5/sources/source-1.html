@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameMusic</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.sound</a>
+</div>
+
+<h1>Coverage Summary for Class: GameMusic (bytemusketeers.heslingtonhustle.sound)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameMusic</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (15/18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.sound;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.audio.Music;
+&nbsp;
+&nbsp;/**
+&nbsp; * The {@link GameMusic} manager controls game music, including playback and volume level adjustments. It also
+&nbsp; * initialises the background music and allows for dynamic volume control.
+&nbsp; *
+&nbsp; * @author ENG1 Team 25
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class GameMusic {
+&nbsp;    /**
+&nbsp;     * The maximal volume of the {@link #audio}
+&nbsp;     */
+&nbsp;    private static final float MUSIC_CAP = 0.1f;
+&nbsp;    /**
+&nbsp;     * The generic audio track played during game-time
+&nbsp;     */
+&nbsp;    private final Music audio;
+&nbsp;    /**
+&nbsp;     * The transient volume of the {@link #audio}
+&nbsp;     *
+&nbsp;     * @see #incrementVolume()
+&nbsp;     * @see #decrementVolume()
+&nbsp;     */
+<b class="fc">&nbsp;    private int musicLevel = 4;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for GameMusic. Initializes and starts playing the game&#39;s background music at the maximum volume
+&nbsp;     * level.
+&nbsp;     */
+<b class="fc">&nbsp;    public GameMusic() {</b>
+<b class="fc">&nbsp;        audio = Gdx.audio.newMusic(Gdx.files.internal(&quot;music_loop/Ludum Dare 30 - 01.ogg&quot;));</b>
+<b class="fc">&nbsp;        audio.play();</b>
+<b class="fc">&nbsp;        audio.setVolume(MUSIC_CAP); // Set volume to 100%</b>
+<b class="fc">&nbsp;        audio.setLooping(true);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the current music volume level.
+&nbsp;     *
+&nbsp;     * @return The current music volume level
+&nbsp;     */
+&nbsp;    public int getMusicLevel() {
+<b class="fc">&nbsp;        return this.musicLevel;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Increments the music volume level by one, if it is not already at the maximum level. Adjusts the music playback
+&nbsp;     * volume accordingly.
+&nbsp;     */
+&nbsp;    public void incrementVolume() {
+&nbsp;        // Check if volume is not already at maximum
+<b class="pc">&nbsp;        if (musicLevel &lt;= 3) {</b>
+<b class="nc">&nbsp;            musicLevel = musicLevel + 1;</b>
+<b class="nc">&nbsp;            float floatingMusicLevel = (float) musicLevel;</b>
+<b class="nc">&nbsp;            audio.setVolume(floatingMusicLevel * 25 / 100 * MUSIC_CAP);</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Decrements the music volume level by one, if it is not already at the minimum level. Adjusts the music playback
+&nbsp;     * volume accordingly.
+&nbsp;     */
+&nbsp;    public void decrementVolume() {
+&nbsp;        // Check if volume is not already at minimum
+<b class="fc">&nbsp;        if (this.musicLevel &gt;= 1) {</b>
+<b class="fc">&nbsp;            musicLevel = musicLevel - 1;</b>
+<b class="fc">&nbsp;            float floatingMusicLevel = (float) musicLevel;</b>
+<b class="fc">&nbsp;            audio.setVolume(floatingMusicLevel * 25 / 100 * MUSIC_CAP);</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>

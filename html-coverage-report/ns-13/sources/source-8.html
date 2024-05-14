@@ -1,0 +1,213 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MapProperties</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps</a>
+</div>
+
+<h1>Coverage Summary for Class: MapProperties (com.badlogic.gdx.maps)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MapProperties</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    36.4%
+  </span>
+  <span class="absValue">
+    (4/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    38.9%
+  </span>
+  <span class="absValue">
+    (7/18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.maps;
+&nbsp;
+&nbsp;import java.util.Iterator;
+&nbsp;
+&nbsp;import com.badlogic.gdx.utils.ObjectMap;
+&nbsp;
+&nbsp;/** @brief Set of string indexed values representing map elements&#39; properties, allowing to retrieve, modify and add properties to
+&nbsp; *        the set. */
+&nbsp;public class MapProperties {
+&nbsp;
+&nbsp;	private ObjectMap&lt;String, Object&gt; properties;
+&nbsp;
+&nbsp;	/** Creates an empty properties set */
+<b class="fc">&nbsp;	public MapProperties () {</b>
+<b class="fc">&nbsp;		properties = new ObjectMap&lt;String, Object&gt;();</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param key property name
+&nbsp;	 * @return true if and only if the property exists */
+&nbsp;	public boolean containsKey (String key) {
+<b class="nc">&nbsp;		return properties.containsKey(key);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param key property name
+&nbsp;	 * @return the value for that property if it exists, otherwise, null */
+&nbsp;	public Object get (String key) {
+<b class="fc">&nbsp;		return properties.get(key);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the object for the given key, casting it to clazz.
+&nbsp;	 * @param key the key of the object
+&nbsp;	 * @param clazz the class of the object
+&nbsp;	 * @return the object or null if the object is not in the map
+&nbsp;	 * @throws ClassCastException if the object with the given key is not of type clazz */
+&nbsp;	public &lt;T&gt; T get (String key, Class&lt;T&gt; clazz) {
+<b class="fc">&nbsp;		return (T)get(key);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the object for the given key, casting it to clazz.
+&nbsp;	 * @param key the key of the object
+&nbsp;	 * @param defaultValue the default value
+&nbsp;	 * @param clazz the class of the object
+&nbsp;	 * @return the object or the defaultValue if the object is not in the map
+&nbsp;	 * @throws ClassCastException if the object with the given key is not of type clazz */
+&nbsp;	public &lt;T&gt; T get (String key, T defaultValue, Class&lt;T&gt; clazz) {
+<b class="nc">&nbsp;		Object object = get(key);</b>
+<b class="nc">&nbsp;		return object == null ? defaultValue : (T)object;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @param key property name
+&nbsp;	 * @param value value to be inserted or modified (if it already existed) */
+&nbsp;	public void put (String key, Object value) {
+<b class="fc">&nbsp;		properties.put(key, value);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param properties set of properties to be added */
+&nbsp;	public void putAll (MapProperties properties) {
+<b class="nc">&nbsp;		this.properties.putAll(properties.properties);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param key property name to be removed */
+&nbsp;	public void remove (String key) {
+<b class="nc">&nbsp;		properties.remove(key);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Removes all properties */
+&nbsp;	public void clear () {
+<b class="nc">&nbsp;		properties.clear();</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return iterator for the property names */
+&nbsp;	public Iterator&lt;String&gt; getKeys () {
+<b class="nc">&nbsp;		return properties.keys();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return iterator to properties&#39; values */
+&nbsp;	public Iterator&lt;Object&gt; getValues () {
+<b class="nc">&nbsp;		return properties.values();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

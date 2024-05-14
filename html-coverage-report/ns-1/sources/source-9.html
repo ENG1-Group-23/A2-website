@@ -1,0 +1,171 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ScoreTests</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle</a>
+</div>
+
+<h1>Coverage Summary for Class: ScoreTests (bytemusketeers.heslingtonhustle)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ScoreTests</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (30/30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.utils.Score;
+&nbsp;import org.junit.Before;
+&nbsp;import org.junit.Test;
+&nbsp;import org.junit.runner.RunWith;
+&nbsp;
+&nbsp;import static org.junit.Assert.assertEquals;
+&nbsp;
+&nbsp;@RunWith(GdxTestRunner.class)
+<b class="fc">&nbsp;public class ScoreTests {</b>
+&nbsp;    private Score score;
+&nbsp;
+&nbsp;    @Before
+&nbsp;    public void setUp() {
+<b class="fc">&nbsp;        score = new Score();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testScoreUpdate() {
+<b class="fc">&nbsp;        float currentScore = score.getScore();</b>
+<b class="fc">&nbsp;        score.incrementStudy(3);</b>
+<b class="fc">&nbsp;        score.incrementRec(2);</b>
+<b class="fc">&nbsp;        score.markAsOverstudied();</b>
+<b class="fc">&nbsp;        score.updateScore();</b>
+<b class="fc">&nbsp;        float desiredScore = currentScore + (float) (15 * 2.5 * 1.2 * 0.75);</b>
+<b class="fc">&nbsp;        assertEquals(desiredScore, score.getScore(), 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testFinalScore() {
+<b class="fc">&nbsp;        float currentScore = score.getScore();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; 3; i++) {</b>
+<b class="fc">&nbsp;            score.incrementNoStudy();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        score.decrementNoStudy();</b>
+<b class="fc">&nbsp;        score.computeFinalScore(3, 5, 2);</b>
+<b class="fc">&nbsp;        float desiredScore = (currentScore + (float) 5 * (3 + 5 + 2)) / 2;</b>
+<b class="fc">&nbsp;        assertEquals(desiredScore, score.getScore(), 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testScoreReset() {
+<b class="fc">&nbsp;        float initialScore = score.getScore();</b>
+<b class="fc">&nbsp;        score.incrementStudy(3);</b>
+<b class="fc">&nbsp;        score.incrementRec(2);</b>
+<b class="fc">&nbsp;        score.markAsOverstudied();</b>
+<b class="fc">&nbsp;        score.updateScore();</b>
+<b class="fc">&nbsp;        float firstUpdateScore = initialScore + (float) (15 * 2.5 * 1.2 * 0.75);</b>
+<b class="fc">&nbsp;        score.resetMultipliers();</b>
+<b class="fc">&nbsp;        score.updateScore();</b>
+<b class="fc">&nbsp;        float desiredScore = firstUpdateScore + 15f;</b>
+<b class="fc">&nbsp;        assertEquals(desiredScore, score.getScore(), 0.0001);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

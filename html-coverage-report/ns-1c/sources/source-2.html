@@ -1,0 +1,399 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ClassReflection</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.utils.reflect</a>
+</div>
+
+<h1>Coverage Summary for Class: ClassReflection (com.badlogic.gdx.utils.reflect)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClassReflection</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3%
+  </span>
+  <span class="absValue">
+    (1/33)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1%
+  </span>
+  <span class="absValue">
+    (1/96)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.utils.reflect;
+&nbsp;
+&nbsp;import java.lang.reflect.Modifier;
+&nbsp;
+&nbsp;/** Utilities for Class reflection.
+&nbsp; * @author nexsoftware */
+<b class="nc">&nbsp;public final class ClassReflection {</b>
+&nbsp;
+&nbsp;	/** Returns the Class object associated with the class or interface with the supplied string name. */
+&nbsp;	static public Class forName (String name) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return Class.forName(name);</b>
+<b class="nc">&nbsp;		} catch (ClassNotFoundException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Class not found: &quot; + name, e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the simple name of the underlying class as supplied in the source code. */
+&nbsp;	static public String getSimpleName (Class c) {
+<b class="nc">&nbsp;		return c.getSimpleName();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the supplied Object is assignment-compatible with the object represented by supplied Class. */
+&nbsp;	static public boolean isInstance (Class c, Object obj) {
+<b class="fc">&nbsp;		return c.isInstance(obj);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the class or interface represented by first Class parameter is either the same as, or is a superclass or
+&nbsp;	 * superinterface of, the class or interface represented by the second Class parameter. */
+&nbsp;	static public boolean isAssignableFrom (Class c1, Class c2) {
+<b class="nc">&nbsp;		return c1.isAssignableFrom(c2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the class or interface represented by the supplied Class is a member class. */
+&nbsp;	static public boolean isMemberClass (Class c) {
+<b class="nc">&nbsp;		return c.isMemberClass();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the class or interface represented by the supplied Class is a static class. */
+&nbsp;	static public boolean isStaticClass (Class c) {
+<b class="nc">&nbsp;		return Modifier.isStatic(c.getModifiers());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the supplied Class object represents an array class. */
+&nbsp;	static public boolean isArray (Class c) {
+<b class="nc">&nbsp;		return c.isArray();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the supplied Class object represents a primitive type. */
+&nbsp;	static public boolean isPrimitive (Class c) {
+<b class="nc">&nbsp;		return c.isPrimitive();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the supplied Class object represents an enum type. */
+&nbsp;	static public boolean isEnum (Class c) {
+<b class="nc">&nbsp;		return c.isEnum();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the supplied Class object represents an annotation type. */
+&nbsp;	static public boolean isAnnotation (Class c) {
+<b class="nc">&nbsp;		return c.isAnnotation();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the supplied Class object represents an interface type. */
+&nbsp;	static public boolean isInterface (Class c) {
+<b class="nc">&nbsp;		return c.isInterface();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Determines if the supplied Class object represents an abstract type. */
+&nbsp;	static public boolean isAbstract (Class c) {
+<b class="nc">&nbsp;		return Modifier.isAbstract(c.getModifiers());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates a new instance of the class represented by the supplied Class. */
+&nbsp;	static public &lt;T&gt; T newInstance (Class&lt;T&gt; c) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return c.newInstance();</b>
+<b class="nc">&nbsp;		} catch (InstantiationException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Could not instantiate instance of class: &quot; + c.getName(), e);</b>
+<b class="nc">&nbsp;		} catch (IllegalAccessException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Could not instantiate instance of class: &quot; + c.getName(), e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the Class representing the component type of an array. If this class does not represent an array class this method
+&nbsp;	 * returns null. */
+&nbsp;	static public Class getComponentType (Class c) {
+<b class="nc">&nbsp;		return c.getComponentType();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an array of {@link Constructor} containing the public constructors of the class represented by the supplied
+&nbsp;	 * Class. */
+&nbsp;	static public Constructor[] getConstructors (Class c) {
+<b class="nc">&nbsp;		java.lang.reflect.Constructor[] constructors = c.getConstructors();</b>
+<b class="nc">&nbsp;		Constructor[] result = new Constructor[constructors.length];</b>
+<b class="nc">&nbsp;		for (int i = 0, j = constructors.length; i &lt; j; i++) {</b>
+<b class="nc">&nbsp;			result[i] = new Constructor(constructors[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a {@link Constructor} that represents the public constructor for the supplied class which takes the supplied
+&nbsp;	 * parameter types. */
+&nbsp;	static public Constructor getConstructor (Class c, Class... parameterTypes) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new Constructor(c.getConstructor(parameterTypes));</b>
+<b class="nc">&nbsp;		} catch (SecurityException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Security violation occurred while getting constructor for class: &#39;&quot; + c.getName() + &quot;&#39;.&quot;,</b>
+&nbsp;				e);
+<b class="nc">&nbsp;		} catch (NoSuchMethodException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Constructor not found for class: &quot; + c.getName(), e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a {@link Constructor} that represents the constructor for the supplied class which takes the supplied parameter
+&nbsp;	 * types. */
+&nbsp;	static public Constructor getDeclaredConstructor (Class c, Class... parameterTypes) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new Constructor(c.getDeclaredConstructor(parameterTypes));</b>
+<b class="nc">&nbsp;		} catch (SecurityException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Security violation while getting constructor for class: &quot; + c.getName(), e);</b>
+<b class="nc">&nbsp;		} catch (NoSuchMethodException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Constructor not found for class: &quot; + c.getName(), e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the elements of this enum class or null if this Class object does not represent an enum type. */
+&nbsp;	static public Object[] getEnumConstants (Class c) {
+<b class="nc">&nbsp;		return c.getEnumConstants();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an array of {@link Method} containing the public member methods of the class represented by the supplied Class. */
+&nbsp;	static public Method[] getMethods (Class c) {
+<b class="nc">&nbsp;		java.lang.reflect.Method[] methods = c.getMethods();</b>
+<b class="nc">&nbsp;		Method[] result = new Method[methods.length];</b>
+<b class="nc">&nbsp;		for (int i = 0, j = methods.length; i &lt; j; i++) {</b>
+<b class="nc">&nbsp;			result[i] = new Method(methods[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a {@link Method} that represents the public member method for the supplied class which takes the supplied parameter
+&nbsp;	 * types. */
+&nbsp;	static public Method getMethod (Class c, String name, Class... parameterTypes) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new Method(c.getMethod(name, parameterTypes));</b>
+<b class="nc">&nbsp;		} catch (SecurityException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Security violation while getting method: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+<b class="nc">&nbsp;		} catch (NoSuchMethodException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Method not found: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an array of {@link Method} containing the methods declared by the class represented by the supplied Class. */
+&nbsp;	static public Method[] getDeclaredMethods (Class c) {
+<b class="nc">&nbsp;		java.lang.reflect.Method[] methods = c.getDeclaredMethods();</b>
+<b class="nc">&nbsp;		Method[] result = new Method[methods.length];</b>
+<b class="nc">&nbsp;		for (int i = 0, j = methods.length; i &lt; j; i++) {</b>
+<b class="nc">&nbsp;			result[i] = new Method(methods[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a {@link Method} that represents the method declared by the supplied class which takes the supplied parameter
+&nbsp;	 * types. */
+&nbsp;	static public Method getDeclaredMethod (Class c, String name, Class... parameterTypes) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new Method(c.getDeclaredMethod(name, parameterTypes));</b>
+<b class="nc">&nbsp;		} catch (SecurityException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Security violation while getting method: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+<b class="nc">&nbsp;		} catch (NoSuchMethodException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Method not found: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an array of {@link Field} containing the public fields of the class represented by the supplied Class. */
+&nbsp;	static public Field[] getFields (Class c) {
+<b class="nc">&nbsp;		java.lang.reflect.Field[] fields = c.getFields();</b>
+<b class="nc">&nbsp;		Field[] result = new Field[fields.length];</b>
+<b class="nc">&nbsp;		for (int i = 0, j = fields.length; i &lt; j; i++) {</b>
+<b class="nc">&nbsp;			result[i] = new Field(fields[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a {@link Field} that represents the specified public member field for the supplied class. */
+&nbsp;	static public Field getField (Class c, String name) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new Field(c.getField(name));</b>
+<b class="nc">&nbsp;		} catch (SecurityException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Security violation while getting field: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+<b class="nc">&nbsp;		} catch (NoSuchFieldException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Field not found: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an array of {@link Field} objects reflecting all the fields declared by the supplied class. */
+&nbsp;	static public Field[] getDeclaredFields (Class c) {
+<b class="nc">&nbsp;		java.lang.reflect.Field[] fields = c.getDeclaredFields();</b>
+<b class="nc">&nbsp;		Field[] result = new Field[fields.length];</b>
+<b class="nc">&nbsp;		for (int i = 0, j = fields.length; i &lt; j; i++) {</b>
+<b class="nc">&nbsp;			result[i] = new Field(fields[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a {@link Field} that represents the specified declared field for the supplied class. */
+&nbsp;	static public Field getDeclaredField (Class c, String name) throws ReflectionException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return new Field(c.getDeclaredField(name));</b>
+<b class="nc">&nbsp;		} catch (SecurityException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Security violation while getting field: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+<b class="nc">&nbsp;		} catch (NoSuchFieldException e) {</b>
+<b class="nc">&nbsp;			throw new ReflectionException(&quot;Field not found: &quot; + name + &quot;, for class: &quot; + c.getName(), e);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the supplied class includes an annotation of the given type. */
+&nbsp;	static public boolean isAnnotationPresent (Class c, Class&lt;? extends java.lang.annotation.Annotation&gt; annotationType) {
+<b class="nc">&nbsp;		return c.isAnnotationPresent(annotationType);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by the supplied class, and inherited
+&nbsp;	 * from its superclass. Returns an empty array if there are none. */
+&nbsp;	static public Annotation[] getAnnotations (Class c) {
+<b class="nc">&nbsp;		java.lang.annotation.Annotation[] annotations = c.getAnnotations();</b>
+<b class="nc">&nbsp;		Annotation[] result = new Annotation[annotations.length];</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; annotations.length; i++) {</b>
+<b class="nc">&nbsp;			result[i] = new Annotation(annotations[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an {@link Annotation} object reflecting the annotation provided, or null if this class doesn&#39;t have such an
+&nbsp;	 * annotation. This is a convenience function if the caller knows already which annotation type he&#39;s looking for. */
+&nbsp;	static public Annotation getAnnotation (Class c, Class&lt;? extends java.lang.annotation.Annotation&gt; annotationType) {
+<b class="nc">&nbsp;		java.lang.annotation.Annotation annotation = c.getAnnotation(annotationType);</b>
+<b class="nc">&nbsp;		if (annotation != null) return new Annotation(annotation);</b>
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by the supplied class, or an empty array
+&nbsp;	 * if there are none. Does not include inherited annotations. */
+&nbsp;	static public Annotation[] getDeclaredAnnotations (Class c) {
+<b class="nc">&nbsp;		java.lang.annotation.Annotation[] annotations = c.getDeclaredAnnotations();</b>
+<b class="nc">&nbsp;		Annotation[] result = new Annotation[annotations.length];</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; annotations.length; i++) {</b>
+<b class="nc">&nbsp;			result[i] = new Annotation(annotations[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an {@link Annotation} object reflecting the annotation provided, or null if this class doesn&#39;t have such an
+&nbsp;	 * annotation. This is a convenience function if the caller knows already which annotation type he&#39;s looking for. */
+&nbsp;	static public Annotation getDeclaredAnnotation (Class c, Class&lt;? extends java.lang.annotation.Annotation&gt; annotationType) {
+<b class="nc">&nbsp;		java.lang.annotation.Annotation[] annotations = c.getDeclaredAnnotations();</b>
+<b class="nc">&nbsp;		for (java.lang.annotation.Annotation annotation : annotations) {</b>
+<b class="nc">&nbsp;			if (annotation.annotationType().equals(annotationType)) return new Annotation(annotation);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public Class[] getInterfaces (Class c) {
+<b class="nc">&nbsp;		return c.getInterfaces();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

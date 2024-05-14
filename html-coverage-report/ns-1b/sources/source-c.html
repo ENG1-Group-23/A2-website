@@ -1,0 +1,305 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > StreamUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: StreamUtils (com.badlogic.gdx.utils)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StreamUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.7%
+  </span>
+  <span class="absValue">
+    (5/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (3/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.1%
+  </span>
+  <span class="absValue">
+    (13/37)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StreamUtils$OptimizedByteArrayOutputStream</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    41.2%
+  </span>
+  <span class="absValue">
+    (7/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (4/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    38.1%
+  </span>
+  <span class="absValue">
+    (16/42)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; *
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.utils;
+&nbsp;
+&nbsp;import java.io.ByteArrayOutputStream;
+&nbsp;import java.io.Closeable;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.io.OutputStream;
+&nbsp;import java.io.StringWriter;
+&nbsp;import java.nio.Buffer;
+&nbsp;import java.nio.ByteBuffer;
+&nbsp;
+&nbsp;/** Provides utility methods to copy streams. */
+<b class="nc">&nbsp;public final class StreamUtils {</b>
+&nbsp;	public static final int DEFAULT_BUFFER_SIZE = 4096;
+<b class="fc">&nbsp;	public static final byte[] EMPTY_BYTES = new byte[0];</b>
+&nbsp;
+&nbsp;	/** Allocates a {@value #DEFAULT_BUFFER_SIZE} byte[] for use as a temporary buffer and calls
+&nbsp;	 * {@link #copyStream(InputStream, OutputStream, byte[])}. */
+&nbsp;	public static void copyStream (InputStream input, OutputStream output) throws IOException {
+<b class="fc">&nbsp;		copyStream(input, output, new byte[DEFAULT_BUFFER_SIZE]);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Allocates a byte[] of the specified size for use as a temporary buffer and calls
+&nbsp;	 * {@link #copyStream(InputStream, OutputStream, byte[])}. */
+&nbsp;	public static void copyStream (InputStream input, OutputStream output, int bufferSize) throws IOException {
+<b class="nc">&nbsp;		copyStream(input, output, new byte[bufferSize]);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Copy the data from an {@link InputStream} to an {@link OutputStream}, using the specified byte[] as a temporary buffer. The
+&nbsp;	 * stream is not closed. */
+&nbsp;	public static void copyStream (InputStream input, OutputStream output, byte[] buffer) throws IOException {
+&nbsp;		int bytesRead;
+<b class="fc">&nbsp;		while ((bytesRead = input.read(buffer)) != -1) {</b>
+<b class="fc">&nbsp;			output.write(buffer, 0, bytesRead);</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Allocates a {@value #DEFAULT_BUFFER_SIZE} byte[] for use as a temporary buffer and calls
+&nbsp;	 * {@link #copyStream(InputStream, OutputStream, byte[])}. */
+&nbsp;	public static void copyStream (InputStream input, ByteBuffer output) throws IOException {
+<b class="nc">&nbsp;		copyStream(input, output, new byte[DEFAULT_BUFFER_SIZE]);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Allocates a byte[] of the specified size for use as a temporary buffer and calls
+&nbsp;	 * {@link #copyStream(InputStream, ByteBuffer, byte[])}. */
+&nbsp;	public static void copyStream (InputStream input, ByteBuffer output, int bufferSize) throws IOException {
+<b class="nc">&nbsp;		copyStream(input, output, new byte[bufferSize]);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Copy the data from an {@link InputStream} to a {@link ByteBuffer}, using the specified byte[] as a temporary buffer. The
+&nbsp;	 * buffer&#39;s limit is increased by the number of bytes copied, the position is left unchanged. The stream is not closed.
+&nbsp;	 * @param output Must be a direct Buffer with native byte order and the buffer MUST be large enough to hold all the bytes in
+&nbsp;	 *           the stream. No error checking is performed.
+&nbsp;	 * @return the number of bytes copied. */
+&nbsp;	public static int copyStream (InputStream input, ByteBuffer output, byte[] buffer) throws IOException {
+<b class="nc">&nbsp;		int startPosition = output.position(), total = 0, bytesRead;</b>
+<b class="nc">&nbsp;		while ((bytesRead = input.read(buffer)) != -1) {</b>
+<b class="nc">&nbsp;			BufferUtils.copy(buffer, 0, output, bytesRead);</b>
+<b class="nc">&nbsp;			total += bytesRead;</b>
+<b class="nc">&nbsp;			((Buffer)output).position(startPosition + total);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		((Buffer)output).position(startPosition);</b>
+<b class="nc">&nbsp;		return total;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Copy the data from an {@link InputStream} to a byte array. The stream is not closed. */
+&nbsp;	public static byte[] copyStreamToByteArray (InputStream input) throws IOException {
+<b class="nc">&nbsp;		return copyStreamToByteArray(input, input.available());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Copy the data from an {@link InputStream} to a byte array. The stream is not closed.
+&nbsp;	 * @param estimatedSize Used to allocate the output byte[] to possibly avoid an array copy. */
+&nbsp;	public static byte[] copyStreamToByteArray (InputStream input, int estimatedSize) throws IOException {
+<b class="fc">&nbsp;		ByteArrayOutputStream baos = new OptimizedByteArrayOutputStream(Math.max(0, estimatedSize));</b>
+<b class="fc">&nbsp;		copyStream(input, baos);</b>
+<b class="fc">&nbsp;		return baos.toByteArray();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calls {@link #copyStreamToString(InputStream, int, String)} using the input&#39;s {@link InputStream#available() available}
+&nbsp;	 * size and the platform&#39;s default charset. */
+&nbsp;	public static String copyStreamToString (InputStream input) throws IOException {
+<b class="nc">&nbsp;		return copyStreamToString(input, input.available(), null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Calls {@link #copyStreamToString(InputStream, int, String)} using the platform&#39;s default charset. */
+&nbsp;	public static String copyStreamToString (InputStream input, int estimatedSize) throws IOException {
+<b class="nc">&nbsp;		return copyStreamToString(input, estimatedSize, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Copy the data from an {@link InputStream} to a string using the specified charset.
+&nbsp;	 * @param estimatedSize Used to allocate the output buffer to possibly avoid an array copy.
+&nbsp;	 * @param charset May be null to use the platform&#39;s default charset. */
+&nbsp;	public static String copyStreamToString (InputStream input, int estimatedSize, @Null String charset) throws IOException {
+<b class="nc">&nbsp;		InputStreamReader reader = charset == null ? new InputStreamReader(input) : new InputStreamReader(input, charset);</b>
+<b class="nc">&nbsp;		StringWriter writer = new StringWriter(Math.max(0, estimatedSize));</b>
+<b class="nc">&nbsp;		char[] buffer = new char[DEFAULT_BUFFER_SIZE];</b>
+&nbsp;		int charsRead;
+<b class="nc">&nbsp;		while ((charsRead = reader.read(buffer)) != -1) {</b>
+<b class="nc">&nbsp;			writer.write(buffer, 0, charsRead);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return writer.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Close and ignore all errors. */
+&nbsp;	public static void closeQuietly (Closeable c) {
+<b class="pc">&nbsp;		if (c != null) {</b>
+&nbsp;			try {
+<b class="fc">&nbsp;				c.close();</b>
+<b class="nc">&nbsp;			} catch (Throwable ignored) {</b>
+<b class="fc">&nbsp;			}</b>
+&nbsp;		}
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** A ByteArrayOutputStream which avoids copying of the byte array if possible. */
+&nbsp;	static public class OptimizedByteArrayOutputStream extends ByteArrayOutputStream {
+&nbsp;		public OptimizedByteArrayOutputStream (int initialSize) {
+<b class="fc">&nbsp;			super(initialSize);</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public synchronized byte[] toByteArray () {
+<b class="pc">&nbsp;			if (count == buf.length) return buf;</b>
+<b class="nc">&nbsp;			return super.toByteArray();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public byte[] getBuffer () {
+<b class="nc">&nbsp;			return buf;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

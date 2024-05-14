@@ -1,0 +1,1141 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BitmapFont</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics.g2d</a>
+</div>
+
+<h1>Coverage Summary for Class: BitmapFont (com.badlogic.gdx.graphics.g2d)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BitmapFont</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (7/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.7%
+  </span>
+  <span class="absValue">
+    (15/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    27%
+  </span>
+  <span class="absValue">
+    (31/115)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BitmapFont$BitmapFontData</td>
+<td class="coverageStat">
+  <span class="percent">
+    35%
+  </span>
+  <span class="absValue">
+    (7/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26%
+  </span>
+  <span class="absValue">
+    (51/196)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.5%
+  </span>
+  <span class="absValue">
+    (170/318)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">BitmapFont$Glyph</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (2/12)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    22.7%
+  </span>
+  <span class="absValue">
+    (15/66)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26.8%
+  </span>
+  <span class="absValue">
+    (66/246)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.6%
+  </span>
+  <span class="absValue">
+    (203/445)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * Copyright (c) 2008-2010, Matthias Mann
+&nbsp; * 
+&nbsp; * All rights reserved.
+&nbsp; * 
+&nbsp; * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
+&nbsp; * conditions are met:
+&nbsp; * 
+&nbsp; * * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+&nbsp; * * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+&nbsp; * disclaimer in the documentation and/or other materials provided with the distribution. * Neither the name of Matthias Mann nor
+&nbsp; * the names of its contributors may be used to endorse or promote products derived from this software without specific prior
+&nbsp; * written permission.
+&nbsp; * 
+&nbsp; * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+&nbsp; * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+&nbsp; * SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+&nbsp; * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+&nbsp; * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+&nbsp; * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+&nbsp; */
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics.g2d;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.util.StringTokenizer;
+&nbsp;import java.util.regex.Matcher;
+&nbsp;import java.util.regex.Pattern;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.graphics.Color;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.Texture.TextureFilter;
+&nbsp;import com.badlogic.gdx.graphics.g2d.GlyphLayout.GlyphRun;
+&nbsp;import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;import com.badlogic.gdx.utils.Disposable;
+&nbsp;import com.badlogic.gdx.utils.FloatArray;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;import com.badlogic.gdx.utils.StreamUtils;
+&nbsp;
+&nbsp;/** Renders bitmap fonts. The font consists of 2 files: an image file or {@link TextureRegion} containing the glyphs and a file in
+&nbsp; * the AngleCode BMFont text format that describes where each glyph is on the image.
+&nbsp; * &lt;p&gt;
+&nbsp; * Text is drawn using a {@link Batch}. Text can be cached in a {@link BitmapFontCache} for faster rendering of static text, which
+&nbsp; * saves needing to compute the location of each glyph each frame.
+&nbsp; * &lt;p&gt;
+&nbsp; * * The texture for a BitmapFont loaded from a file is managed. {@link #dispose()} must be called to free the texture when no
+&nbsp; * longer needed. A BitmapFont loaded using a {@link TextureRegion} is managed if the region&#39;s texture is managed. Disposing the
+&nbsp; * BitmapFont disposes the region&#39;s texture, which may not be desirable if the texture is still being used elsewhere.
+&nbsp; * &lt;p&gt;
+&nbsp; * The code was originally based on Matthias Mann&#39;s TWL BitmapFont class. Thanks for sharing, Matthias! :)
+&nbsp; * @author Nathan Sweet
+&nbsp; * @author Matthias Mann */
+&nbsp;public class BitmapFont implements Disposable {
+&nbsp;	static private final int LOG2_PAGE_SIZE = 9;
+&nbsp;	static private final int PAGE_SIZE = 1 &lt;&lt; LOG2_PAGE_SIZE;
+&nbsp;	static private final int PAGES = 0x10000 / PAGE_SIZE;
+&nbsp;
+&nbsp;	final BitmapFontData data;
+&nbsp;	Array&lt;TextureRegion&gt; regions;
+&nbsp;	private final BitmapFontCache cache;
+&nbsp;	private boolean flipped;
+&nbsp;	boolean integer;
+&nbsp;	private boolean ownsTexture;
+&nbsp;
+&nbsp;	/** Creates a BitmapFont using the default 15pt Liberation Sans font included in the libgdx JAR file. This is convenient to
+&nbsp;	 * easily display text without bothering without generating a bitmap font yourself. */
+&nbsp;	public BitmapFont () {
+<b class="nc">&nbsp;		this(Gdx.files.classpath(&quot;com/badlogic/gdx/utils/lsans-15.fnt&quot;), Gdx.files.classpath(&quot;com/badlogic/gdx/utils/lsans-15.png&quot;),</b>
+&nbsp;			false, true);
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a BitmapFont using the default 15pt Liberation Sans font included in the libgdx JAR file. This is convenient to
+&nbsp;	 * easily display text without bothering without generating a bitmap font yourself.
+&nbsp;	 * @param flip If true, the glyphs will be flipped for use with a perspective where 0,0 is the upper left corner. */
+&nbsp;	public BitmapFont (boolean flip) {
+<b class="nc">&nbsp;		this(Gdx.files.classpath(&quot;com/badlogic/gdx/utils/lsans-15.fnt&quot;), Gdx.files.classpath(&quot;com/badlogic/gdx/utils/lsans-15.png&quot;),</b>
+&nbsp;			flip, true);
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a BitmapFont with the glyphs relative to the specified region. If the region is null, the glyph textures are loaded
+&nbsp;	 * from the image file given in the font file. The {@link #dispose()} method will not dispose the region&#39;s texture in this
+&nbsp;	 * case!
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The font data is not flipped.
+&nbsp;	 * @param fontFile the font definition file
+&nbsp;	 * @param region The texture region containing the glyphs. The glyphs must be relative to the lower left corner (ie, the region
+&nbsp;	 *           should not be flipped). If the region is null the glyph images are loaded from the image path in the font file. */
+&nbsp;	public BitmapFont (FileHandle fontFile, TextureRegion region) {
+<b class="nc">&nbsp;		this(fontFile, region, false);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a BitmapFont with the glyphs relative to the specified region. If the region is null, the glyph textures are loaded
+&nbsp;	 * from the image file given in the font file. The {@link #dispose()} method will not dispose the region&#39;s texture in this
+&nbsp;	 * case!
+&nbsp;	 * @param region The texture region containing the glyphs. The glyphs must be relative to the lower left corner (ie, the region
+&nbsp;	 *           should not be flipped). If the region is null the glyph images are loaded from the image path in the font file.
+&nbsp;	 * @param flip If true, the glyphs will be flipped for use with a perspective where 0,0 is the upper left corner. */
+&nbsp;	public BitmapFont (FileHandle fontFile, TextureRegion region, boolean flip) {
+<b class="nc">&nbsp;		this(new BitmapFontData(fontFile, flip), region, true);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a BitmapFont from a BMFont file. The image file name is read from the BMFont file and the image is loaded from the
+&nbsp;	 * same directory. The font data is not flipped. */
+&nbsp;	public BitmapFont (FileHandle fontFile) {
+<b class="fc">&nbsp;		this(fontFile, false);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a BitmapFont from a BMFont file. The image file name is read from the BMFont file and the image is loaded from the
+&nbsp;	 * same directory.
+&nbsp;	 * @param flip If true, the glyphs will be flipped for use with a perspective where 0,0 is the upper left corner. */
+&nbsp;	public BitmapFont (FileHandle fontFile, boolean flip) {
+<b class="fc">&nbsp;		this(new BitmapFontData(fontFile, flip), (TextureRegion)null, true);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a BitmapFont from a BMFont file, using the specified image for glyphs. Any image specified in the BMFont file is
+&nbsp;	 * ignored.
+&nbsp;	 * @param flip If true, the glyphs will be flipped for use with a perspective where 0,0 is the upper left corner. */
+&nbsp;	public BitmapFont (FileHandle fontFile, FileHandle imageFile, boolean flip) {
+<b class="nc">&nbsp;		this(fontFile, imageFile, flip, true);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a BitmapFont from a BMFont file, using the specified image for glyphs. Any image specified in the BMFont file is
+&nbsp;	 * ignored.
+&nbsp;	 * @param flip If true, the glyphs will be flipped for use with a perspective where 0,0 is the upper left corner.
+&nbsp;	 * @param integer If true, rendering positions will be at integer values to avoid filtering artifacts. */
+&nbsp;	public BitmapFont (FileHandle fontFile, FileHandle imageFile, boolean flip, boolean integer) {
+<b class="nc">&nbsp;		this(new BitmapFontData(fontFile, flip), new TextureRegion(new Texture(imageFile, false)), integer);</b>
+<b class="nc">&nbsp;		ownsTexture = true;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new BitmapFont from the given {@link BitmapFontData} and {@link TextureRegion}. If the TextureRegion is null,
+&nbsp;	 * the image path(s) will be read from the BitmapFontData. The dispose() method will not dispose the texture of the region(s)
+&nbsp;	 * if the region is != null.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Passing a single TextureRegion assumes that your font only needs a single texture page. If you need to support multiple
+&nbsp;	 * pages, either let the Font read the images themselves (by specifying null as the TextureRegion), or by specifying each page
+&nbsp;	 * manually with the TextureRegion[] constructor.
+&nbsp;	 * @param integer If true, rendering positions will be at integer values to avoid filtering artifacts. */
+&nbsp;	public BitmapFont (BitmapFontData data, TextureRegion region, boolean integer) {
+<b class="pc">&nbsp;		this(data, region != null ? Array.with(region) : null, integer);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructs a new BitmapFont from the given {@link BitmapFontData} and array of {@link TextureRegion}. If the TextureRegion
+&nbsp;	 * is null or empty, the image path(s) will be read from the BitmapFontData. The dispose() method will not dispose the texture
+&nbsp;	 * of the region(s) if the regions array is != null and not empty.
+&nbsp;	 * @param integer If true, rendering positions will be at integer values to avoid filtering artifacts. */
+<b class="fc">&nbsp;	public BitmapFont (BitmapFontData data, Array&lt;TextureRegion&gt; pageRegions, boolean integer) {</b>
+<b class="fc">&nbsp;		this.flipped = data.flipped;</b>
+<b class="fc">&nbsp;		this.data = data;</b>
+<b class="fc">&nbsp;		this.integer = integer;</b>
+&nbsp;
+<b class="pc">&nbsp;		if (pageRegions == null || pageRegions.size == 0) {</b>
+<b class="pc">&nbsp;			if (data.imagePaths == null)</b>
+<b class="nc">&nbsp;				throw new IllegalArgumentException(&quot;If no regions are specified, the font data must have an images path.&quot;);</b>
+&nbsp;
+&nbsp;			// Load each path.
+<b class="fc">&nbsp;			int n = data.imagePaths.length;</b>
+<b class="fc">&nbsp;			regions = new Array(n);</b>
+<b class="fc">&nbsp;			for (int i = 0; i &lt; n; i++) {</b>
+&nbsp;				FileHandle file;
+<b class="pc">&nbsp;				if (data.fontFile == null)</b>
+<b class="nc">&nbsp;					file = Gdx.files.internal(data.imagePaths[i]);</b>
+&nbsp;				else
+<b class="fc">&nbsp;					file = Gdx.files.getFileHandle(data.imagePaths[i], data.fontFile.type());</b>
+<b class="fc">&nbsp;				regions.add(new TextureRegion(new Texture(file, false)));</b>
+&nbsp;			}
+<b class="fc">&nbsp;			ownsTexture = true;</b>
+<b class="fc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			regions = pageRegions;</b>
+<b class="nc">&nbsp;			ownsTexture = false;</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		cache = newFontCache();</b>
+&nbsp;
+<b class="fc">&nbsp;		load(data);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected void load (BitmapFontData data) {
+<b class="fc">&nbsp;		for (Glyph[] page : data.glyphs) {</b>
+<b class="fc">&nbsp;			if (page == null) continue;</b>
+<b class="fc">&nbsp;			for (Glyph glyph : page)</b>
+<b class="fc">&nbsp;				if (glyph != null) data.setGlyphRegion(glyph, regions.get(glyph.page));</b>
+&nbsp;		}
+<b class="pc">&nbsp;		if (data.missingGlyph != null) data.setGlyphRegion(data.missingGlyph, regions.get(data.missingGlyph.page));</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws text at the specified position.
+&nbsp;	 * @see BitmapFontCache#addText(CharSequence, float, float) */
+&nbsp;	public GlyphLayout draw (Batch batch, CharSequence str, float x, float y) {
+<b class="nc">&nbsp;		cache.clear();</b>
+<b class="nc">&nbsp;		GlyphLayout layout = cache.addText(str, x, y);</b>
+<b class="nc">&nbsp;		cache.draw(batch);</b>
+<b class="nc">&nbsp;		return layout;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Draws text at the specified position.
+&nbsp;	 * @see BitmapFontCache#addText(CharSequence, float, float, int, int, float, int, boolean, String) */
+&nbsp;	public GlyphLayout draw (Batch batch, CharSequence str, float x, float y, float targetWidth, int halign, boolean wrap) {
+<b class="nc">&nbsp;		cache.clear();</b>
+<b class="nc">&nbsp;		GlyphLayout layout = cache.addText(str, x, y, targetWidth, halign, wrap);</b>
+<b class="nc">&nbsp;		cache.draw(batch);</b>
+<b class="nc">&nbsp;		return layout;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Draws text at the specified position.
+&nbsp;	 * @see BitmapFontCache#addText(CharSequence, float, float, int, int, float, int, boolean, String) */
+&nbsp;	public GlyphLayout draw (Batch batch, CharSequence str, float x, float y, int start, int end, float targetWidth, int halign,
+&nbsp;		boolean wrap) {
+<b class="nc">&nbsp;		cache.clear();</b>
+<b class="nc">&nbsp;		GlyphLayout layout = cache.addText(str, x, y, start, end, targetWidth, halign, wrap);</b>
+<b class="nc">&nbsp;		cache.draw(batch);</b>
+<b class="nc">&nbsp;		return layout;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Draws text at the specified position.
+&nbsp;	 * @see BitmapFontCache#addText(CharSequence, float, float, int, int, float, int, boolean, String) */
+&nbsp;	public GlyphLayout draw (Batch batch, CharSequence str, float x, float y, int start, int end, float targetWidth, int halign,
+&nbsp;		boolean wrap, String truncate) {
+<b class="nc">&nbsp;		cache.clear();</b>
+<b class="nc">&nbsp;		GlyphLayout layout = cache.addText(str, x, y, start, end, targetWidth, halign, wrap, truncate);</b>
+<b class="nc">&nbsp;		cache.draw(batch);</b>
+<b class="nc">&nbsp;		return layout;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Draws text at the specified position.
+&nbsp;	 * @see BitmapFontCache#addText(CharSequence, float, float, int, int, float, int, boolean, String) */
+&nbsp;	public void draw (Batch batch, GlyphLayout layout, float x, float y) {
+<b class="nc">&nbsp;		cache.clear();</b>
+<b class="nc">&nbsp;		cache.addText(layout, x, y);</b>
+<b class="nc">&nbsp;		cache.draw(batch);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the color of text drawn with this font. */
+&nbsp;	public Color getColor () {
+<b class="nc">&nbsp;		return cache.getColor();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** A convenience method for setting the font color. The color can also be set by modifying {@link #getColor()}. */
+&nbsp;	public void setColor (Color color) {
+<b class="nc">&nbsp;		cache.getColor().set(color);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** A convenience method for setting the font color. The color can also be set by modifying {@link #getColor()}. */
+&nbsp;	public void setColor (float r, float g, float b, float a) {
+<b class="nc">&nbsp;		cache.getColor().set(r, g, b, a);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public float getScaleX () {
+<b class="nc">&nbsp;		return data.scaleX;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public float getScaleY () {
+<b class="nc">&nbsp;		return data.scaleY;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the first texture region. This is included for backwards compatibility, and for convenience since most fonts only
+&nbsp;	 * use one texture page. For multi-page fonts, use {@link #getRegions()}.
+&nbsp;	 * @return the first texture region */
+&nbsp;	public TextureRegion getRegion () {
+<b class="nc">&nbsp;		return regions.first();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the array of TextureRegions that represents each texture page of glyphs.
+&nbsp;	 * @return the array of texture regions; modifying it may produce undesirable results */
+&nbsp;	public Array&lt;TextureRegion&gt; getRegions () {
+<b class="nc">&nbsp;		return regions;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the texture page at the given index.
+&nbsp;	 * @return the texture page at the given index */
+&nbsp;	public TextureRegion getRegion (int index) {
+<b class="nc">&nbsp;		return regions.get(index);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the line height, which is the distance from one line of text to the next. */
+&nbsp;	public float getLineHeight () {
+<b class="nc">&nbsp;		return data.lineHeight;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the x-advance of the space character. */
+&nbsp;	public float getSpaceXadvance () {
+<b class="nc">&nbsp;		return data.spaceXadvance;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the x-height, which is the distance from the top of most lowercase characters to the baseline. */
+&nbsp;	public float getXHeight () {
+<b class="nc">&nbsp;		return data.xHeight;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the cap height, which is the distance from the top of most uppercase characters to the baseline. Since the drawing
+&nbsp;	 * position is the cap height of the first line, the cap height can be used to get the location of the baseline. */
+&nbsp;	public float getCapHeight () {
+<b class="nc">&nbsp;		return data.capHeight;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the ascent, which is the distance from the cap height to the top of the tallest glyph. */
+&nbsp;	public float getAscent () {
+<b class="nc">&nbsp;		return data.ascent;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the descent, which is the distance from the bottom of the glyph that extends the lowest to the baseline. This
+&nbsp;	 * number is negative. */
+&nbsp;	public float getDescent () {
+<b class="nc">&nbsp;		return data.descent;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if this BitmapFont has been flipped for use with a y-down coordinate system. */
+&nbsp;	public boolean isFlipped () {
+<b class="nc">&nbsp;		return flipped;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Disposes the texture used by this BitmapFont&#39;s region IF this BitmapFont created the texture. */
+&nbsp;	public void dispose () {
+<b class="nc">&nbsp;		if (ownsTexture) {</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; regions.size; i++)</b>
+<b class="nc">&nbsp;				regions.get(i).getTexture().dispose();</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Makes the specified glyphs fixed width. This can be useful to make the numbers in a font fixed width. Eg, when horizontally
+&nbsp;	 * centering a score or loading percentage text, it will not jump around as different numbers are shown. */
+&nbsp;	public void setFixedWidthGlyphs (CharSequence glyphs) {
+<b class="nc">&nbsp;		BitmapFontData data = this.data;</b>
+<b class="nc">&nbsp;		int maxAdvance = 0;</b>
+<b class="nc">&nbsp;		for (int index = 0, end = glyphs.length(); index &lt; end; index++) {</b>
+<b class="nc">&nbsp;			Glyph g = data.getGlyph(glyphs.charAt(index));</b>
+<b class="nc">&nbsp;			if (g != null &amp;&amp; g.xadvance &gt; maxAdvance) maxAdvance = g.xadvance;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		for (int index = 0, end = glyphs.length(); index &lt; end; index++) {</b>
+<b class="nc">&nbsp;			Glyph g = data.getGlyph(glyphs.charAt(index));</b>
+<b class="nc">&nbsp;			if (g == null) continue;</b>
+<b class="nc">&nbsp;			g.xoffset += (maxAdvance - g.xadvance) / 2;</b>
+<b class="nc">&nbsp;			g.xadvance = maxAdvance;</b>
+<b class="nc">&nbsp;			g.kerning = null;</b>
+<b class="nc">&nbsp;			g.fixedWidth = true;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Specifies whether to use integer positions. Default is to use them so filtering doesn&#39;t kick in as badly. */
+&nbsp;	public void setUseIntegerPositions (boolean integer) {
+<b class="nc">&nbsp;		this.integer = integer;</b>
+<b class="nc">&nbsp;		cache.setUseIntegerPositions(integer);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Checks whether this font uses integer positions for drawing. */
+&nbsp;	public boolean usesIntegerPositions () {
+<b class="nc">&nbsp;		return integer;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** For expert usage -- returns the BitmapFontCache used by this font, for rendering to a sprite batch. This can be used, for
+&nbsp;	 * example, to manipulate glyph colors within a specific index.
+&nbsp;	 * @return the bitmap font cache used by this font */
+&nbsp;	public BitmapFontCache getCache () {
+<b class="nc">&nbsp;		return cache;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Gets the underlying {@link BitmapFontData} for this BitmapFont. */
+&nbsp;	public BitmapFontData getData () {
+<b class="fc">&nbsp;		return data;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return whether the texture is owned by the font, font disposes the texture itself if true */
+&nbsp;	public boolean ownsTexture () {
+<b class="nc">&nbsp;		return ownsTexture;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets whether the font owns the texture. In case it does, the font will also dispose of the texture when {@link #dispose()}
+&nbsp;	 * is called. Use with care!
+&nbsp;	 * @param ownsTexture whether the font owns the texture */
+&nbsp;	public void setOwnsTexture (boolean ownsTexture) {
+<b class="nc">&nbsp;		this.ownsTexture = ownsTexture;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new BitmapFontCache for this font. Using this method allows the font to provide the BitmapFontCache
+&nbsp;	 * implementation to customize rendering.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Note this method is called by the BitmapFont constructors. If a subclass overrides this method, it will be called before the
+&nbsp;	 * subclass constructors. */
+&nbsp;	public BitmapFontCache newFontCache () {
+<b class="fc">&nbsp;		return new BitmapFontCache(this, integer);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		return data.name != null ? data.name : super.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Represents a single character in a font page. */
+<b class="fc">&nbsp;	public static class Glyph {</b>
+&nbsp;		public int id;
+&nbsp;		public int srcX;
+&nbsp;		public int srcY;
+&nbsp;		public int width, height;
+&nbsp;		public float u, v, u2, v2;
+&nbsp;		public int xoffset, yoffset;
+&nbsp;		public int xadvance;
+&nbsp;		public byte[][] kerning;
+&nbsp;		public boolean fixedWidth;
+&nbsp;
+&nbsp;		/** The index to the texture page that holds this glyph. */
+<b class="fc">&nbsp;		public int page = 0;</b>
+&nbsp;
+&nbsp;		public int getKerning (char ch) {
+<b class="nc">&nbsp;			if (kerning != null) {</b>
+<b class="nc">&nbsp;				byte[] page = kerning[ch &gt;&gt;&gt; LOG2_PAGE_SIZE];</b>
+<b class="nc">&nbsp;				if (page != null) return page[ch &amp; PAGE_SIZE - 1];</b>
+&nbsp;			}
+<b class="nc">&nbsp;			return 0;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void setKerning (int ch, int value) {
+<b class="nc">&nbsp;			if (kerning == null) kerning = new byte[PAGES][];</b>
+<b class="nc">&nbsp;			byte[] page = kerning[ch &gt;&gt;&gt; LOG2_PAGE_SIZE];</b>
+<b class="nc">&nbsp;			if (page == null) kerning[ch &gt;&gt;&gt; LOG2_PAGE_SIZE] = page = new byte[PAGE_SIZE];</b>
+<b class="nc">&nbsp;			page[ch &amp; PAGE_SIZE - 1] = (byte)value;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public String toString () {
+<b class="nc">&nbsp;			return Character.toString((char)id);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	static int indexOf (CharSequence text, char ch, int start) {
+<b class="nc">&nbsp;		final int n = text.length();</b>
+<b class="nc">&nbsp;		for (; start &lt; n; start++)</b>
+<b class="nc">&nbsp;			if (text.charAt(start) == ch) return start;</b>
+<b class="nc">&nbsp;		return n;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Backing data for a {@link BitmapFont}. */
+&nbsp;	static public class BitmapFontData {
+&nbsp;		/** The name of the font, or null. */
+&nbsp;		public String name;
+&nbsp;		/** An array of the image paths, for multiple texture pages. */
+&nbsp;		public String[] imagePaths;
+&nbsp;		public FileHandle fontFile;
+&nbsp;		public boolean flipped;
+&nbsp;		public float padTop, padRight, padBottom, padLeft;
+&nbsp;		/** The distance from one line of text to the next. To set this value, use {@link #setLineHeight(float)}. */
+&nbsp;		public float lineHeight;
+&nbsp;		/** The distance from the top of most uppercase characters to the baseline. Since the drawing position is the cap height of
+&nbsp;		 * the first line, the cap height can be used to get the location of the baseline. */
+<b class="fc">&nbsp;		public float capHeight = 1;</b>
+&nbsp;		/** The distance from the cap height to the top of the tallest glyph. */
+&nbsp;		public float ascent;
+&nbsp;		/** The distance from the bottom of the glyph that extends the lowest to the baseline. This number is negative. */
+&nbsp;		public float descent;
+&nbsp;		/** The distance to move down when \n is encountered. */
+&nbsp;		public float down;
+&nbsp;		/** Multiplier for the line height of blank lines. down * blankLineHeight is used as the distance to move down for a blank
+&nbsp;		 * line. */
+<b class="fc">&nbsp;		public float blankLineScale = 1;</b>
+<b class="fc">&nbsp;		public float scaleX = 1, scaleY = 1;</b>
+&nbsp;		public boolean markupEnabled;
+&nbsp;		/** The amount to add to the glyph X position when drawing a cursor between glyphs. This field is not set by the BMFont
+&nbsp;		 * file, it needs to be set manually depending on how the glyphs are rendered on the backing textures. */
+&nbsp;		public float cursorX;
+&nbsp;
+<b class="fc">&nbsp;		public final Glyph[][] glyphs = new Glyph[PAGES][];</b>
+&nbsp;		/** The glyph to display for characters not in the font. May be null. */
+&nbsp;		public Glyph missingGlyph;
+&nbsp;
+&nbsp;		/** The width of the space character. */
+&nbsp;		public float spaceXadvance;
+&nbsp;		/** The x-height, which is the distance from the top of most lowercase characters to the baseline. */
+<b class="fc">&nbsp;		public float xHeight = 1;</b>
+&nbsp;
+&nbsp;		/** Additional characters besides whitespace where text is wrapped. Eg, a hypen (-). */
+&nbsp;		public char[] breakChars;
+<b class="fc">&nbsp;		public char[] xChars = {&#39;x&#39;, &#39;e&#39;, &#39;a&#39;, &#39;o&#39;, &#39;n&#39;, &#39;s&#39;, &#39;r&#39;, &#39;c&#39;, &#39;u&#39;, &#39;m&#39;, &#39;v&#39;, &#39;w&#39;, &#39;z&#39;};</b>
+<b class="fc">&nbsp;		public char[] capChars = {&#39;M&#39;, &#39;N&#39;, &#39;B&#39;, &#39;D&#39;, &#39;C&#39;, &#39;E&#39;, &#39;F&#39;, &#39;K&#39;, &#39;A&#39;, &#39;G&#39;, &#39;H&#39;, &#39;I&#39;, &#39;J&#39;, &#39;L&#39;, &#39;O&#39;, &#39;P&#39;, &#39;Q&#39;, &#39;R&#39;, &#39;S&#39;,</b>
+&nbsp;			&#39;T&#39;, &#39;U&#39;, &#39;V&#39;, &#39;W&#39;, &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;};
+&nbsp;
+&nbsp;		/** Creates an empty BitmapFontData for configuration before calling {@link #load(FileHandle, boolean)}, to subclass, or to
+&nbsp;		 * populate yourself, e.g. using stb-truetype or FreeType. */
+<b class="nc">&nbsp;		public BitmapFontData () {</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		public BitmapFontData (FileHandle fontFile, boolean flip) {</b>
+<b class="fc">&nbsp;			this.fontFile = fontFile;</b>
+<b class="fc">&nbsp;			this.flipped = flip;</b>
+<b class="fc">&nbsp;			load(fontFile, flip);</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public void load (FileHandle fontFile, boolean flip) {
+<b class="pc">&nbsp;			if (imagePaths != null) throw new IllegalStateException(&quot;Already loaded.&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;			name = fontFile.nameWithoutExtension();</b>
+&nbsp;
+<b class="fc">&nbsp;			BufferedReader reader = new BufferedReader(new InputStreamReader(fontFile.read()), 512);</b>
+&nbsp;			try {
+<b class="fc">&nbsp;				String line = reader.readLine(); // info</b>
+<b class="pc">&nbsp;				if (line == null) throw new GdxRuntimeException(&quot;File is empty.&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;				line = line.substring(line.indexOf(&quot;padding=&quot;) + 8);</b>
+<b class="fc">&nbsp;				String[] padding = line.substring(0, line.indexOf(&#39; &#39;)).split(&quot;,&quot;, 4);</b>
+<b class="pc">&nbsp;				if (padding.length != 4) throw new GdxRuntimeException(&quot;Invalid padding.&quot;);</b>
+<b class="fc">&nbsp;				padTop = Integer.parseInt(padding[0]);</b>
+<b class="fc">&nbsp;				padRight = Integer.parseInt(padding[1]);</b>
+<b class="fc">&nbsp;				padBottom = Integer.parseInt(padding[2]);</b>
+<b class="fc">&nbsp;				padLeft = Integer.parseInt(padding[3]);</b>
+<b class="fc">&nbsp;				float padY = padTop + padBottom;</b>
+&nbsp;
+<b class="fc">&nbsp;				line = reader.readLine();</b>
+<b class="pc">&nbsp;				if (line == null) throw new GdxRuntimeException(&quot;Missing common header.&quot;);</b>
+<b class="fc">&nbsp;				String[] common = line.split(&quot; &quot;, 9); // At most we want the 6th element; i.e. &quot;page=N&quot;</b>
+&nbsp;
+&nbsp;				// At least lineHeight and base are required.
+<b class="pc">&nbsp;				if (common.length &lt; 3) throw new GdxRuntimeException(&quot;Invalid common header.&quot;);</b>
+&nbsp;
+<b class="pc">&nbsp;				if (!common[1].startsWith(&quot;lineHeight=&quot;)) throw new GdxRuntimeException(&quot;Missing: lineHeight&quot;);</b>
+<b class="fc">&nbsp;				lineHeight = Integer.parseInt(common[1].substring(11));</b>
+&nbsp;
+<b class="pc">&nbsp;				if (!common[2].startsWith(&quot;base=&quot;)) throw new GdxRuntimeException(&quot;Missing: base&quot;);</b>
+<b class="fc">&nbsp;				float baseLine = Integer.parseInt(common[2].substring(5));</b>
+&nbsp;
+<b class="fc">&nbsp;				int pageCount = 1;</b>
+<b class="pc">&nbsp;				if (common.length &gt;= 6 &amp;&amp; common[5] != null &amp;&amp; common[5].startsWith(&quot;pages=&quot;)) {</b>
+&nbsp;					try {
+<b class="fc">&nbsp;						pageCount = Math.max(1, Integer.parseInt(common[5].substring(6)));</b>
+<b class="nc">&nbsp;					} catch (NumberFormatException ignored) { // Use one page.</b>
+<b class="fc">&nbsp;					}</b>
+&nbsp;				}
+&nbsp;
+<b class="fc">&nbsp;				imagePaths = new String[pageCount];</b>
+&nbsp;
+&nbsp;				// Read each page definition.
+<b class="fc">&nbsp;				for (int p = 0; p &lt; pageCount; p++) {</b>
+&nbsp;					// Read each &quot;page&quot; info line.
+<b class="fc">&nbsp;					line = reader.readLine();</b>
+<b class="pc">&nbsp;					if (line == null) throw new GdxRuntimeException(&quot;Missing additional page definitions.&quot;);</b>
+&nbsp;
+&nbsp;					// Expect ID to mean &quot;index&quot;.
+<b class="fc">&nbsp;					Matcher matcher = Pattern.compile(&quot;.*id=(\\d+)&quot;).matcher(line);</b>
+<b class="pc">&nbsp;					if (matcher.find()) {</b>
+<b class="fc">&nbsp;						String id = matcher.group(1);</b>
+&nbsp;						try {
+<b class="fc">&nbsp;							int pageID = Integer.parseInt(id);</b>
+<b class="pc">&nbsp;							if (pageID != p) throw new GdxRuntimeException(&quot;Page IDs must be indices starting at 0: &quot; + id);</b>
+<b class="nc">&nbsp;						} catch (NumberFormatException ex) {</b>
+<b class="nc">&nbsp;							throw new GdxRuntimeException(&quot;Invalid page id: &quot; + id, ex);</b>
+<b class="fc">&nbsp;						}</b>
+&nbsp;					}
+&nbsp;
+<b class="fc">&nbsp;					matcher = Pattern.compile(&quot;.*file=\&quot;?([^\&quot;]+)\&quot;?&quot;).matcher(line);</b>
+<b class="pc">&nbsp;					if (!matcher.find()) throw new GdxRuntimeException(&quot;Missing: file&quot;);</b>
+<b class="fc">&nbsp;					String fileName = matcher.group(1);</b>
+&nbsp;
+<b class="fc">&nbsp;					imagePaths[p] = fontFile.parent().child(fileName).path().replaceAll(&quot;\\\\&quot;, &quot;/&quot;);</b>
+&nbsp;				}
+<b class="fc">&nbsp;				descent = 0;</b>
+&nbsp;
+&nbsp;				while (true) {
+<b class="fc">&nbsp;					line = reader.readLine();</b>
+<b class="pc">&nbsp;					if (line == null) break; // EOF</b>
+<b class="fc">&nbsp;					if (line.startsWith(&quot;kernings &quot;)) break; // Starting kernings block.</b>
+<b class="pc">&nbsp;					if (line.startsWith(&quot;metrics &quot;)) break; // Starting metrics block.</b>
+<b class="fc">&nbsp;					if (!line.startsWith(&quot;char &quot;)) continue;</b>
+&nbsp;
+<b class="fc">&nbsp;					Glyph glyph = new Glyph();</b>
+&nbsp;
+<b class="fc">&nbsp;					StringTokenizer tokens = new StringTokenizer(line, &quot; =&quot;);</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					int ch = Integer.parseInt(tokens.nextToken());</b>
+<b class="pc">&nbsp;					if (ch &lt;= 0)</b>
+<b class="nc">&nbsp;						missingGlyph = glyph;</b>
+<b class="pc">&nbsp;					else if (ch &lt;= Character.MAX_VALUE)</b>
+<b class="fc">&nbsp;						setGlyph(ch, glyph);</b>
+&nbsp;					else
+&nbsp;						continue;
+<b class="fc">&nbsp;					glyph.id = ch;</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					glyph.srcX = Integer.parseInt(tokens.nextToken());</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					glyph.srcY = Integer.parseInt(tokens.nextToken());</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					glyph.width = Integer.parseInt(tokens.nextToken());</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					glyph.height = Integer.parseInt(tokens.nextToken());</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					glyph.xoffset = Integer.parseInt(tokens.nextToken());</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="pc">&nbsp;					if (flip)</b>
+<b class="nc">&nbsp;						glyph.yoffset = Integer.parseInt(tokens.nextToken());</b>
+&nbsp;					else
+<b class="fc">&nbsp;						glyph.yoffset = -(glyph.height + Integer.parseInt(tokens.nextToken()));</b>
+<b class="fc">&nbsp;					tokens.nextToken();</b>
+<b class="fc">&nbsp;					glyph.xadvance = Integer.parseInt(tokens.nextToken());</b>
+&nbsp;
+&nbsp;					// Check for page safely, it could be omitted or invalid.
+<b class="pc">&nbsp;					if (tokens.hasMoreTokens()) tokens.nextToken();</b>
+<b class="pc">&nbsp;					if (tokens.hasMoreTokens()) {</b>
+&nbsp;						try {
+<b class="fc">&nbsp;							glyph.page = Integer.parseInt(tokens.nextToken());</b>
+<b class="nc">&nbsp;						} catch (NumberFormatException ignored) {</b>
+<b class="fc">&nbsp;						}</b>
+&nbsp;					}
+&nbsp;
+<b class="pc">&nbsp;					if (glyph.width &gt; 0 &amp;&amp; glyph.height &gt; 0) descent = Math.min(baseLine + glyph.yoffset, descent);</b>
+<b class="fc">&nbsp;				}</b>
+<b class="fc">&nbsp;				descent += padBottom;</b>
+&nbsp;
+&nbsp;				while (true) {
+<b class="fc">&nbsp;					line = reader.readLine();</b>
+<b class="pc">&nbsp;					if (line == null) break;</b>
+<b class="nc">&nbsp;					if (!line.startsWith(&quot;kerning &quot;)) break;</b>
+&nbsp;
+<b class="nc">&nbsp;					StringTokenizer tokens = new StringTokenizer(line, &quot; =&quot;);</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					int first = Integer.parseInt(tokens.nextToken());</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					int second = Integer.parseInt(tokens.nextToken());</b>
+<b class="nc">&nbsp;					if (first &lt; 0 || first &gt; Character.MAX_VALUE || second &lt; 0 || second &gt; Character.MAX_VALUE) continue;</b>
+<b class="nc">&nbsp;					Glyph glyph = getGlyph((char)first);</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					int amount = Integer.parseInt(tokens.nextToken());</b>
+<b class="nc">&nbsp;					if (glyph != null) { // Kernings may exist for glyph pairs not contained in the font.</b>
+<b class="nc">&nbsp;						glyph.setKerning(second, amount);</b>
+&nbsp;					}
+<b class="nc">&nbsp;				}</b>
+&nbsp;
+<b class="fc">&nbsp;				boolean hasMetricsOverride = false;</b>
+<b class="fc">&nbsp;				float overrideAscent = 0;</b>
+<b class="fc">&nbsp;				float overrideDescent = 0;</b>
+<b class="fc">&nbsp;				float overrideDown = 0;</b>
+<b class="fc">&nbsp;				float overrideCapHeight = 0;</b>
+<b class="fc">&nbsp;				float overrideLineHeight = 0;</b>
+<b class="fc">&nbsp;				float overrideSpaceXAdvance = 0;</b>
+<b class="fc">&nbsp;				float overrideXHeight = 0;</b>
+&nbsp;
+&nbsp;				// Metrics override
+<b class="pc">&nbsp;				if (line != null &amp;&amp; line.startsWith(&quot;metrics &quot;)) {</b>
+&nbsp;
+<b class="nc">&nbsp;					hasMetricsOverride = true;</b>
+&nbsp;
+<b class="nc">&nbsp;					StringTokenizer tokens = new StringTokenizer(line, &quot; =&quot;);</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					overrideAscent = Float.parseFloat(tokens.nextToken());</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					overrideDescent = Float.parseFloat(tokens.nextToken());</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					overrideDown = Float.parseFloat(tokens.nextToken());</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					overrideCapHeight = Float.parseFloat(tokens.nextToken());</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					overrideLineHeight = Float.parseFloat(tokens.nextToken());</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					overrideSpaceXAdvance = Float.parseFloat(tokens.nextToken());</b>
+<b class="nc">&nbsp;					tokens.nextToken();</b>
+<b class="nc">&nbsp;					overrideXHeight = Float.parseFloat(tokens.nextToken());</b>
+&nbsp;				}
+&nbsp;
+<b class="fc">&nbsp;				Glyph spaceGlyph = getGlyph(&#39; &#39;);</b>
+<b class="pc">&nbsp;				if (spaceGlyph == null) {</b>
+<b class="nc">&nbsp;					spaceGlyph = new Glyph();</b>
+<b class="nc">&nbsp;					spaceGlyph.id = &#39; &#39;;</b>
+<b class="nc">&nbsp;					Glyph xadvanceGlyph = getGlyph(&#39;l&#39;);</b>
+<b class="nc">&nbsp;					if (xadvanceGlyph == null) xadvanceGlyph = getFirstGlyph();</b>
+<b class="nc">&nbsp;					spaceGlyph.xadvance = xadvanceGlyph.xadvance;</b>
+<b class="nc">&nbsp;					setGlyph(&#39; &#39;, spaceGlyph);</b>
+&nbsp;				}
+<b class="pc">&nbsp;				if (spaceGlyph.width == 0) {</b>
+<b class="fc">&nbsp;					spaceGlyph.width = (int)(padLeft + spaceGlyph.xadvance + padRight);</b>
+<b class="fc">&nbsp;					spaceGlyph.xoffset = (int)-padLeft;</b>
+&nbsp;				}
+<b class="fc">&nbsp;				spaceXadvance = spaceGlyph.xadvance;</b>
+&nbsp;
+<b class="fc">&nbsp;				Glyph xGlyph = null;</b>
+<b class="pc">&nbsp;				for (char xChar : xChars) {</b>
+<b class="fc">&nbsp;					xGlyph = getGlyph(xChar);</b>
+<b class="pc">&nbsp;					if (xGlyph != null) break;</b>
+&nbsp;				}
+<b class="pc">&nbsp;				if (xGlyph == null) xGlyph = getFirstGlyph();</b>
+<b class="fc">&nbsp;				xHeight = xGlyph.height - padY;</b>
+&nbsp;
+<b class="fc">&nbsp;				Glyph capGlyph = null;</b>
+<b class="pc">&nbsp;				for (char capChar : capChars) {</b>
+<b class="fc">&nbsp;					capGlyph = getGlyph(capChar);</b>
+<b class="pc">&nbsp;					if (capGlyph != null) break;</b>
+&nbsp;				}
+<b class="pc">&nbsp;				if (capGlyph == null) {</b>
+<b class="nc">&nbsp;					for (Glyph[] page : this.glyphs) {</b>
+<b class="nc">&nbsp;						if (page == null) continue;</b>
+<b class="nc">&nbsp;						for (Glyph glyph : page) {</b>
+<b class="nc">&nbsp;							if (glyph == null || glyph.height == 0 || glyph.width == 0) continue;</b>
+<b class="nc">&nbsp;							capHeight = Math.max(capHeight, glyph.height);</b>
+&nbsp;						}
+&nbsp;					}
+&nbsp;				} else
+<b class="fc">&nbsp;					capHeight = capGlyph.height;</b>
+<b class="fc">&nbsp;				capHeight -= padY;</b>
+&nbsp;
+<b class="fc">&nbsp;				ascent = baseLine - capHeight;</b>
+<b class="fc">&nbsp;				down = -lineHeight;</b>
+<b class="pc">&nbsp;				if (flip) {</b>
+<b class="nc">&nbsp;					ascent = -ascent;</b>
+<b class="nc">&nbsp;					down = -down;</b>
+&nbsp;				}
+&nbsp;
+<b class="pc">&nbsp;				if (hasMetricsOverride) {</b>
+<b class="nc">&nbsp;					this.ascent = overrideAscent;</b>
+<b class="nc">&nbsp;					this.descent = overrideDescent;</b>
+<b class="nc">&nbsp;					this.down = overrideDown;</b>
+<b class="nc">&nbsp;					this.capHeight = overrideCapHeight;</b>
+<b class="nc">&nbsp;					this.lineHeight = overrideLineHeight;</b>
+<b class="nc">&nbsp;					this.spaceXadvance = overrideSpaceXAdvance;</b>
+<b class="nc">&nbsp;					this.xHeight = overrideXHeight;</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;			} catch (Exception ex) {</b>
+<b class="nc">&nbsp;				throw new GdxRuntimeException(&quot;Error loading font file: &quot; + fontFile, ex);</b>
+&nbsp;			} finally {
+<b class="fc">&nbsp;				StreamUtils.closeQuietly(reader);</b>
+<b class="fc">&nbsp;			}</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public void setGlyphRegion (Glyph glyph, TextureRegion region) {
+<b class="fc">&nbsp;			Texture texture = region.getTexture();</b>
+<b class="fc">&nbsp;			float invTexWidth = 1.0f / texture.getWidth();</b>
+<b class="fc">&nbsp;			float invTexHeight = 1.0f / texture.getHeight();</b>
+&nbsp;
+<b class="fc">&nbsp;			float offsetX = 0, offsetY = 0;</b>
+<b class="fc">&nbsp;			float u = region.u;</b>
+<b class="fc">&nbsp;			float v = region.v;</b>
+<b class="fc">&nbsp;			float regionWidth = region.getRegionWidth();</b>
+<b class="fc">&nbsp;			float regionHeight = region.getRegionHeight();</b>
+<b class="pc">&nbsp;			if (region instanceof AtlasRegion) {</b>
+&nbsp;				// Compensate for whitespace stripped from left and top edges.
+<b class="nc">&nbsp;				AtlasRegion atlasRegion = (AtlasRegion)region;</b>
+<b class="nc">&nbsp;				offsetX = atlasRegion.offsetX;</b>
+<b class="nc">&nbsp;				offsetY = atlasRegion.originalHeight - atlasRegion.packedHeight - atlasRegion.offsetY;</b>
+&nbsp;			}
+&nbsp;
+<b class="fc">&nbsp;			float x = glyph.srcX;</b>
+<b class="fc">&nbsp;			float x2 = glyph.srcX + glyph.width;</b>
+<b class="fc">&nbsp;			float y = glyph.srcY;</b>
+<b class="fc">&nbsp;			float y2 = glyph.srcY + glyph.height;</b>
+&nbsp;
+&nbsp;			// Shift glyph for left and top edge stripped whitespace. Clip glyph for right and bottom edge stripped whitespace.
+&nbsp;			// Note if the font region has padding, whitespace stripping must not be used.
+<b class="pc">&nbsp;			if (offsetX &gt; 0) {</b>
+<b class="nc">&nbsp;				x -= offsetX;</b>
+<b class="nc">&nbsp;				if (x &lt; 0) {</b>
+<b class="nc">&nbsp;					glyph.width += x;</b>
+<b class="nc">&nbsp;					glyph.xoffset -= x;</b>
+<b class="nc">&nbsp;					x = 0;</b>
+&nbsp;				}
+<b class="nc">&nbsp;				x2 -= offsetX;</b>
+<b class="nc">&nbsp;				if (x2 &gt; regionWidth) {</b>
+<b class="nc">&nbsp;					glyph.width -= x2 - regionWidth;</b>
+<b class="nc">&nbsp;					x2 = regionWidth;</b>
+&nbsp;				}
+&nbsp;			}
+<b class="pc">&nbsp;			if (offsetY &gt; 0) {</b>
+<b class="nc">&nbsp;				y -= offsetY;</b>
+<b class="nc">&nbsp;				if (y &lt; 0) {</b>
+<b class="nc">&nbsp;					glyph.height += y;</b>
+<b class="nc">&nbsp;					if (glyph.height &lt; 0) glyph.height = 0;</b>
+<b class="nc">&nbsp;					y = 0;</b>
+&nbsp;				}
+<b class="nc">&nbsp;				y2 -= offsetY;</b>
+<b class="nc">&nbsp;				if (y2 &gt; regionHeight) {</b>
+<b class="nc">&nbsp;					float amount = y2 - regionHeight;</b>
+<b class="nc">&nbsp;					glyph.height -= amount;</b>
+<b class="nc">&nbsp;					glyph.yoffset += amount;</b>
+<b class="nc">&nbsp;					y2 = regionHeight;</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;
+<b class="fc">&nbsp;			glyph.u = u + x * invTexWidth;</b>
+<b class="fc">&nbsp;			glyph.u2 = u + x2 * invTexWidth;</b>
+<b class="pc">&nbsp;			if (flipped) {</b>
+<b class="nc">&nbsp;				glyph.v = v + y * invTexHeight;</b>
+<b class="nc">&nbsp;				glyph.v2 = v + y2 * invTexHeight;</b>
+&nbsp;			} else {
+<b class="fc">&nbsp;				glyph.v2 = v + y * invTexHeight;</b>
+<b class="fc">&nbsp;				glyph.v = v + y2 * invTexHeight;</b>
+&nbsp;			}
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		/** Sets the line height, which is the distance from one line of text to the next. */
+&nbsp;		public void setLineHeight (float height) {
+<b class="nc">&nbsp;			lineHeight = height * scaleY;</b>
+<b class="nc">&nbsp;			down = flipped ? lineHeight : -lineHeight;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public void setGlyph (int ch, Glyph glyph) {
+<b class="fc">&nbsp;			Glyph[] page = glyphs[ch / PAGE_SIZE];</b>
+<b class="fc">&nbsp;			if (page == null) glyphs[ch / PAGE_SIZE] = page = new Glyph[PAGE_SIZE];</b>
+<b class="fc">&nbsp;			page[ch &amp; PAGE_SIZE - 1] = glyph;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public Glyph getFirstGlyph () {
+<b class="nc">&nbsp;			for (Glyph[] page : this.glyphs) {</b>
+<b class="nc">&nbsp;				if (page == null) continue;</b>
+<b class="nc">&nbsp;				for (Glyph glyph : page) {</b>
+<b class="nc">&nbsp;					if (glyph == null || glyph.height == 0 || glyph.width == 0) continue;</b>
+<b class="nc">&nbsp;					return glyph;</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;No glyphs found.&quot;);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns true if the font has the glyph, or if the font has a {@link #missingGlyph}. */
+&nbsp;		public boolean hasGlyph (char ch) {
+<b class="nc">&nbsp;			if (missingGlyph != null) return true;</b>
+<b class="nc">&nbsp;			return getGlyph(ch) != null;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the glyph for the specified character, or null if no such glyph exists. Note that
+&nbsp;		 * {@link #getGlyphs(GlyphRun, CharSequence, int, int, Glyph)} should be be used to shape a string of characters into a list
+&nbsp;		 * of glyphs. */
+&nbsp;		public Glyph getGlyph (char ch) {
+<b class="fc">&nbsp;			Glyph[] page = glyphs[ch / PAGE_SIZE];</b>
+<b class="pc">&nbsp;			if (page != null) return page[ch &amp; PAGE_SIZE - 1];</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Using the specified string, populates the glyphs and positions of the specified glyph run.
+&nbsp;		 * @param str Characters to convert to glyphs. Will not contain newline or color tags. May contain &quot;[[&quot; for an escaped left
+&nbsp;		 *           square bracket.
+&nbsp;		 * @param lastGlyph The glyph immediately before this run, or null if this is run is the first on a line of text. Used tp
+&nbsp;		 *           apply kerning between the specified glyph and the first glyph in this run. */
+&nbsp;		public void getGlyphs (GlyphRun run, CharSequence str, int start, int end, Glyph lastGlyph) {
+<b class="nc">&nbsp;			int max = end - start;</b>
+<b class="nc">&nbsp;			if (max == 0) return;</b>
+<b class="nc">&nbsp;			boolean markupEnabled = this.markupEnabled;</b>
+<b class="nc">&nbsp;			float scaleX = this.scaleX;</b>
+<b class="nc">&nbsp;			Array&lt;Glyph&gt; glyphs = run.glyphs;</b>
+<b class="nc">&nbsp;			FloatArray xAdvances = run.xAdvances;</b>
+&nbsp;
+&nbsp;			// Guess at number of glyphs needed.
+<b class="nc">&nbsp;			glyphs.ensureCapacity(max);</b>
+<b class="nc">&nbsp;			run.xAdvances.ensureCapacity(max + 1);</b>
+&nbsp;
+&nbsp;			do {
+<b class="nc">&nbsp;				char ch = str.charAt(start++);</b>
+<b class="nc">&nbsp;				if (ch == &#39;\r&#39;) continue; // Ignore.</b>
+<b class="nc">&nbsp;				Glyph glyph = getGlyph(ch);</b>
+<b class="nc">&nbsp;				if (glyph == null) {</b>
+<b class="nc">&nbsp;					if (missingGlyph == null) continue;</b>
+<b class="nc">&nbsp;					glyph = missingGlyph;</b>
+&nbsp;				}
+<b class="nc">&nbsp;				glyphs.add(glyph);</b>
+<b class="nc">&nbsp;				xAdvances.add(lastGlyph == null // First glyph on line, adjust the position so it isn&#39;t drawn left of 0.</b>
+<b class="nc">&nbsp;					? (glyph.fixedWidth ? 0 : -glyph.xoffset * scaleX - padLeft)</b>
+<b class="nc">&nbsp;					: (lastGlyph.xadvance + lastGlyph.getKerning(ch)) * scaleX);</b>
+<b class="nc">&nbsp;				lastGlyph = glyph;</b>
+&nbsp;
+&nbsp;				// &quot;[[&quot; is an escaped left square bracket, skip second character.
+<b class="nc">&nbsp;				if (markupEnabled &amp;&amp; ch == &#39;[&#39; &amp;&amp; start &lt; end &amp;&amp; str.charAt(start) == &#39;[&#39;) start++;</b>
+<b class="nc">&nbsp;			} while (start &lt; end);</b>
+<b class="nc">&nbsp;			if (lastGlyph != null) {</b>
+<b class="nc">&nbsp;				float lastGlyphWidth = lastGlyph.fixedWidth ? lastGlyph.xadvance * scaleX</b>
+<b class="nc">&nbsp;					: (lastGlyph.width + lastGlyph.xoffset) * scaleX - padRight;</b>
+<b class="nc">&nbsp;				xAdvances.add(lastGlyphWidth);</b>
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		/** Returns the first valid glyph index to use to wrap to the next line, starting at the specified start index and
+&nbsp;		 * (typically) moving toward the beginning of the glyphs array. */
+&nbsp;		public int getWrapIndex (Array&lt;Glyph&gt; glyphs, int start) {
+<b class="nc">&nbsp;			int i = start - 1;</b>
+<b class="nc">&nbsp;			Object[] glyphsItems = glyphs.items;</b>
+<b class="nc">&nbsp;			char ch = (char)((Glyph)glyphsItems[i]).id;</b>
+<b class="nc">&nbsp;			if (isWhitespace(ch)) return i;</b>
+<b class="nc">&nbsp;			if (isBreakChar(ch)) i--;</b>
+<b class="nc">&nbsp;			for (; i &gt; 0; i--) {</b>
+<b class="nc">&nbsp;				ch = (char)((Glyph)glyphsItems[i]).id;</b>
+<b class="nc">&nbsp;				if (isWhitespace(ch) || isBreakChar(ch)) return i + 1;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			return 0;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public boolean isBreakChar (char c) {
+<b class="nc">&nbsp;			if (breakChars == null) return false;</b>
+<b class="nc">&nbsp;			for (char br : breakChars)</b>
+<b class="nc">&nbsp;				if (c == br) return true;</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public boolean isWhitespace (char c) {
+<b class="nc">&nbsp;			switch (c) {</b>
+&nbsp;			case &#39;\n&#39;:
+&nbsp;			case &#39;\r&#39;:
+&nbsp;			case &#39;\t&#39;:
+&nbsp;			case &#39; &#39;:
+<b class="nc">&nbsp;				return true;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				return false;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Returns the image path for the texture page at the given index (the &quot;id&quot; in the BMFont file). */
+&nbsp;		public String getImagePath (int index) {
+<b class="nc">&nbsp;			return imagePaths[index];</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public String[] getImagePaths () {
+<b class="nc">&nbsp;			return imagePaths;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public FileHandle getFontFile () {
+<b class="nc">&nbsp;			return fontFile;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Scales the font by the specified amounts on both axes
+&nbsp;		 * &lt;p&gt;
+&nbsp;		 * Note that smoother scaling can be achieved if the texture backing the BitmapFont is using {@link TextureFilter#Linear}.
+&nbsp;		 * The default is Nearest, so use a BitmapFont constructor that takes a {@link TextureRegion}.
+&nbsp;		 * @throws IllegalArgumentException if scaleX or scaleY is zero. */
+&nbsp;		public void setScale (float scaleX, float scaleY) {
+<b class="pc">&nbsp;			if (scaleX == 0) throw new IllegalArgumentException(&quot;scaleX cannot be 0.&quot;);</b>
+<b class="pc">&nbsp;			if (scaleY == 0) throw new IllegalArgumentException(&quot;scaleY cannot be 0.&quot;);</b>
+<b class="fc">&nbsp;			float x = scaleX / this.scaleX;</b>
+<b class="fc">&nbsp;			float y = scaleY / this.scaleY;</b>
+<b class="fc">&nbsp;			lineHeight *= y;</b>
+<b class="fc">&nbsp;			spaceXadvance *= x;</b>
+<b class="fc">&nbsp;			xHeight *= y;</b>
+<b class="fc">&nbsp;			capHeight *= y;</b>
+<b class="fc">&nbsp;			ascent *= y;</b>
+<b class="fc">&nbsp;			descent *= y;</b>
+<b class="fc">&nbsp;			down *= y;</b>
+<b class="fc">&nbsp;			padLeft *= x;</b>
+<b class="fc">&nbsp;			padRight *= x;</b>
+<b class="fc">&nbsp;			padTop *= y;</b>
+<b class="fc">&nbsp;			padBottom *= y;</b>
+<b class="fc">&nbsp;			this.scaleX = scaleX;</b>
+<b class="fc">&nbsp;			this.scaleY = scaleY;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		/** Scales the font by the specified amount in both directions.
+&nbsp;		 * @see #setScale(float, float)
+&nbsp;		 * @throws IllegalArgumentException if scaleX or scaleY is zero. */
+&nbsp;		public void setScale (float scaleXY) {
+<b class="nc">&nbsp;			setScale(scaleXY, scaleXY);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		/** Sets the font&#39;s scale relative to the current scale.
+&nbsp;		 * @see #setScale(float, float)
+&nbsp;		 * @throws IllegalArgumentException if the resulting scale is zero. */
+&nbsp;		public void scale (float amount) {
+<b class="nc">&nbsp;			setScale(scaleX + amount, scaleY + amount);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public String toString () {
+<b class="nc">&nbsp;			return name != null ? name : super.toString();</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

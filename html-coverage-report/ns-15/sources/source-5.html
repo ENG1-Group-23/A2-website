@@ -1,0 +1,309 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TiledMapTileLayer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.maps.tiled</a>
+</div>
+
+<h1>Coverage Summary for Class: TiledMapTileLayer (com.badlogic.gdx.maps.tiled)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TiledMapTileLayer</td>
+<td class="coverageStat">
+  <span class="percent">
+    71.4%
+  </span>
+  <span class="absValue">
+    (5/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (8/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.9%
+  </span>
+  <span class="absValue">
+    (16/18)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TiledMapTileLayer$Cell</td>
+<td class="coverageStat">
+  <span class="percent">
+    55.6%
+  </span>
+  <span class="absValue">
+    (5/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    69.2%
+  </span>
+  <span class="absValue">
+    (9/13)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    62.5%
+  </span>
+  <span class="absValue">
+    (10/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (8/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80.6%
+  </span>
+  <span class="absValue">
+    (25/31)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.maps.tiled;
+&nbsp;
+&nbsp;import com.badlogic.gdx.maps.MapLayer;
+&nbsp;
+&nbsp;/** @brief Layer for a TiledMap */
+&nbsp;public class TiledMapTileLayer extends MapLayer {
+&nbsp;
+&nbsp;	private int width;
+&nbsp;	private int height;
+&nbsp;
+&nbsp;	private int tileWidth;
+&nbsp;	private int tileHeight;
+&nbsp;
+&nbsp;	private Cell[][] cells;
+&nbsp;
+&nbsp;	/** @return layer&#39;s width in tiles */
+&nbsp;	public int getWidth () {
+<b class="fc">&nbsp;		return width;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return layer&#39;s height in tiles */
+&nbsp;	public int getHeight () {
+<b class="fc">&nbsp;		return height;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return tiles&#39; width in pixels */
+&nbsp;	public int getTileWidth () {
+<b class="nc">&nbsp;		return tileWidth;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return tiles&#39; height in pixels */
+&nbsp;	public int getTileHeight () {
+<b class="nc">&nbsp;		return tileHeight;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates TiledMap layer
+&nbsp;	 * 
+&nbsp;	 * @param width layer width in tiles
+&nbsp;	 * @param height layer height in tiles
+&nbsp;	 * @param tileWidth tile width in pixels
+&nbsp;	 * @param tileHeight tile height in pixels */
+&nbsp;	public TiledMapTileLayer (int width, int height, int tileWidth, int tileHeight) {
+<b class="fc">&nbsp;		super();</b>
+<b class="fc">&nbsp;		this.width = width;</b>
+<b class="fc">&nbsp;		this.height = height;</b>
+<b class="fc">&nbsp;		this.tileWidth = tileWidth;</b>
+<b class="fc">&nbsp;		this.tileHeight = tileHeight;</b>
+<b class="fc">&nbsp;		this.cells = new Cell[width][height];</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param x X coordinate
+&nbsp;	 * @param y Y coordinate
+&nbsp;	 * @return {@link Cell} at (x, y) */
+&nbsp;	public Cell getCell (int x, int y) {
+<b class="pc">&nbsp;		if (x &lt; 0 || x &gt;= width) return null;</b>
+<b class="pc">&nbsp;		if (y &lt; 0 || y &gt;= height) return null;</b>
+<b class="fc">&nbsp;		return cells[x][y];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the {@link Cell} at the given coordinates.
+&nbsp;	 * 
+&nbsp;	 * @param x X coordinate
+&nbsp;	 * @param y Y coordinate
+&nbsp;	 * @param cell the {@link Cell} to set at the given coordinates. */
+&nbsp;	public void setCell (int x, int y, Cell cell) {
+<b class="pc">&nbsp;		if (x &lt; 0 || x &gt;= width) return;</b>
+<b class="pc">&nbsp;		if (y &lt; 0 || y &gt;= height) return;</b>
+<b class="fc">&nbsp;		cells[x][y] = cell;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @brief represents a cell in a TiledLayer: TiledMapTile, flip and rotation properties. */
+<b class="fc">&nbsp;	public static class Cell {</b>
+&nbsp;
+&nbsp;		private TiledMapTile tile;
+&nbsp;
+&nbsp;		private boolean flipHorizontally;
+&nbsp;
+&nbsp;		private boolean flipVertically;
+&nbsp;
+&nbsp;		private int rotation;
+&nbsp;
+&nbsp;		/** @return The tile currently assigned to this cell. */
+&nbsp;		public TiledMapTile getTile () {
+<b class="nc">&nbsp;			return tile;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets the tile to be used for this cell.
+&nbsp;		 * 
+&nbsp;		 * @param tile the {@link TiledMapTile} to use for this cell.
+&nbsp;		 * @return this, for method chaining */
+&nbsp;		public Cell setTile (TiledMapTile tile) {
+<b class="fc">&nbsp;			this.tile = tile;</b>
+<b class="fc">&nbsp;			return this;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** @return Whether the tile should be flipped horizontally. */
+&nbsp;		public boolean getFlipHorizontally () {
+<b class="nc">&nbsp;			return flipHorizontally;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets whether to flip the tile horizontally.
+&nbsp;		 * 
+&nbsp;		 * @param flipHorizontally whether or not to flip the tile horizontally.
+&nbsp;		 * @return this, for method chaining */
+&nbsp;		public Cell setFlipHorizontally (boolean flipHorizontally) {
+<b class="fc">&nbsp;			this.flipHorizontally = flipHorizontally;</b>
+<b class="fc">&nbsp;			return this;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** @return Whether the tile should be flipped vertically. */
+&nbsp;		public boolean getFlipVertically () {
+<b class="nc">&nbsp;			return flipVertically;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets whether to flip the tile vertically.
+&nbsp;		 * 
+&nbsp;		 * @param flipVertically whether or not this tile should be flipped vertically.
+&nbsp;		 * @return this, for method chaining */
+&nbsp;		public Cell setFlipVertically (boolean flipVertically) {
+<b class="fc">&nbsp;			this.flipVertically = flipVertically;</b>
+<b class="fc">&nbsp;			return this;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** @return The rotation of this cell, in 90 degree increments. */
+&nbsp;		public int getRotation () {
+<b class="nc">&nbsp;			return rotation;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/** Sets the rotation of this cell, in 90 degree increments.
+&nbsp;		 * 
+&nbsp;		 * @param rotation the rotation in 90 degree increments (see ints below).
+&nbsp;		 * @return this, for method chaining */
+&nbsp;		public Cell setRotation (int rotation) {
+<b class="fc">&nbsp;			this.rotation = rotation;</b>
+<b class="fc">&nbsp;			return this;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public static final int ROTATE_0 = 0;
+&nbsp;		public static final int ROTATE_90 = 1;
+&nbsp;		public static final int ROTATE_180 = 2;
+&nbsp;		public static final int ROTATE_270 = 3;
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

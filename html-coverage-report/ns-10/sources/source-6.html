@@ -1,0 +1,502 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Texture</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics</a>
+</div>
+
+<h1>Coverage Summary for Class: Texture (com.badlogic.gdx.graphics)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Texture</td>
+<td class="coverageStat">
+  <span class="percent">
+    44.4%
+  </span>
+  <span class="absValue">
+    (12/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    17.6%
+  </span>
+  <span class="absValue">
+    (6/34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    32%
+  </span>
+  <span class="absValue">
+    (33/103)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Texture$TextureFilter</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.3%
+  </span>
+  <span class="absValue">
+    (12/13)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Texture$TextureWrap</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    52.9%
+  </span>
+  <span class="absValue">
+    (18/34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.8%
+  </span>
+  <span class="absValue">
+    (6/38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    41.8%
+  </span>
+  <span class="absValue">
+    (51/122)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Application;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.assets.AssetLoaderParameters.LoadedCallback;
+&nbsp;import com.badlogic.gdx.assets.AssetManager;
+&nbsp;import com.badlogic.gdx.assets.loaders.AssetLoader;
+&nbsp;import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.graphics.Pixmap.Format;
+&nbsp;import com.badlogic.gdx.graphics.glutils.FileTextureData;
+&nbsp;import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;import com.badlogic.gdx.utils.GdxRuntimeException;
+&nbsp;
+&nbsp;/** A Texture wraps a standard OpenGL ES texture.
+&nbsp; * &lt;p&gt;
+&nbsp; * A Texture can be managed. If the OpenGL context is lost all managed textures get invalidated. This happens when a user switches
+&nbsp; * to another application or receives an incoming call. Managed textures get reloaded automatically.
+&nbsp; * &lt;p&gt;
+&nbsp; * A Texture has to be bound via the {@link Texture#bind()} method in order for it to be applied to geometry. The texture will be
+&nbsp; * bound to the currently active texture unit specified via {@link GL20#glActiveTexture(int)}.
+&nbsp; * &lt;p&gt;
+&nbsp; * You can draw {@link Pixmap}s to a texture at any time. The changes will be automatically uploaded to texture memory. This is of
+&nbsp; * course not extremely fast so use it with care. It also only works with unmanaged textures.
+&nbsp; * &lt;p&gt;
+&nbsp; * A Texture must be disposed when it is no longer used
+&nbsp; * @author badlogicgames@gmail.com */
+&nbsp;public class Texture extends GLTexture {
+&nbsp;	private static AssetManager assetManager;
+<b class="fc">&nbsp;	final static Map&lt;Application, Array&lt;Texture&gt;&gt; managedTextures = new HashMap&lt;Application, Array&lt;Texture&gt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;	public enum TextureFilter {</b>
+&nbsp;		/** Fetch the nearest texel that best maps to the pixel on screen. */
+<b class="fc">&nbsp;		Nearest(GL20.GL_NEAREST),</b>
+&nbsp;
+&nbsp;		/** Fetch four nearest texels that best maps to the pixel on screen. */
+<b class="fc">&nbsp;		Linear(GL20.GL_LINEAR),</b>
+&nbsp;
+&nbsp;		/** @see TextureFilter#MipMapLinearLinear */
+<b class="fc">&nbsp;		MipMap(GL20.GL_LINEAR_MIPMAP_LINEAR),</b>
+&nbsp;
+&nbsp;		/** Fetch the best fitting image from the mip map chain based on the pixel/texel ratio and then sample the texels with a
+&nbsp;		 * nearest filter. */
+<b class="fc">&nbsp;		MipMapNearestNearest(GL20.GL_NEAREST_MIPMAP_NEAREST),</b>
+&nbsp;
+&nbsp;		/** Fetch the best fitting image from the mip map chain based on the pixel/texel ratio and then sample the texels with a
+&nbsp;		 * linear filter. */
+<b class="fc">&nbsp;		MipMapLinearNearest(GL20.GL_LINEAR_MIPMAP_NEAREST),</b>
+&nbsp;
+&nbsp;		/** Fetch the two best fitting images from the mip map chain and then sample the nearest texel from each of the two images,
+&nbsp;		 * combining them to the final output pixel. */
+<b class="fc">&nbsp;		MipMapNearestLinear(GL20.GL_NEAREST_MIPMAP_LINEAR),</b>
+&nbsp;
+&nbsp;		/** Fetch the two best fitting images from the mip map chain and then sample the four nearest texels from each of the two
+&nbsp;		 * images, combining them to the final output pixel. */
+<b class="fc">&nbsp;		MipMapLinearLinear(GL20.GL_LINEAR_MIPMAP_LINEAR);</b>
+&nbsp;
+&nbsp;		final int glEnum;
+&nbsp;
+<b class="fc">&nbsp;		TextureFilter (int glEnum) {</b>
+<b class="fc">&nbsp;			this.glEnum = glEnum;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public boolean isMipMap () {
+<b class="nc">&nbsp;			return glEnum != GL20.GL_NEAREST &amp;&amp; glEnum != GL20.GL_LINEAR;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public int getGLEnum () {
+<b class="fc">&nbsp;			return glEnum;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	public enum TextureWrap {</b>
+<b class="fc">&nbsp;		MirroredRepeat(GL20.GL_MIRRORED_REPEAT), ClampToEdge(GL20.GL_CLAMP_TO_EDGE), Repeat(GL20.GL_REPEAT);</b>
+&nbsp;
+&nbsp;		final int glEnum;
+&nbsp;
+<b class="fc">&nbsp;		TextureWrap (int glEnum) {</b>
+<b class="fc">&nbsp;			this.glEnum = glEnum;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public int getGLEnum () {
+<b class="fc">&nbsp;			return glEnum;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	TextureData data;
+&nbsp;
+&nbsp;	public Texture (String internalPath) {
+<b class="fc">&nbsp;		this(Gdx.files.internal(internalPath));</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (FileHandle file) {
+<b class="fc">&nbsp;		this(file, null, false);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (FileHandle file, boolean useMipMaps) {
+<b class="fc">&nbsp;		this(file, null, useMipMaps);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (FileHandle file, Format format, boolean useMipMaps) {
+<b class="fc">&nbsp;		this(TextureData.Factory.loadFromFile(file, format, useMipMaps));</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (Pixmap pixmap) {
+<b class="nc">&nbsp;		this(new PixmapTextureData(pixmap, null, false, false));</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (Pixmap pixmap, boolean useMipMaps) {
+<b class="nc">&nbsp;		this(new PixmapTextureData(pixmap, null, useMipMaps, false));</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (Pixmap pixmap, Format format, boolean useMipMaps) {
+<b class="nc">&nbsp;		this(new PixmapTextureData(pixmap, format, useMipMaps, false));</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (int width, int height, Format format) {
+<b class="nc">&nbsp;		this(new PixmapTextureData(new Pixmap(width, height, format), null, false, true));</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Texture (TextureData data) {
+<b class="fc">&nbsp;		this(GL20.GL_TEXTURE_2D, Gdx.gl.glGenTexture(), data);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected Texture (int glTarget, int glHandle, TextureData data) {
+<b class="fc">&nbsp;		super(glTarget, glHandle);</b>
+<b class="fc">&nbsp;		load(data);</b>
+<b class="pc">&nbsp;		if (data.isManaged()) addManagedTexture(Gdx.app, this);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void load (TextureData data) {
+<b class="pc">&nbsp;		if (this.data != null &amp;&amp; data.isManaged() != this.data.isManaged())</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;New data must have the same managed status as the old data&quot;);</b>
+<b class="fc">&nbsp;		this.data = data;</b>
+&nbsp;
+<b class="pc">&nbsp;		if (!data.isPrepared()) data.prepare();</b>
+&nbsp;
+<b class="fc">&nbsp;		bind();</b>
+<b class="fc">&nbsp;		uploadImageData(GL20.GL_TEXTURE_2D, data);</b>
+&nbsp;
+<b class="fc">&nbsp;		unsafeSetFilter(minFilter, magFilter, true);</b>
+<b class="fc">&nbsp;		unsafeSetWrap(uWrap, vWrap, true);</b>
+<b class="fc">&nbsp;		unsafeSetAnisotropicFilter(anisotropicFilterLevel, true);</b>
+<b class="fc">&nbsp;		Gdx.gl.glBindTexture(glTarget, 0);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Used internally to reload after context loss. Creates a new GL handle then calls {@link #load(TextureData)}. Use this only
+&nbsp;	 * if you know what you do! */
+&nbsp;	@Override
+&nbsp;	protected void reload () {
+<b class="nc">&nbsp;		if (!isManaged()) throw new GdxRuntimeException(&quot;Tried to reload unmanaged Texture&quot;);</b>
+<b class="nc">&nbsp;		glHandle = Gdx.gl.glGenTexture();</b>
+<b class="nc">&nbsp;		load(data);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Draws the given {@link Pixmap} to the texture at position x, y. No clipping is performed so you have to make sure that you
+&nbsp;	 * draw only inside the texture region. Note that this will only draw to mipmap level 0!
+&nbsp;	 * 
+&nbsp;	 * @param pixmap The Pixmap
+&nbsp;	 * @param x The x coordinate in pixels
+&nbsp;	 * @param y The y coordinate in pixels */
+&nbsp;	public void draw (Pixmap pixmap, int x, int y) {
+<b class="nc">&nbsp;		if (data.isManaged()) throw new GdxRuntimeException(&quot;can&#39;t draw to a managed texture&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		bind();</b>
+<b class="nc">&nbsp;		Gdx.gl.glTexSubImage2D(glTarget, 0, x, y, pixmap.getWidth(), pixmap.getHeight(), pixmap.getGLFormat(), pixmap.getGLType(),</b>
+<b class="nc">&nbsp;			pixmap.getPixels());</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getWidth () {
+<b class="fc">&nbsp;		return data.getWidth();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getHeight () {
+<b class="fc">&nbsp;		return data.getHeight();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getDepth () {
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public TextureData getTextureData () {
+<b class="nc">&nbsp;		return data;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return whether this texture is managed or not. */
+&nbsp;	public boolean isManaged () {
+<b class="nc">&nbsp;		return data.isManaged();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Disposes all resources associated with the texture */
+&nbsp;	public void dispose () {
+&nbsp;		// this is a hack. reason: we have to set the glHandle to 0 for textures that are
+&nbsp;		// reloaded through the asset manager as we first remove (and thus dispose) the texture
+&nbsp;		// and then reload it. the glHandle is set to 0 in invalidateAllTextures prior to
+&nbsp;		// removal from the asset manager.
+<b class="pc">&nbsp;		if (glHandle == 0) return;</b>
+<b class="nc">&nbsp;		delete();</b>
+<b class="nc">&nbsp;		if (data.isManaged()) if (managedTextures.get(Gdx.app) != null) managedTextures.get(Gdx.app).removeValue(this, true);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		if (data instanceof FileTextureData) return data.toString();</b>
+<b class="nc">&nbsp;		return super.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void addManagedTexture (Application app, Texture texture) {
+<b class="fc">&nbsp;		Array&lt;Texture&gt; managedTextureArray = managedTextures.get(app);</b>
+<b class="fc">&nbsp;		if (managedTextureArray == null) managedTextureArray = new Array&lt;Texture&gt;();</b>
+<b class="fc">&nbsp;		managedTextureArray.add(texture);</b>
+<b class="fc">&nbsp;		managedTextures.put(app, managedTextureArray);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Clears all managed textures. This is an internal method. Do not use it! */
+&nbsp;	public static void clearAllTextures (Application app) {
+<b class="nc">&nbsp;		managedTextures.remove(app);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Invalidate all managed textures. This is an internal method. Do not use it! */
+&nbsp;	public static void invalidateAllTextures (Application app) {
+<b class="nc">&nbsp;		Array&lt;Texture&gt; managedTextureArray = managedTextures.get(app);</b>
+<b class="nc">&nbsp;		if (managedTextureArray == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (assetManager == null) {</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; managedTextureArray.size; i++) {</b>
+<b class="nc">&nbsp;				Texture texture = managedTextureArray.get(i);</b>
+<b class="nc">&nbsp;				texture.reload();</b>
+&nbsp;			}
+&nbsp;		} else {
+&nbsp;			// first we have to make sure the AssetManager isn&#39;t loading anything anymore,
+&nbsp;			// otherwise the ref counting trick below wouldn&#39;t work (when a texture is
+&nbsp;			// currently on the task stack of the manager.)
+<b class="nc">&nbsp;			assetManager.finishLoading();</b>
+&nbsp;
+&nbsp;			// next we go through each texture and reload either directly or via the
+&nbsp;			// asset manager.
+<b class="nc">&nbsp;			Array&lt;Texture&gt; textures = new Array&lt;Texture&gt;(managedTextureArray);</b>
+<b class="nc">&nbsp;			for (Texture texture : textures) {</b>
+<b class="nc">&nbsp;				String fileName = assetManager.getAssetFileName(texture);</b>
+<b class="nc">&nbsp;				if (fileName == null) {</b>
+<b class="nc">&nbsp;					texture.reload();</b>
+&nbsp;				} else {
+&nbsp;					// get the ref count of the texture, then set it to 0 so we
+&nbsp;					// can actually remove it from the assetmanager. Also set the
+&nbsp;					// handle to zero, otherwise we might accidentially dispose
+&nbsp;					// already reloaded textures.
+<b class="nc">&nbsp;					final int refCount = assetManager.getReferenceCount(fileName);</b>
+<b class="nc">&nbsp;					assetManager.setReferenceCount(fileName, 0);</b>
+<b class="nc">&nbsp;					texture.glHandle = 0;</b>
+&nbsp;
+&nbsp;					// create the parameters, passing the reference to the texture as
+&nbsp;					// well as a callback that sets the ref count.
+<b class="nc">&nbsp;					TextureParameter params = new TextureParameter();</b>
+<b class="nc">&nbsp;					params.textureData = texture.getTextureData();</b>
+<b class="nc">&nbsp;					params.minFilter = texture.getMinFilter();</b>
+<b class="nc">&nbsp;					params.magFilter = texture.getMagFilter();</b>
+<b class="nc">&nbsp;					params.wrapU = texture.getUWrap();</b>
+<b class="nc">&nbsp;					params.wrapV = texture.getVWrap();</b>
+<b class="nc">&nbsp;					params.genMipMaps = texture.data.useMipMaps(); // not sure about this?</b>
+<b class="nc">&nbsp;					params.texture = texture; // special parameter which will ensure that the references stay the same.</b>
+<b class="nc">&nbsp;					params.loadedCallback = new LoadedCallback() {</b>
+&nbsp;						@Override
+&nbsp;						public void finishedLoading (AssetManager assetManager, String fileName, Class type) {
+&nbsp;							assetManager.setReferenceCount(fileName, refCount);
+&nbsp;						}
+&nbsp;					};
+&nbsp;
+&nbsp;					// unload the texture, create a new gl handle then reload it.
+<b class="nc">&nbsp;					assetManager.unload(fileName);</b>
+<b class="nc">&nbsp;					texture.glHandle = Gdx.gl.glGenTexture();</b>
+<b class="nc">&nbsp;					assetManager.load(fileName, Texture.class, params);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;			managedTextureArray.clear();</b>
+<b class="nc">&nbsp;			managedTextureArray.addAll(textures);</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sets the {@link AssetManager}. When the context is lost, textures managed by the asset manager are reloaded by the manager
+&nbsp;	 * on a separate thread (provided that a suitable {@link AssetLoader} is registered with the manager). Textures not managed by
+&nbsp;	 * the AssetManager are reloaded via the usual means on the rendering thread.
+&nbsp;	 * @param manager the asset manager. */
+&nbsp;	public static void setAssetManager (AssetManager manager) {
+<b class="nc">&nbsp;		Texture.assetManager = manager;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public static String getManagedStatus () {
+<b class="nc">&nbsp;		StringBuilder builder = new StringBuilder();</b>
+<b class="nc">&nbsp;		builder.append(&quot;Managed textures/app: { &quot;);</b>
+<b class="nc">&nbsp;		for (Application app : managedTextures.keySet()) {</b>
+<b class="nc">&nbsp;			builder.append(managedTextures.get(app).size);</b>
+<b class="nc">&nbsp;			builder.append(&quot; &quot;);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		builder.append(&quot;}&quot;);</b>
+<b class="nc">&nbsp;		return builder.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the number of managed textures currently loaded */
+&nbsp;	public static int getNumManagedTextures () {
+<b class="nc">&nbsp;		return managedTextures.get(Gdx.app).size;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,891 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Array</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: Array (com.badlogic.gdx.utils)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Array</td>
+<td class="coverageStat">
+  <span class="percent">
+    21.7%
+  </span>
+  <span class="absValue">
+    (13/60)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.4%
+  </span>
+  <span class="absValue">
+    (13/202)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.8%
+  </span>
+  <span class="absValue">
+    (47/297)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Array$ArrayIterable</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (3/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    78.9%
+  </span>
+  <span class="absValue">
+    (15/19)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Array$ArrayIterator</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.9%
+  </span>
+  <span class="absValue">
+    (3/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (5/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    47.6%
+  </span>
+  <span class="absValue">
+    (10/21)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    27.1%
+  </span>
+  <span class="absValue">
+    (19/70)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.6%
+  </span>
+  <span class="absValue">
+    (21/218)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    21.4%
+  </span>
+  <span class="absValue">
+    (72/337)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.utils;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.Iterator;
+&nbsp;import java.util.NoSuchElementException;
+&nbsp;
+&nbsp;import com.badlogic.gdx.math.MathUtils;
+&nbsp;import com.badlogic.gdx.utils.reflect.ArrayReflection;
+&nbsp;
+&nbsp;/** A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the
+&nbsp; * last element is moved to the removed element&#39;s position).
+&nbsp; * @author Nathan Sweet */
+&nbsp;public class Array&lt;T&gt; implements Iterable&lt;T&gt; {
+&nbsp;	/** Provides direct access to the underlying array. If the Array&#39;s generic type is not Object, this field may only be accessed
+&nbsp;	 * if the {@link Array#Array(boolean, int, Class)} constructor was used. */
+&nbsp;	public T[] items;
+&nbsp;
+&nbsp;	public int size;
+&nbsp;	public boolean ordered;
+&nbsp;
+&nbsp;	private ArrayIterable iterable;
+&nbsp;	private Predicate.PredicateIterable&lt;T&gt; predicateIterable;
+&nbsp;
+&nbsp;	/** Creates an ordered array with a capacity of 16. */
+&nbsp;	public Array () {
+<b class="fc">&nbsp;		this(true, 16);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates an ordered array with the specified capacity. */
+&nbsp;	public Array (int capacity) {
+<b class="fc">&nbsp;		this(true, capacity);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
+&nbsp;	 *           memory copy.
+&nbsp;	 * @param capacity Any elements added beyond this will cause the backing array to be grown. */
+<b class="fc">&nbsp;	public Array (boolean ordered, int capacity) {</b>
+<b class="fc">&nbsp;		this.ordered = ordered;</b>
+<b class="fc">&nbsp;		items = (T[])new Object[capacity];</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new array with {@link #items} of the specified type.
+&nbsp;	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
+&nbsp;	 *           memory copy.
+&nbsp;	 * @param capacity Any elements added beyond this will cause the backing array to be grown. */
+<b class="nc">&nbsp;	public Array (boolean ordered, int capacity, Class arrayType) {</b>
+<b class="nc">&nbsp;		this.ordered = ordered;</b>
+<b class="nc">&nbsp;		items = (T[])ArrayReflection.newInstance(arrayType, capacity);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates an ordered array with {@link #items} of the specified type and a capacity of 16. */
+&nbsp;	public Array (Class arrayType) {
+<b class="nc">&nbsp;		this(true, 16, arrayType);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new array containing the elements in the specified array. The new array will have the same type of backing array
+&nbsp;	 * and will be ordered if the specified array is ordered. The capacity is set to the number of elements, so any subsequent
+&nbsp;	 * elements added will cause the backing array to be grown. */
+&nbsp;	public Array (Array&lt;? extends T&gt; array) {
+<b class="nc">&nbsp;		this(array.ordered, array.size, array.items.getClass().getComponentType());</b>
+<b class="nc">&nbsp;		size = array.size;</b>
+<b class="nc">&nbsp;		System.arraycopy(array.items, 0, items, 0, size);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new ordered array containing the elements in the specified array. The new array will have the same type of
+&nbsp;	 * backing array. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array
+&nbsp;	 * to be grown. */
+&nbsp;	public Array (T[] array) {
+<b class="nc">&nbsp;		this(true, array, 0, array.length);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Creates a new array containing the elements in the specified array. The new array will have the same type of backing array.
+&nbsp;	 * The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+&nbsp;	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
+&nbsp;	 *           memory copy. */
+&nbsp;	public Array (boolean ordered, T[] array, int start, int count) {
+<b class="nc">&nbsp;		this(ordered, count, array.getClass().getComponentType());</b>
+<b class="nc">&nbsp;		size = count;</b>
+<b class="nc">&nbsp;		System.arraycopy(array, start, items, 0, size);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void add (T value) {
+<b class="fc">&nbsp;		T[] items = this.items;</b>
+<b class="fc">&nbsp;		if (size == items.length) items = resize(Math.max(8, (int)(size * 1.75f)));</b>
+<b class="fc">&nbsp;		items[size++] = value;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void add (T value1, T value2) {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		if (size + 1 &gt;= items.length) items = resize(Math.max(8, (int)(size * 1.75f)));</b>
+<b class="nc">&nbsp;		items[size] = value1;</b>
+<b class="nc">&nbsp;		items[size + 1] = value2;</b>
+<b class="nc">&nbsp;		size += 2;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void add (T value1, T value2, T value3) {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		if (size + 2 &gt;= items.length) items = resize(Math.max(8, (int)(size * 1.75f)));</b>
+<b class="nc">&nbsp;		items[size] = value1;</b>
+<b class="nc">&nbsp;		items[size + 1] = value2;</b>
+<b class="nc">&nbsp;		items[size + 2] = value3;</b>
+<b class="nc">&nbsp;		size += 3;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void add (T value1, T value2, T value3, T value4) {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		if (size + 3 &gt;= items.length) items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn&#39;t enough when size=5.</b>
+<b class="nc">&nbsp;		items[size] = value1;</b>
+<b class="nc">&nbsp;		items[size + 1] = value2;</b>
+<b class="nc">&nbsp;		items[size + 2] = value3;</b>
+<b class="nc">&nbsp;		items[size + 3] = value4;</b>
+<b class="nc">&nbsp;		size += 4;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void addAll (Array&lt;? extends T&gt; array) {
+<b class="nc">&nbsp;		addAll(array.items, 0, array.size);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void addAll (Array&lt;? extends T&gt; array, int start, int count) {
+<b class="nc">&nbsp;		if (start + count &gt; array.size)</b>
+<b class="nc">&nbsp;			throw new IllegalArgumentException(&quot;start + count must be &lt;= size: &quot; + start + &quot; + &quot; + count + &quot; &lt;= &quot; + array.size);</b>
+<b class="nc">&nbsp;		addAll(array.items, start, count);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void addAll (T... array) {
+<b class="nc">&nbsp;		addAll(array, 0, array.length);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void addAll (T[] array, int start, int count) {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		int sizeNeeded = size + count;</b>
+<b class="nc">&nbsp;		if (sizeNeeded &gt; items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));</b>
+<b class="nc">&nbsp;		System.arraycopy(array, start, items, size, count);</b>
+<b class="nc">&nbsp;		size = sizeNeeded;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public T get (int index) {
+<b class="pc">&nbsp;		if (index &gt;= size) throw new IndexOutOfBoundsException(&quot;index can&#39;t be &gt;= size: &quot; + index + &quot; &gt;= &quot; + size);</b>
+<b class="fc">&nbsp;		return items[index];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void set (int index, T value) {
+<b class="nc">&nbsp;		if (index &gt;= size) throw new IndexOutOfBoundsException(&quot;index can&#39;t be &gt;= size: &quot; + index + &quot; &gt;= &quot; + size);</b>
+<b class="nc">&nbsp;		items[index] = value;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void insert (int index, T value) {
+<b class="nc">&nbsp;		if (index &gt; size) throw new IndexOutOfBoundsException(&quot;index can&#39;t be &gt; size: &quot; + index + &quot; &gt; &quot; + size);</b>
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		if (size == items.length) items = resize(Math.max(8, (int)(size * 1.75f)));</b>
+<b class="nc">&nbsp;		if (ordered)</b>
+<b class="nc">&nbsp;			System.arraycopy(items, index, items, index + 1, size - index);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			items[size] = items[index];</b>
+<b class="nc">&nbsp;		size++;</b>
+<b class="nc">&nbsp;		items[index] = value;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
+&nbsp;	 * indices before the insertion. */
+&nbsp;	public void insertRange (int index, int count) {
+<b class="nc">&nbsp;		if (index &gt; size) throw new IndexOutOfBoundsException(&quot;index can&#39;t be &gt; size: &quot; + index + &quot; &gt; &quot; + size);</b>
+<b class="nc">&nbsp;		int sizeNeeded = size + count;</b>
+<b class="nc">&nbsp;		if (sizeNeeded &gt; items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));</b>
+<b class="nc">&nbsp;		System.arraycopy(items, index, items, index + count, size - index);</b>
+<b class="nc">&nbsp;		size = sizeNeeded;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void swap (int first, int second) {
+<b class="nc">&nbsp;		if (first &gt;= size) throw new IndexOutOfBoundsException(&quot;first can&#39;t be &gt;= size: &quot; + first + &quot; &gt;= &quot; + size);</b>
+<b class="nc">&nbsp;		if (second &gt;= size) throw new IndexOutOfBoundsException(&quot;second can&#39;t be &gt;= size: &quot; + second + &quot; &gt;= &quot; + size);</b>
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		T firstValue = items[first];</b>
+<b class="nc">&nbsp;		items[first] = items[second];</b>
+<b class="nc">&nbsp;		items[second] = firstValue;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns true if this array contains the specified value.
+&nbsp;	 * @param value May be null.
+&nbsp;	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used. */
+&nbsp;	public boolean contains (@Null T value, boolean identity) {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		int i = size - 1;</b>
+<b class="nc">&nbsp;		if (identity || value == null) {</b>
+<b class="nc">&nbsp;			while (i &gt;= 0)</b>
+<b class="nc">&nbsp;				if (items[i--] == value) return true;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			while (i &gt;= 0)</b>
+<b class="nc">&nbsp;				if (value.equals(items[i--])) return true;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if this array contains all the specified values.
+&nbsp;	 * @param values May contains nulls.
+&nbsp;	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used. */
+&nbsp;	public boolean containsAll (Array&lt;? extends T&gt; values, boolean identity) {
+<b class="nc">&nbsp;		T[] items = values.items;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = values.size; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			if (!contains(items[i], identity)) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if this array contains any the specified values.
+&nbsp;	 * @param values May contains nulls.
+&nbsp;	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used. */
+&nbsp;	public boolean containsAny (Array&lt;? extends T&gt; values, boolean identity) {
+<b class="nc">&nbsp;		T[] items = values.items;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = values.size; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			if (contains(items[i], identity)) return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the index of first occurrence of value in the array, or -1 if no such value exists.
+&nbsp;	 * @param value May be null.
+&nbsp;	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
+&nbsp;	 * @return An index of first occurrence of value in array or -1 if no such value exists */
+&nbsp;	public int indexOf (@Null T value, boolean identity) {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		if (identity || value == null) {</b>
+<b class="nc">&nbsp;			for (int i = 0, n = size; i &lt; n; i++)</b>
+<b class="nc">&nbsp;				if (items[i] == value) return i;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			for (int i = 0, n = size; i &lt; n; i++)</b>
+<b class="nc">&nbsp;				if (value.equals(items[i])) return i;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an index of last occurrence of value in array or -1 if no such value exists. Search is started from the end of an
+&nbsp;	 * array.
+&nbsp;	 * @param value May be null.
+&nbsp;	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
+&nbsp;	 * @return An index of last occurrence of value in array or -1 if no such value exists */
+&nbsp;	public int lastIndexOf (@Null T value, boolean identity) {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		if (identity || value == null) {</b>
+<b class="nc">&nbsp;			for (int i = size - 1; i &gt;= 0; i--)</b>
+<b class="nc">&nbsp;				if (items[i] == value) return i;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			for (int i = size - 1; i &gt;= 0; i--)</b>
+<b class="nc">&nbsp;				if (value.equals(items[i])) return i;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Removes the first instance of the specified value in the array.
+&nbsp;	 * @param value May be null.
+&nbsp;	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
+&nbsp;	 * @return true if value was found and removed, false otherwise */
+&nbsp;	public boolean removeValue (@Null T value, boolean identity) {
+<b class="fc">&nbsp;		T[] items = this.items;</b>
+<b class="pc">&nbsp;		if (identity || value == null) {</b>
+<b class="pc">&nbsp;			for (int i = 0, n = size; i &lt; n; i++) {</b>
+<b class="pc">&nbsp;				if (items[i] == value) {</b>
+<b class="fc">&nbsp;					removeIndex(i);</b>
+<b class="fc">&nbsp;					return true;</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		} else {
+<b class="nc">&nbsp;			for (int i = 0, n = size; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;				if (value.equals(items[i])) {</b>
+<b class="nc">&nbsp;					removeIndex(i);</b>
+<b class="nc">&nbsp;					return true;</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Removes and returns the item at the specified index. */
+&nbsp;	public T removeIndex (int index) {
+<b class="pc">&nbsp;		if (index &gt;= size) throw new IndexOutOfBoundsException(&quot;index can&#39;t be &gt;= size: &quot; + index + &quot; &gt;= &quot; + size);</b>
+<b class="fc">&nbsp;		T[] items = this.items;</b>
+<b class="fc">&nbsp;		T value = items[index];</b>
+<b class="fc">&nbsp;		size--;</b>
+<b class="pc">&nbsp;		if (ordered)</b>
+<b class="fc">&nbsp;			System.arraycopy(items, index + 1, items, index, size - index);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			items[index] = items[size];</b>
+<b class="fc">&nbsp;		items[size] = null;</b>
+<b class="fc">&nbsp;		return value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Removes the items between the specified indices, inclusive. */
+&nbsp;	public void removeRange (int start, int end) {
+<b class="nc">&nbsp;		int n = size;</b>
+<b class="nc">&nbsp;		if (end &gt;= n) throw new IndexOutOfBoundsException(&quot;end can&#39;t be &gt;= size: &quot; + end + &quot; &gt;= &quot; + size);</b>
+<b class="nc">&nbsp;		if (start &gt; end) throw new IndexOutOfBoundsException(&quot;start can&#39;t be &gt; end: &quot; + start + &quot; &gt; &quot; + end);</b>
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		int count = end - start + 1, lastIndex = n - count;</b>
+<b class="nc">&nbsp;		if (ordered)</b>
+<b class="nc">&nbsp;			System.arraycopy(items, start + count, items, start, n - (start + count));</b>
+&nbsp;		else {
+<b class="nc">&nbsp;			int i = Math.max(lastIndex, end + 1);</b>
+<b class="nc">&nbsp;			System.arraycopy(items, i, items, start, n - i);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		for (int i = lastIndex; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			items[i] = null;</b>
+<b class="nc">&nbsp;		size = n - count;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Removes from this array all of elements contained in the specified array.
+&nbsp;	 * @param identity True to use ==, false to use .equals().
+&nbsp;	 * @return true if this array was modified. */
+&nbsp;	public boolean removeAll (Array&lt;? extends T&gt; array, boolean identity) {
+<b class="nc">&nbsp;		int size = this.size;</b>
+<b class="nc">&nbsp;		int startSize = size;</b>
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		if (identity) {</b>
+<b class="nc">&nbsp;			for (int i = 0, n = array.size; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;				T item = array.get(i);</b>
+<b class="nc">&nbsp;				for (int ii = 0; ii &lt; size; ii++) {</b>
+<b class="nc">&nbsp;					if (item == items[ii]) {</b>
+<b class="nc">&nbsp;						removeIndex(ii);</b>
+<b class="nc">&nbsp;						size--;</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		} else {
+<b class="nc">&nbsp;			for (int i = 0, n = array.size; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;				T item = array.get(i);</b>
+<b class="nc">&nbsp;				for (int ii = 0; ii &lt; size; ii++) {</b>
+<b class="nc">&nbsp;					if (item.equals(items[ii])) {</b>
+<b class="nc">&nbsp;						removeIndex(ii);</b>
+<b class="nc">&nbsp;						size--;</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		return size != startSize;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Removes and returns the last item. */
+&nbsp;	public T pop () {
+<b class="pc">&nbsp;		if (size == 0) throw new IllegalStateException(&quot;Array is empty.&quot;);</b>
+<b class="fc">&nbsp;		--size;</b>
+<b class="fc">&nbsp;		T item = items[size];</b>
+<b class="fc">&nbsp;		items[size] = null;</b>
+<b class="fc">&nbsp;		return item;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the last item. */
+&nbsp;	public T peek () {
+<b class="pc">&nbsp;		if (size == 0) throw new IllegalStateException(&quot;Array is empty.&quot;);</b>
+<b class="fc">&nbsp;		return items[size - 1];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the first item. */
+&nbsp;	public T first () {
+<b class="nc">&nbsp;		if (size == 0) throw new IllegalStateException(&quot;Array is empty.&quot;);</b>
+<b class="nc">&nbsp;		return items[0];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the array has one or more items. */
+&nbsp;	public boolean notEmpty () {
+<b class="pc">&nbsp;		return size &gt; 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns true if the array is empty. */
+&nbsp;	public boolean isEmpty () {
+<b class="nc">&nbsp;		return size == 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void clear () {
+<b class="fc">&nbsp;		Arrays.fill(items, 0, size, null);</b>
+<b class="fc">&nbsp;		size = 0;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Reduces the size of the backing array to the size of the actual items. This is useful to release memory when many items
+&nbsp;	 * have been removed, or if it is known that more items will not be added.
+&nbsp;	 * @return {@link #items} */
+&nbsp;	public T[] shrink () {
+<b class="nc">&nbsp;		if (items.length != size) resize(size);</b>
+<b class="nc">&nbsp;		return items;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
+&nbsp;	 * items to avoid multiple backing array resizes.
+&nbsp;	 * @return {@link #items} */
+&nbsp;	public T[] ensureCapacity (int additionalCapacity) {
+<b class="nc">&nbsp;		if (additionalCapacity &lt; 0) throw new IllegalArgumentException(&quot;additionalCapacity must be &gt;= 0: &quot; + additionalCapacity);</b>
+<b class="nc">&nbsp;		int sizeNeeded = size + additionalCapacity;</b>
+<b class="nc">&nbsp;		if (sizeNeeded &gt; items.length) resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));</b>
+<b class="nc">&nbsp;		return items;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the array size, leaving any values beyond the current size null.
+&nbsp;	 * @return {@link #items} */
+&nbsp;	public T[] setSize (int newSize) {
+<b class="nc">&nbsp;		truncate(newSize);</b>
+<b class="nc">&nbsp;		if (newSize &gt; items.length) resize(Math.max(8, newSize));</b>
+<b class="nc">&nbsp;		size = newSize;</b>
+<b class="nc">&nbsp;		return items;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Creates a new backing array with the specified size containing the current items. */
+&nbsp;	protected T[] resize (int newSize) {
+<b class="fc">&nbsp;		T[] items = this.items;</b>
+<b class="fc">&nbsp;		T[] newItems = (T[])ArrayReflection.newInstance(items.getClass().getComponentType(), newSize);</b>
+<b class="fc">&nbsp;		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));</b>
+<b class="fc">&nbsp;		this.items = newItems;</b>
+<b class="fc">&nbsp;		return newItems;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sorts this array. The array elements must implement {@link Comparable}. This method is not thread safe (uses
+&nbsp;	 * {@link Sort#instance()}). */
+&nbsp;	public void sort () {
+<b class="nc">&nbsp;		Sort.instance().sort(items, 0, size);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Sorts the array. This method is not thread safe (uses {@link Sort#instance()}). */
+&nbsp;	public void sort (Comparator&lt;? super T&gt; comparator) {
+<b class="nc">&nbsp;		Sort.instance().sort(items, comparator, 0, size);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Selects the nth-lowest element from the Array according to Comparator ranking. This might partially sort the Array. The
+&nbsp;	 * array must have a size greater than 0, or a {@link com.badlogic.gdx.utils.GdxRuntimeException} will be thrown.
+&nbsp;	 * @see Select
+&nbsp;	 * @param comparator used for comparison
+&nbsp;	 * @param kthLowest rank of desired object according to comparison, n is based on ordinal numbers, not array indices. for min
+&nbsp;	 *           value use 1, for max value use size of array, using 0 results in runtime exception.
+&nbsp;	 * @return the value of the Nth lowest ranked object. */
+&nbsp;	public T selectRanked (Comparator&lt;T&gt; comparator, int kthLowest) {
+<b class="nc">&nbsp;		if (kthLowest &lt; 1) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;nth_lowest must be greater than 0, 1 = first, 2 = second...&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return Select.instance().select(items, comparator, kthLowest, size);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @see Array#selectRanked(java.util.Comparator, int)
+&nbsp;	 * @param comparator used for comparison
+&nbsp;	 * @param kthLowest rank of desired object according to comparison, n is based on ordinal numbers, not array indices. for min
+&nbsp;	 *           value use 1, for max value use size of array, using 0 results in runtime exception.
+&nbsp;	 * @return the index of the Nth lowest ranked object. */
+&nbsp;	public int selectRankedIndex (Comparator&lt;T&gt; comparator, int kthLowest) {
+<b class="nc">&nbsp;		if (kthLowest &lt; 1) {</b>
+<b class="nc">&nbsp;			throw new GdxRuntimeException(&quot;nth_lowest must be greater than 0, 1 = first, 2 = second...&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return Select.instance().selectIndex(items, comparator, kthLowest, size);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void reverse () {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		for (int i = 0, lastIndex = size - 1, n = size / 2; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			int ii = lastIndex - i;</b>
+<b class="nc">&nbsp;			T temp = items[i];</b>
+<b class="nc">&nbsp;			items[i] = items[ii];</b>
+<b class="nc">&nbsp;			items[ii] = temp;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void shuffle () {
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		for (int i = size - 1; i &gt;= 0; i--) {</b>
+<b class="nc">&nbsp;			int ii = MathUtils.random(i);</b>
+<b class="nc">&nbsp;			T temp = items[i];</b>
+<b class="nc">&nbsp;			items[i] = items[ii];</b>
+<b class="nc">&nbsp;			items[ii] = temp;</b>
+&nbsp;		}
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns an iterator for the items in the array. Remove is supported.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * If {@link Collections#allocateIterators} is false, the same iterator instance is returned each time this method is called.
+&nbsp;	 * Use the {@link ArrayIterator} constructor for nested or multithreaded iteration. */
+&nbsp;	public ArrayIterator&lt;T&gt; iterator () {
+<b class="pc">&nbsp;		if (Collections.allocateIterators) return new ArrayIterator(this, true);</b>
+<b class="pc">&nbsp;		if (iterable == null) iterable = new ArrayIterable(this);</b>
+<b class="fc">&nbsp;		return iterable.iterator();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns an iterable for the selected items in the array. Remove is supported, but not between hasNext() and next().
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * If {@link Collections#allocateIterators} is false, the same iterable instance is returned each time this method is called.
+&nbsp;	 * Use the {@link Predicate.PredicateIterable} constructor for nested or multithreaded iteration. */
+&nbsp;	public Iterable&lt;T&gt; select (Predicate&lt;T&gt; predicate) {
+<b class="nc">&nbsp;		if (Collections.allocateIterators) return new Predicate.PredicateIterable&lt;T&gt;(this, predicate);</b>
+<b class="nc">&nbsp;		if (predicateIterable == null)</b>
+<b class="nc">&nbsp;			predicateIterable = new Predicate.PredicateIterable&lt;T&gt;(this, predicate);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			predicateIterable.set(this, predicate);</b>
+<b class="nc">&nbsp;		return predicateIterable;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+&nbsp;	 * taken. */
+&nbsp;	public void truncate (int newSize) {
+<b class="nc">&nbsp;		if (newSize &lt; 0) throw new IllegalArgumentException(&quot;newSize must be &gt;= 0: &quot; + newSize);</b>
+<b class="nc">&nbsp;		if (size &lt;= newSize) return;</b>
+<b class="nc">&nbsp;		for (int i = newSize; i &lt; size; i++)</b>
+<b class="nc">&nbsp;			items[i] = null;</b>
+<b class="nc">&nbsp;		size = newSize;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns a random item from the array, or null if the array is empty. */
+&nbsp;	public @Null T random () {
+<b class="nc">&nbsp;		if (size == 0) return null;</b>
+<b class="nc">&nbsp;		return items[MathUtils.random(0, size - 1)];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the items as an array. Note the array is typed, so the {@link #Array(Class)} constructor must have been used.
+&nbsp;	 * Otherwise use {@link #toArray(Class)} to specify the array type. */
+&nbsp;	public T[] toArray () {
+<b class="nc">&nbsp;		return (T[])toArray(items.getClass().getComponentType());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public &lt;V&gt; V[] toArray (Class&lt;V&gt; type) {
+<b class="nc">&nbsp;		V[] result = (V[])ArrayReflection.newInstance(type, size);</b>
+<b class="nc">&nbsp;		System.arraycopy(items, 0, result, 0, size);</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int hashCode () {
+<b class="nc">&nbsp;		if (!ordered) return super.hashCode();</b>
+<b class="nc">&nbsp;		Object[] items = this.items;</b>
+<b class="nc">&nbsp;		int h = 1;</b>
+<b class="nc">&nbsp;		for (int i = 0, n = size; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			h *= 31;</b>
+<b class="nc">&nbsp;			Object item = items[i];</b>
+<b class="nc">&nbsp;			if (item != null) h += item.hashCode();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return h;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns false if either array is unordered. */
+&nbsp;	public boolean equals (Object object) {
+<b class="nc">&nbsp;		if (object == this) return true;</b>
+<b class="nc">&nbsp;		if (!ordered) return false;</b>
+<b class="nc">&nbsp;		if (!(object instanceof Array)) return false;</b>
+<b class="nc">&nbsp;		Array array = (Array)object;</b>
+<b class="nc">&nbsp;		if (!array.ordered) return false;</b>
+<b class="nc">&nbsp;		int n = size;</b>
+<b class="nc">&nbsp;		if (n != array.size) return false;</b>
+<b class="nc">&nbsp;		Object[] items1 = this.items, items2 = array.items;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			Object o1 = items1[i], o2 = items2[i];</b>
+<b class="nc">&nbsp;			if (!(o1 == null ? o2 == null : o1.equals(o2))) return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Uses == for comparison of each item. Returns false if either array is unordered. */
+&nbsp;	public boolean equalsIdentity (Object object) {
+<b class="nc">&nbsp;		if (object == this) return true;</b>
+<b class="nc">&nbsp;		if (!ordered) return false;</b>
+<b class="nc">&nbsp;		if (!(object instanceof Array)) return false;</b>
+<b class="nc">&nbsp;		Array array = (Array)object;</b>
+<b class="nc">&nbsp;		if (!array.ordered) return false;</b>
+<b class="nc">&nbsp;		int n = size;</b>
+<b class="nc">&nbsp;		if (n != array.size) return false;</b>
+<b class="nc">&nbsp;		Object[] items1 = this.items, items2 = array.items;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; n; i++)</b>
+<b class="nc">&nbsp;			if (items1[i] != items2[i]) return false;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString () {
+<b class="nc">&nbsp;		if (size == 0) return &quot;[]&quot;;</b>
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		StringBuilder buffer = new StringBuilder(32);</b>
+<b class="nc">&nbsp;		buffer.append(&#39;[&#39;);</b>
+<b class="nc">&nbsp;		buffer.append(items[0]);</b>
+<b class="nc">&nbsp;		for (int i = 1; i &lt; size; i++) {</b>
+<b class="nc">&nbsp;			buffer.append(&quot;, &quot;);</b>
+<b class="nc">&nbsp;			buffer.append(items[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		buffer.append(&#39;]&#39;);</b>
+<b class="nc">&nbsp;		return buffer.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString (String separator) {
+<b class="nc">&nbsp;		if (size == 0) return &quot;&quot;;</b>
+<b class="nc">&nbsp;		T[] items = this.items;</b>
+<b class="nc">&nbsp;		StringBuilder buffer = new StringBuilder(32);</b>
+<b class="nc">&nbsp;		buffer.append(items[0]);</b>
+<b class="nc">&nbsp;		for (int i = 1; i &lt; size; i++) {</b>
+<b class="nc">&nbsp;			buffer.append(separator);</b>
+<b class="nc">&nbsp;			buffer.append(items[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return buffer.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @see #Array(Class) */
+&nbsp;	static public &lt;T&gt; Array&lt;T&gt; of (Class&lt;T&gt; arrayType) {
+<b class="nc">&nbsp;		return new Array(arrayType);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @see #Array(boolean, int, Class) */
+&nbsp;	static public &lt;T&gt; Array&lt;T&gt; of (boolean ordered, int capacity, Class&lt;T&gt; arrayType) {
+<b class="nc">&nbsp;		return new Array(ordered, capacity, arrayType);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @see #Array(Object[]) */
+&nbsp;	static public &lt;T&gt; Array&lt;T&gt; with (T... array) {
+<b class="nc">&nbsp;		return new Array(array);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static public class ArrayIterator&lt;T&gt; implements Iterator&lt;T&gt;, Iterable&lt;T&gt; {
+&nbsp;		private final Array&lt;T&gt; array;
+&nbsp;		private final boolean allowRemove;
+&nbsp;		int index;
+<b class="fc">&nbsp;		boolean valid = true;</b>
+&nbsp;
+&nbsp;// ArrayIterable&lt;T&gt; iterable;
+&nbsp;
+&nbsp;		public ArrayIterator (Array&lt;T&gt; array) {
+<b class="nc">&nbsp;			this(array, true);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		public ArrayIterator (Array&lt;T&gt; array, boolean allowRemove) {</b>
+<b class="fc">&nbsp;			this.array = array;</b>
+<b class="fc">&nbsp;			this.allowRemove = allowRemove;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public boolean hasNext () {
+<b class="pc">&nbsp;			if (!valid) {</b>
+&nbsp;// System.out.println(iterable.lastAcquire);
+<b class="nc">&nbsp;				throw new GdxRuntimeException(&quot;#iterator() cannot be used nested.&quot;);</b>
+&nbsp;			}
+<b class="fc">&nbsp;			return index &lt; array.size;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public T next () {
+<b class="pc">&nbsp;			if (index &gt;= array.size) throw new NoSuchElementException(String.valueOf(index));</b>
+<b class="pc">&nbsp;			if (!valid) {</b>
+&nbsp;// System.out.println(iterable.lastAcquire);
+<b class="nc">&nbsp;				throw new GdxRuntimeException(&quot;#iterator() cannot be used nested.&quot;);</b>
+&nbsp;			}
+<b class="fc">&nbsp;			return array.items[index++];</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void remove () {
+<b class="nc">&nbsp;			if (!allowRemove) throw new GdxRuntimeException(&quot;Remove not allowed.&quot;);</b>
+<b class="nc">&nbsp;			index--;</b>
+<b class="nc">&nbsp;			array.removeIndex(index);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public void reset () {
+<b class="nc">&nbsp;			index = 0;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		public ArrayIterator&lt;T&gt; iterator () {
+<b class="nc">&nbsp;			return this;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	static public class ArrayIterable&lt;T&gt; implements Iterable&lt;T&gt; {
+&nbsp;		private final Array&lt;T&gt; array;
+&nbsp;		private final boolean allowRemove;
+&nbsp;		private ArrayIterator iterator1, iterator2;
+&nbsp;
+&nbsp;// java.io.StringWriter lastAcquire = new java.io.StringWriter();
+&nbsp;
+&nbsp;		public ArrayIterable (Array&lt;T&gt; array) {
+<b class="fc">&nbsp;			this(array, true);</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		public ArrayIterable (Array&lt;T&gt; array, boolean allowRemove) {</b>
+<b class="fc">&nbsp;			this.array = array;</b>
+<b class="fc">&nbsp;			this.allowRemove = allowRemove;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		/** @see Collections#allocateIterators */
+&nbsp;		public ArrayIterator&lt;T&gt; iterator () {
+<b class="pc">&nbsp;			if (Collections.allocateIterators) return new ArrayIterator(array, allowRemove);</b>
+&nbsp;// lastAcquire.getBuffer().setLength(0);
+&nbsp;// new Throwable().printStackTrace(new java.io.PrintWriter(lastAcquire));
+<b class="pc">&nbsp;			if (iterator1 == null) {</b>
+<b class="fc">&nbsp;				iterator1 = new ArrayIterator(array, allowRemove);</b>
+<b class="fc">&nbsp;				iterator2 = new ArrayIterator(array, allowRemove);</b>
+&nbsp;// iterator1.iterable = this;
+&nbsp;// iterator2.iterable = this;
+&nbsp;			}
+<b class="pc">&nbsp;			if (!iterator1.valid) {</b>
+<b class="nc">&nbsp;				iterator1.index = 0;</b>
+<b class="nc">&nbsp;				iterator1.valid = true;</b>
+<b class="nc">&nbsp;				iterator2.valid = false;</b>
+<b class="nc">&nbsp;				return iterator1;</b>
+&nbsp;			}
+<b class="fc">&nbsp;			iterator2.index = 0;</b>
+<b class="fc">&nbsp;			iterator2.valid = true;</b>
+<b class="fc">&nbsp;			iterator1.valid = false;</b>
+<b class="fc">&nbsp;			return iterator2;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

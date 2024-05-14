@@ -1,0 +1,325 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MockUtil</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.mockito.internal.util</a>
+</div>
+
+<h1>Coverage Summary for Class: MockUtil (org.mockito.internal.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MockUtil</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.2%
+  </span>
+  <span class="absValue">
+    (4/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.8%
+  </span>
+  <span class="absValue">
+    (3/44)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.5%
+  </span>
+  <span class="absValue">
+    (13/84)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;//
+&nbsp;// Source code recreated from a .class file by IntelliJ IDEA
+&nbsp;// (powered by FernFlower decompiler)
+&nbsp;//
+&nbsp;
+&nbsp;package org.mockito.internal.util;
+&nbsp;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.Iterator;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;import java.util.function.Function;
+&nbsp;import org.mockito.MockedConstruction;
+&nbsp;import org.mockito.Mockito;
+&nbsp;import org.mockito.exceptions.misusing.NotAMockException;
+&nbsp;import org.mockito.internal.configuration.plugins.DefaultMockitoPlugins;
+&nbsp;import org.mockito.internal.configuration.plugins.Plugins;
+&nbsp;import org.mockito.internal.creation.settings.CreationSettings;
+&nbsp;import org.mockito.internal.handler.MockHandlerFactory;
+&nbsp;import org.mockito.internal.stubbing.InvocationContainerImpl;
+&nbsp;import org.mockito.internal.util.reflection.LenientCopyTool;
+&nbsp;import org.mockito.invocation.MockHandler;
+&nbsp;import org.mockito.mock.MockCreationSettings;
+&nbsp;import org.mockito.mock.MockName;
+&nbsp;import org.mockito.plugins.MockMaker;
+&nbsp;import org.mockito.plugins.MockResolver;
+&nbsp;
+&nbsp;public class MockUtil {
+<b class="pc">&nbsp;    private static final MockMaker defaultMockMaker = Plugins.getMockMaker();</b>
+&nbsp;    private static final Map&lt;Class&lt;? extends MockMaker&gt;, MockMaker&gt; mockMakers;
+&nbsp;
+<b class="fc">&nbsp;    private MockUtil() {</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+<b class="fc">&nbsp;    private static MockMaker getMockMaker(String mockMaker) {</b>
+&nbsp;        if (mockMaker == null) {
+<b class="nc">&nbsp;            return defaultMockMaker;</b>
+&nbsp;        } else {
+&nbsp;            String typeName;
+<b class="pc">&nbsp;            if (DefaultMockitoPlugins.MOCK_MAKER_ALIASES.contains(mockMaker)) {</b>
+<b class="fc">&nbsp;                typeName = DefaultMockitoPlugins.getDefaultPluginClass(mockMaker);</b>
+&nbsp;            } else {
+&nbsp;                typeName = mockMaker;
+&nbsp;            }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            ClassLoader loader = Thread.currentThread().getContextClassLoader();</b>
+&nbsp;            if (loader == null) {
+<b class="nc">&nbsp;                loader = ClassLoader.getSystemClassLoader();</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            Class type;
+&nbsp;            try {
+&nbsp;                type = loader.loadClass(typeName).asSubclass(MockMaker.class);
+&nbsp;            } catch (Exception var5) {
+<b class="nc">&nbsp;                Exception e = var5;</b>
+<b class="nc">&nbsp;                throw new IllegalStateException(&quot;Failed to load MockMaker: &quot; + mockMaker, e);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;
+&nbsp;            return (MockMaker)mockMakers.computeIfAbsent(type, (t) -&gt; {
+<b class="nc">&nbsp;                try {</b>
+<b class="nc">&nbsp;                    return (MockMaker)t.getDeclaredConstructor().newInstance();</b>
+<b class="nc">&nbsp;                } catch (Exception var2) {</b>
+&nbsp;                    Exception e = var2;
+&nbsp;                    throw new IllegalStateException(&quot;Failed to construct MockMaker: &quot; + t.getName(), e);
+<b class="nc">&nbsp;                }</b>
+&nbsp;            });
+&nbsp;        }
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public static MockMaker.TypeMockability typeMockabilityOf(Class&lt;?&gt; type, String mockMaker) {</b>
+<b class="nc">&nbsp;        return getMockMaker(mockMaker).isTypeMockable(type);</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public static &lt;T&gt; T createMock(MockCreationSettings&lt;T&gt; settings) {
+&nbsp;        MockMaker mockMaker = getMockMaker(settings.getMockMaker());
+&nbsp;        MockHandler mockHandler = MockHandlerFactory.createMockHandler(settings);
+&nbsp;        Object spiedInstance = settings.getSpiedInstance();
+<b class="fc">&nbsp;        Object mock;</b>
+&nbsp;        if (spiedInstance != null) {
+&nbsp;            mock = mockMaker.createSpy(settings, mockHandler, spiedInstance).orElseGet(() -&gt; {
+&nbsp;                T instance = mockMaker.createMock(settings, mockHandler);
+<b class="fc">&nbsp;                (new LenientCopyTool()).copyToMock(spiedInstance, instance);</b>
+<b class="fc">&nbsp;                return instance;</b>
+&nbsp;            });
+<b class="fc">&nbsp;        } else {</b>
+&nbsp;            mock = mockMaker.createMock(settings, mockHandler);
+&nbsp;        }
+<b class="pc">&nbsp;</b>
+<b class="nc">&nbsp;        return mock;</b>
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public static void resetMock(Object mock) {</b>
+&nbsp;        MockHandler oldHandler = getMockHandler(mock);
+<b class="nc">&nbsp;        MockCreationSettings settings = oldHandler.getMockSettings();</b>
+<b class="nc">&nbsp;        MockHandler newHandler = MockHandlerFactory.createMockHandler(settings);</b>
+<b class="nc">&nbsp;        mock = resolve(mock);</b>
+&nbsp;        getMockMaker(settings.getMockMaker()).resetMock(mock, newHandler, settings);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    public static MockHandler&lt;?&gt; getMockHandler(Object mock) {
+&nbsp;        MockHandler handler = getMockHandlerOrNull(mock);
+<b class="fc">&nbsp;        if (handler != null) {</b>
+&nbsp;            return handler;
+&nbsp;        } else {
+&nbsp;            throw new NotAMockException(&quot;Argument should be a mock, but is: &quot; + mock.getClass());
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public static InvocationContainerImpl getInvocationContainer(Object mock) {
+<b class="nc">&nbsp;        return (InvocationContainerImpl)getMockHandler(mock).getInvocationContainer();</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public static boolean isSpy(Object mock) {
+&nbsp;        return isMock(mock) &amp;&amp; getMockSettings(mock).getDefaultAnswer() == Mockito.CALLS_REAL_METHODS;
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public static boolean isMock(Object mock) {</b>
+&nbsp;        if (mock == null) {
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        } else {
+&nbsp;            return getMockHandlerOrNull(mock) != null;
+&nbsp;        }
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    private static MockHandler&lt;?&gt; getMockHandlerOrNull(Object mock) {
+&nbsp;        if (mock == null) {
+&nbsp;            throw new NotAMockException(&quot;Argument should be a mock, but is null!&quot;);
+<b class="nc">&nbsp;        } else {</b>
+<b class="nc">&nbsp;            mock = resolve(mock);</b>
+&nbsp;            Iterator var1 = mockMakers.values().iterator();
+&nbsp;
+&nbsp;            MockMaker mockMaker;
+&nbsp;            MockHandler handler;
+&nbsp;            do {
+&nbsp;                if (!var1.hasNext()) {
+&nbsp;                    return null;
+&nbsp;                }
+&nbsp;
+&nbsp;                mockMaker = (MockMaker)var1.next();
+&nbsp;                handler = mockMaker.getHandler(mock);
+&nbsp;            } while(handler == null);
+&nbsp;
+&nbsp;            assert getMockMaker(handler.getMockSettings().getMockMaker()) == mockMaker;
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            return handler;</b>
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private static Object resolve(Object mock) {
+&nbsp;        if (mock instanceof Class) {
+<b class="nc">&nbsp;            return mock;</b>
+<b class="nc">&nbsp;        } else {</b>
+&nbsp;            MockResolver mockResolver;
+&nbsp;            for(Iterator var1 = Plugins.getMockResolvers().iterator(); var1.hasNext(); mock = mockResolver.resolve(mock)) {
+<b class="nc">&nbsp;                mockResolver = (MockResolver)var1.next();</b>
+&nbsp;            }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;            return mock;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public static boolean areSameMocks(Object mockA, Object mockB) {
+<b class="nc">&nbsp;        return mockA == mockB || resolve(mockA) == resolve(mockB);</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public static MockName getMockName(Object mock) {
+&nbsp;        return getMockHandler(mock).getMockSettings().getMockName();
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;</b>
+&nbsp;    public static void maybeRedefineMockName(Object mock, String newName) {
+<b class="nc">&nbsp;        MockName mockName = getMockName(mock);</b>
+<b class="nc">&nbsp;        MockCreationSettings mockSettings = getMockHandler(mock).getMockSettings();</b>
+<b class="nc">&nbsp;        if (mockName.isDefault() &amp;&amp; mockSettings instanceof CreationSettings) {</b>
+<b class="nc">&nbsp;            ((CreationSettings)mockSettings).setMockName(new MockNameImpl(newName));</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public static MockCreationSettings getMockSettings(Object mock) {
+&nbsp;        return getMockHandler(mock).getMockSettings();
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public static &lt;T&gt; MockMaker.StaticMockControl&lt;T&gt; createStaticMock(Class&lt;T&gt; type, MockCreationSettings&lt;T&gt; settings) {
+&nbsp;        MockMaker mockMaker = getMockMaker(settings.getMockMaker());
+&nbsp;        MockHandler&lt;T&gt; handler = MockHandlerFactory.createMockHandler(settings);
+<b class="nc">&nbsp;        return mockMaker.createStaticMock(type, settings, handler);</b>
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+<b class="nc">&nbsp;    public static &lt;T&gt; MockMaker.ConstructionMockControl&lt;T&gt; createConstructionMock(Class&lt;T&gt; type, Function&lt;MockedConstruction.Context, MockCreationSettings&lt;T&gt;&gt; settingsFactory, MockedConstruction.MockInitializer&lt;T&gt; mockInitializer) {</b>
+<b class="nc">&nbsp;        Function&lt;MockedConstruction.Context, MockHandler&lt;T&gt;&gt; handlerFactory = (context) -&gt; {</b>
+&nbsp;            return MockHandlerFactory.createMockHandler((MockCreationSettings)settingsFactory.apply(context));
+<b class="nc">&nbsp;        };</b>
+&nbsp;        return defaultMockMaker.createConstructionMock(type, settingsFactory, handlerFactory, mockInitializer);
+&nbsp;    }
+<b class="nc">&nbsp;</b>
+&nbsp;    public static void clearAllCaches() {
+&nbsp;        Iterator var0 = mockMakers.values().iterator();
+&nbsp;
+&nbsp;        while(var0.hasNext()) {
+<b class="nc">&nbsp;            MockMaker mockMaker = (MockMaker)var0.next();</b>
+<b class="nc">&nbsp;            mockMaker.clearAllCaches();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    static {
+&nbsp;        mockMakers = new ConcurrentHashMap(Collections.singletonMap(defaultMockMaker.getClass(), defaultMockMaker));
+&nbsp;    }
+<b class="nc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

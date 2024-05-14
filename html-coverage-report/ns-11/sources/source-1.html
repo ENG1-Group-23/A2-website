@@ -1,0 +1,361 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Animation</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.badlogic.gdx.graphics.g2d</a>
+</div>
+
+<h1>Coverage Summary for Class: Animation (com.badlogic.gdx.graphics.g2d)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Animation</td>
+<td class="coverageStat">
+  <span class="percent">
+    21.4%
+  </span>
+  <span class="absValue">
+    (3/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.3%
+  </span>
+  <span class="absValue">
+    (8/65)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Animation$PlayMode</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    26.7%
+  </span>
+  <span class="absValue">
+    (4/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.9%
+  </span>
+  <span class="absValue">
+    (10/67)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*******************************************************************************
+&nbsp; * Copyright 2011 See AUTHORS file.
+&nbsp; * 
+&nbsp; * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+&nbsp; * you may not use this file except in compliance with the License.
+&nbsp; * You may obtain a copy of the License at
+&nbsp; * 
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; * 
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; ******************************************************************************/
+&nbsp;
+&nbsp;package com.badlogic.gdx.graphics.g2d;
+&nbsp;
+&nbsp;import com.badlogic.gdx.math.MathUtils;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;import com.badlogic.gdx.utils.reflect.ArrayReflection;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * An Animation stores a list of objects representing an animated sequence, e.g. for running or jumping. Each object in the
+&nbsp; * Animation is called a key frame, and multiple key frames make up the animation.
+&nbsp; * &lt;p&gt;
+&nbsp; * The animation&#39;s type is the class representing a frame of animation. For example, a typical 2D animation could be made up of
+&nbsp; * {@link com.badlogic.gdx.graphics.g2d.TextureRegion TextureRegions} and would be specified as:
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;code&gt;Animation&amp;lt;TextureRegion&amp;gt; myAnimation = new Animation&amp;lt;TextureRegion&amp;gt;(...);&lt;/code&gt;
+&nbsp; * 
+&nbsp; * @author mzechner */
+&nbsp;public class Animation&lt;T&gt; {
+&nbsp;
+&nbsp;	/** Defines possible playback modes for an {@link Animation}. */
+<b class="fc">&nbsp;	public enum PlayMode {</b>
+<b class="fc">&nbsp;		NORMAL, REVERSED, LOOP, LOOP_REVERSED, LOOP_PINGPONG, LOOP_RANDOM,</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Length must not be modified without updating {@link #animationDuration}. See {@link #setKeyFrames(T[])}. */
+&nbsp;	T[] keyFrames;
+&nbsp;	private float frameDuration;
+&nbsp;	private float animationDuration;
+&nbsp;	private int lastFrameNumber;
+&nbsp;	private float lastStateTime;
+&nbsp;
+<b class="fc">&nbsp;	private PlayMode playMode = PlayMode.NORMAL;</b>
+&nbsp;
+&nbsp;	/** Constructor, storing the frame duration and key frames.
+&nbsp;	 * 
+&nbsp;	 * @param frameDuration the time between frames in seconds.
+&nbsp;	 * @param keyFrames the objects representing the frames. If this Array is type-aware, {@link #getKeyFrames()} can return the
+&nbsp;	 *           correct type of array. Otherwise, it returns an Object[]. */
+<b class="nc">&nbsp;	public Animation (float frameDuration, Array&lt;? extends T&gt; keyFrames) {</b>
+<b class="nc">&nbsp;		this.frameDuration = frameDuration;</b>
+<b class="nc">&nbsp;		Class arrayType = keyFrames.items.getClass().getComponentType();</b>
+<b class="nc">&nbsp;		T[] frames = (T[])ArrayReflection.newInstance(arrayType, keyFrames.size);</b>
+<b class="nc">&nbsp;		for (int i = 0, n = keyFrames.size; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			frames[i] = keyFrames.get(i);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		setKeyFrames(frames);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructor, storing the frame duration and key frames.
+&nbsp;	 * 
+&nbsp;	 * @param frameDuration the time between frames in seconds.
+&nbsp;	 * @param keyFrames the objects representing the frames. If this Array is type-aware, {@link #getKeyFrames()} can return the
+&nbsp;	 *           correct type of array. Otherwise, it returns an Object[]. */
+&nbsp;	public Animation (float frameDuration, Array&lt;? extends T&gt; keyFrames, PlayMode playMode) {
+<b class="nc">&nbsp;		this(frameDuration, keyFrames);</b>
+<b class="nc">&nbsp;		setPlayMode(playMode);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Constructor, storing the frame duration and key frames.
+&nbsp;	 * 
+&nbsp;	 * @param frameDuration the time between frames in seconds.
+&nbsp;	 * @param keyFrames the objects representing the frames. */
+<b class="fc">&nbsp;	public Animation (float frameDuration, T... keyFrames) {</b>
+<b class="fc">&nbsp;		this.frameDuration = frameDuration;</b>
+<b class="fc">&nbsp;		setKeyFrames(keyFrames);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns a frame based on the so called state time. This is the amount of seconds an object has spent in the state this
+&nbsp;	 * Animation instance represents, e.g. running, jumping and so on. The mode specifies whether the animation is looping or not.
+&nbsp;	 * 
+&nbsp;	 * @param stateTime the time spent in the state represented by this animation.
+&nbsp;	 * @param looping whether the animation is looping or not.
+&nbsp;	 * @return the frame of animation for the given state time. */
+&nbsp;	public T getKeyFrame (float stateTime, boolean looping) {
+&nbsp;		// we set the play mode by overriding the previous mode based on looping
+&nbsp;		// parameter value
+<b class="nc">&nbsp;		PlayMode oldPlayMode = playMode;</b>
+<b class="nc">&nbsp;		if (looping &amp;&amp; (playMode == PlayMode.NORMAL || playMode == PlayMode.REVERSED)) {</b>
+<b class="nc">&nbsp;			if (playMode == PlayMode.NORMAL)</b>
+<b class="nc">&nbsp;				playMode = PlayMode.LOOP;</b>
+&nbsp;			else
+<b class="nc">&nbsp;				playMode = PlayMode.LOOP_REVERSED;</b>
+<b class="nc">&nbsp;		} else if (!looping &amp;&amp; !(playMode == PlayMode.NORMAL || playMode == PlayMode.REVERSED)) {</b>
+<b class="nc">&nbsp;			if (playMode == PlayMode.LOOP_REVERSED)</b>
+<b class="nc">&nbsp;				playMode = PlayMode.REVERSED;</b>
+&nbsp;			else
+<b class="nc">&nbsp;				playMode = PlayMode.LOOP;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		T frame = getKeyFrame(stateTime);</b>
+<b class="nc">&nbsp;		playMode = oldPlayMode;</b>
+<b class="nc">&nbsp;		return frame;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns a frame based on the so called state time. This is the amount of seconds an object has spent in the state this
+&nbsp;	 * Animation instance represents, e.g. running, jumping and so on using the mode specified by {@link #setPlayMode(PlayMode)}
+&nbsp;	 * method.
+&nbsp;	 * 
+&nbsp;	 * @param stateTime
+&nbsp;	 * @return the frame of animation for the given state time. */
+&nbsp;	public T getKeyFrame (float stateTime) {
+<b class="nc">&nbsp;		int frameNumber = getKeyFrameIndex(stateTime);</b>
+<b class="nc">&nbsp;		return keyFrames[frameNumber];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the current frame number.
+&nbsp;	 * @param stateTime
+&nbsp;	 * @return current frame number */
+&nbsp;	public int getKeyFrameIndex (float stateTime) {
+<b class="nc">&nbsp;		if (keyFrames.length == 1) return 0;</b>
+&nbsp;
+<b class="nc">&nbsp;		int frameNumber = (int)(stateTime / frameDuration);</b>
+<b class="nc">&nbsp;		switch (playMode) {</b>
+&nbsp;		case NORMAL:
+<b class="nc">&nbsp;			frameNumber = Math.min(keyFrames.length - 1, frameNumber);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case LOOP:
+<b class="nc">&nbsp;			frameNumber = frameNumber % keyFrames.length;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case LOOP_PINGPONG:
+<b class="nc">&nbsp;			frameNumber = frameNumber % ((keyFrames.length * 2) - 2);</b>
+<b class="nc">&nbsp;			if (frameNumber &gt;= keyFrames.length) frameNumber = keyFrames.length - 2 - (frameNumber - keyFrames.length);</b>
+&nbsp;			break;
+&nbsp;		case LOOP_RANDOM:
+<b class="nc">&nbsp;			int lastFrameNumber = (int)((lastStateTime) / frameDuration);</b>
+<b class="nc">&nbsp;			if (lastFrameNumber != frameNumber) {</b>
+<b class="nc">&nbsp;				frameNumber = MathUtils.random(keyFrames.length - 1);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				frameNumber = this.lastFrameNumber;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case REVERSED:
+<b class="nc">&nbsp;			frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case LOOP_REVERSED:
+<b class="nc">&nbsp;			frameNumber = frameNumber % keyFrames.length;</b>
+<b class="nc">&nbsp;			frameNumber = keyFrames.length - frameNumber - 1;</b>
+&nbsp;			break;
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		lastFrameNumber = frameNumber;</b>
+<b class="nc">&nbsp;		lastStateTime = stateTime;</b>
+&nbsp;
+<b class="nc">&nbsp;		return frameNumber;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Returns the keyframes[] array where all the frames of the animation are stored.
+&nbsp;	 * @return The keyframes[] field. This array is an Object[] if the animation was instantiated with an Array that was not
+&nbsp;	 *         type-aware. */
+&nbsp;	public T[] getKeyFrames () {
+<b class="nc">&nbsp;		return keyFrames;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void setKeyFrames (T... keyFrames) {
+<b class="fc">&nbsp;		this.keyFrames = keyFrames;</b>
+<b class="fc">&nbsp;		this.animationDuration = keyFrames.length * frameDuration;</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Returns the animation play mode. */
+&nbsp;	public PlayMode getPlayMode () {
+<b class="nc">&nbsp;		return playMode;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets the animation play mode.
+&nbsp;	 * 
+&nbsp;	 * @param playMode The animation {@link PlayMode} to use. */
+&nbsp;	public void setPlayMode (PlayMode playMode) {
+<b class="nc">&nbsp;		this.playMode = playMode;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Whether the animation would be finished if played without looping (PlayMode#NORMAL), given the state time.
+&nbsp;	 * @param stateTime
+&nbsp;	 * @return whether the animation is finished. */
+&nbsp;	public boolean isAnimationFinished (float stateTime) {
+<b class="nc">&nbsp;		int frameNumber = (int)(stateTime / frameDuration);</b>
+<b class="nc">&nbsp;		return keyFrames.length - 1 &lt; frameNumber;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Sets duration a frame will be displayed.
+&nbsp;	 * @param frameDuration in seconds */
+&nbsp;	public void setFrameDuration (float frameDuration) {
+<b class="nc">&nbsp;		this.frameDuration = frameDuration;</b>
+<b class="nc">&nbsp;		this.animationDuration = keyFrames.length * frameDuration;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** @return the duration of a frame in seconds */
+&nbsp;	public float getFrameDuration () {
+<b class="nc">&nbsp;		return frameDuration;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** @return the duration of the entire animation, number of frames times frame duration, in seconds */
+&nbsp;	public float getAnimationDuration () {
+<b class="nc">&nbsp;		return animationDuration;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 20:57</div>
+</div>
+</body>
+</html>

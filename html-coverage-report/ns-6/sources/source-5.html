@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Leaderboard</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">bytemusketeers.heslingtonhustle.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: Leaderboard (bytemusketeers.heslingtonhustle.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Leaderboard</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package bytemusketeers.heslingtonhustle.utils;
+&nbsp;
+&nbsp;import bytemusketeers.heslingtonhustle.screens.EndScreen;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.Preferences;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Label;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Table;
+&nbsp;import java.util.AbstractMap;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * The {@link Leaderboard} manages and displays a set of high-scoring players. The player scores are based on the
+&nbsp; * current username, and data is persisted with the LibGDX {@link Preferences} API.
+&nbsp; *
+&nbsp; * @author ENG1 Team 23
+&nbsp; */
+&nbsp;public class Leaderboard {
+&nbsp;    /**
+&nbsp;     * The maximum number of entries to be displayed
+&nbsp;     */
+&nbsp;    private static final int MAX_ENTRY_COUNT = 10;
+&nbsp;    /**
+&nbsp;     * The LibGDX {@link Preferences} reference to be used for persistent high-score storage.
+&nbsp;     */
+<b class="nc">&nbsp;    private static final Preferences preferences =</b>
+<b class="nc">&nbsp;            Gdx.app.getPreferences(&quot;bytemusketeers.heslingtonhustle.highscores&quot;);</b>
+&nbsp;    /**
+&nbsp;     * The two-column name-score {@link Table} used to hold high-score entries.
+&nbsp;     */
+<b class="nc">&nbsp;    private final Table table = new Table();</b>
+&nbsp;    /**
+&nbsp;     * The given {@link Label.LabelStyle} style to use for typesetting entries
+&nbsp;     */
+&nbsp;    private final Label.LabelStyle labelStyle;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Instantiates a new {@link Leaderboard} to contain high-score entries.
+&nbsp;     */
+<b class="nc">&nbsp;    public Leaderboard(Label.LabelStyle labelStyle) {</b>
+<b class="nc">&nbsp;        this.labelStyle = labelStyle;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Register a new score for the user of the current {@link com.badlogic.gdx.Game}. The {@link #preferences} is
+&nbsp;     * updated only if this is a new high score for the user identified by the given name.
+&nbsp;     *
+&nbsp;     * @param name  The name of the user
+&nbsp;     * @param score The new score
+&nbsp;     */
+&nbsp;    public void registerScore(String name, Score score) {
+<b class="nc">&nbsp;        float points = score.getScore();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (points &gt; preferences.getFloat(name, -Float.MAX_VALUE)) {</b>
+<b class="nc">&nbsp;            preferences.putFloat(name, points);</b>
+<b class="nc">&nbsp;            preferences.flush();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Register a new score for the user of the current {@link com.badlogic.gdx.Game}. The {@link #preferences} is
+&nbsp;     * updated only if this is a new high score for the current Java user.
+&nbsp;     *
+&nbsp;     * @param score The new score
+&nbsp;     * @see #registerScore(Score)
+&nbsp;     */
+&nbsp;    public void registerScore(Score score) {
+<b class="nc">&nbsp;        registerScore(System.getProperty(&quot;user.name&quot;), score);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Populate the {@link Leaderboard} {@link Table} based on the {@link Preferences} scores, up to a maximum of
+&nbsp;     * {@link #MAX_ENTRY_COUNT} entries.
+&nbsp;     */
+&nbsp;    public void populateBoard() {
+<b class="nc">&nbsp;        List&lt;Map.Entry&lt;String, Float&gt;&gt; scores = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        preferences.get().forEach((key, value) -&gt; scores.add(new AbstractMap.SimpleEntry&lt;&gt;(key, Float.parseFloat(value</b>
+<b class="nc">&nbsp;                .toString()))));</b>
+&nbsp;
+<b class="nc">&nbsp;        scores.stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(MAX_ENTRY_COUNT)</b>
+<b class="nc">&nbsp;                .forEach(record -&gt; {</b>
+<b class="nc">&nbsp;                    table.row().height(16 * labelStyle.font.getScaleY() + EndScreen.VERTICAL_PADDING);</b>
+<b class="nc">&nbsp;                    table.add(new Label(record.getKey(), labelStyle)).padRight(EndScreen.HORIZONTAL_PADDING);</b>
+<b class="nc">&nbsp;                    table.add(new Label(Score.formatLoadedScore(record.getValue()), labelStyle));</b>
+&nbsp;                });
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves the populated LibGDX {@link Table}
+&nbsp;     *
+&nbsp;     * @return The {@link Table}, populated with high-score information
+&nbsp;     */
+&nbsp;    public Table getTable() {
+<b class="nc">&nbsp;        return table;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-14 21:04</div>
+</div>
+</body>
+</html>
